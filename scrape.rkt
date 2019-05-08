@@ -10,10 +10,9 @@
 
 ;;
 
+(define wiki-dir (build-path (current-directory) "wiki"))
 (define orig-dir (build-path (current-directory) "schemecookbook.org"))
 (define orig-glob "schemecookbook.org/**/index.html")
-
-(define wiki-dir (build-path (current-directory) "wiki"))
 
 (define (whitespace-cleanup str)
   (regexp-replace* #px"(?m:\\s+$)" str ""))
