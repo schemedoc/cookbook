@@ -18,9 +18,6 @@
 (define (whitespace-cleanup str)
   (regexp-replace* #px"(?m:\\s+$)" str ""))
 
-(define (newline-join strings)
-  (string-append (string-join strings "\n") "\n"))
-
 (define (add-final-newline s)
   (if (= 0 (string-length s)) s (string-append s "\n")))
 
