@@ -18,11 +18,11 @@
 (define (whitespace-cleanup str)
   (regexp-replace* #px"(?m:\\s+$)" str ""))
 
-(define (list-orig-files)
-  (glob orig-glob))
-
 (define (file->xexp html-file)
   (with-input-from-file html-file (compose html->xexp port->string)))
+
+(define (list-orig-files)
+  (glob orig-glob))
 
 (define (scrape-contentbox orig-file)
   (let* ((document (file->xexp orig-file))
