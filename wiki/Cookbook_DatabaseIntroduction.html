@@ -1,0 +1,45 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+Relational databases, along with the file system and structured markup, are one of the primary means of storing and exchanging data between applications.  As such, they are an important part of any programmer's toolkit.
+<p />
+Database access in Scheme is generally achieved at the lowest levels through the use of an <span style="background : #FFFFCE;">
+  <font color="#0000FF">ExtensionLibrary</font>
+</span><a href="/edit/Cookbook/ExtensionLibrary?topicparent=Cookbook.DatabaseIntroduction">?</a>.  These libraries are usually written to either the Scheme implementation's native FFI interface, or using a tool such as SWIG, which automates the creation of FFI wrappers for a number of Schemes, including PLT.  With such an approach, you'll need access to a compiler for your platform (almost certainly a C compiler) and some knowlege of compiling C code.
+For PLT, another alternative would be to use <a href="http://www.cs.uvm.edu/~dvanhorn/scheme/" target="_top">David van Horn's c-syntax</a> module to expose the low-level C interface for your database.  PLT also provides the <span style="background : #FFFFCE;">
+  <font color="#0000FF">SrPersist</font>
+</span><a href="/edit/Cookbook/SrPersist?topicparent=Cookbook.DatabaseIntroduction">?</a> library for working with ODBC data sources.  This would be a nice option for a database that has an ODBC provider but where no FFI library exists for PLT, or if you don't have access to a C compiler or the knowlege of how to use one.
+<p />
+At a higher level, Schematics provides <a href="/Cookbook/SchemeQL">SchemeQL</a>, which provides a higher level interface on top of <span style="background : #FFFFCE;">
+  <font color="#0000FF">SrPersist</font>
+</span><a href="/edit/Cookbook/SrPersist?topicparent=Cookbook.DatabaseIntroduction">?</a>.
+<p />
+<p />
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 30 Jul 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Section </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DatabaseChapter">DatabaseChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

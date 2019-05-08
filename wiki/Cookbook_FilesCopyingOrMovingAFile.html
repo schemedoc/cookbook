@@ -1,0 +1,66 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Copying_or_Moving_a_File"> Copying or Moving a File </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You need to copy a file.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use <a href="/Cookbook/PltScheme">PltScheme</a>'s standard function <code>copy-file</code>:
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">copy-file</span> <span class="variable">src-path</span> <span class="variable">dest-path</span>)
+</pre>
+</div>
+<p />
+creates the file <code>dest-path</code> as a copy of <code>src-path</code>. If the file is successfully copied, void is returned, otherwise the <code>exn:i/o:filesystem</code> exception is raised. If <code>dest-path</code> already exists, the copy will fail. File permissions are preserved in the copy. Under Mac OS Classic, the resource fork is also preserved in the copy. If <code>src-path</code> refers to a link, the target of the link is copied, rather than the link itself.
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/IvanHernandez">IvanHernandez</a> - 03 Jun 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

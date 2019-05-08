@@ -1,0 +1,122 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Operating_on_a_Series_of_Integer"> Operating on a Series of Integers  </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to perform an operation on all integers in a certain range.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use the <code>map</code>, <code>foldl</code>, or <code>for-each</code> functions if you have a known list of (possibly non-contiguous) integers.  Or, you may be interested in <a href="/Cookbook/SRFI">SRFI</a> 42 (Eager List Comprehensions).  Otherwise, try a <code>do</code> loop.
+<p />
+For example, to double all entries in a list:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">a</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">5</span> <span class="selfeval">7</span> <span class="selfeval">9</span> <span class="selfeval">10</span> <span class="selfeval">108</span>))
+<span class="builtin">&gt;</span> (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) (<span class="builtin">*</span> <span class="selfeval">2</span> <span class="variable">x</span>)) <span class="variable">a</span>)
+(<span class="selfeval">2</span> <span class="selfeval">4</span> <span class="selfeval">10</span> <span class="selfeval">14</span> <span class="selfeval">18</span> <span class="selfeval">20</span> <span class="selfeval">216</span>)
+<span class="builtin">&gt;</span> (<span class="builtin">for-each</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) (<span class="variable">printf</span> <span class="selfeval">"~a "</span> (<span class="builtin">*</span> <span class="selfeval">2</span> <span class="variable">x</span>))) <span class="variable">a</span>)
+<span class="selfeval">2</span> <span class="selfeval">4</span> <span class="selfeval">10</span> <span class="selfeval">14</span> <span class="selfeval">18</span> <span class="selfeval">20</span> <span class="selfeval">216</span>
+</pre>
+</div>
+<p />
+Or, to print all even integers less than 71:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"42.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">list-ec</span> (<span class="selfeval">:</span> <span class="variable">i</span> <span class="selfeval">72</span>) (<span class="keyword">if</span> (<span class="builtin">even?</span> <span class="variable">i</span>)) <span class="variable">i</span>)
+(<span class="selfeval">0</span> <span class="selfeval">2</span> <span class="selfeval">4</span> <span class="selfeval">6</span> <span class="selfeval">8</span> <span class="selfeval">10</span> <span class="selfeval">12</span> <span class="selfeval">14</span> <span class="selfeval">16</span> <span class="selfeval">18</span> <span class="selfeval">20</span> <span class="selfeval">22</span> <span class="selfeval">24</span> <span class="selfeval">26</span> <span class="selfeval">28</span> <span class="selfeval">30</span> <span class="selfeval">32</span> <span class="selfeval">34</span> <span class="selfeval">36</span> <span class="selfeval">38</span>
+ <span class="selfeval">40</span> <span class="selfeval">42</span> <span class="selfeval">44</span> <span class="selfeval">46</span> <span class="selfeval">48</span> <span class="selfeval">50</span> <span class="selfeval">52</span> <span class="selfeval">54</span> <span class="selfeval">56</span> <span class="selfeval">58</span> <span class="selfeval">60</span> <span class="selfeval">62</span> <span class="selfeval">64</span> <span class="selfeval">66</span> <span class="selfeval">68</span> <span class="selfeval">70</span>)
+</pre>
+</div>
+<p />
+Or use a boring <code>do</code> loop.  For example, to iterate across all integers from 0 to 4:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">do</span> ((<span class="variable">i</span> <span class="selfeval">0</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))
+    ((<span class="builtin">=</span> <span class="variable">i</span> <span class="selfeval">5</span>) <span class="variable">i</span>)
+    (<span class="variable">printf</span> <span class="selfeval">"~a "</span> <span class="variable">i</span>))
+<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span>
+<span class="selfeval">5</span>
+</pre>
+</div>
+<p />
+Or, to iterate across all integers from 0 to 71, step 7:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">do</span> ((<span class="variable">i</span> <span class="selfeval">0</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">7</span>)))
+    ((<span class="builtin">&gt;=</span> <span class="variable">i</span> <span class="selfeval">71</span>) (<span class="variable">printf</span> <span class="selfeval">"Done! ~a"</span> <span class="variable">i</span>))
+    (<span class="variable">printf</span> <span class="selfeval">"~a "</span> <span class="variable">i</span>))
+<span class="selfeval">0</span> <span class="selfeval">7</span> <span class="selfeval">14</span> <span class="selfeval">21</span> <span class="selfeval">28</span> <span class="selfeval">35</span> <span class="selfeval">42</span> <span class="selfeval">49</span> <span class="selfeval">56</span> <span class="selfeval">63</span> <span class="selfeval">70</span> <span class="variable">Done!</span> <span class="selfeval">77</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The first two methods use a more functional approach to loops.
+<p />
+The following code shows each technique. Here we only print the numbers we generate:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"42.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="variable">printf</span> <span class="selfeval">"Infancy is: "</span>)
+(<span class="variable">foldl</span>
+ (<span class="keyword">lambda</span> (<span class="variable">x</span> <span class="variable">y</span>) (<span class="variable">printf</span> <span class="selfeval">"~a "</span> <span class="variable">x</span>))
+ <span class="selfeval">0</span>
+ (<span class="builtin">list</span> <span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span>))
+(<span class="builtin">newline</span>)
+(<span class="variable">printf</span> <span class="selfeval">"Toddling is: "</span>)
+(<span class="builtin">for-each</span>
+ (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+   (<span class="variable">printf</span> <span class="selfeval">"~a "</span> <span class="variable">x</span>))
+ (<span class="builtin">list</span> <span class="selfeval">3</span> <span class="selfeval">4</span>))
+(<span class="builtin">newline</span>)
+(<span class="variable">printf</span> <span class="selfeval">"Childhold is: "</span>)
+(<span class="variable">do-ec</span> (<span class="selfeval">:range</span> <span class="variable">i</span> <span class="selfeval">5</span> <span class="selfeval">12</span> <span class="selfeval">1</span>) (<span class="variable">printf</span> <span class="selfeval">"~a "</span> <span class="variable">i</span>))
+(<span class="builtin">newline</span>)
+</pre>
+</div>
+<p />
+The program output looks like:
+<div class="scheme">
+  <pre><span class="variable">Infancy</span> <span class="variable">is:</span> <span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span>
+<span class="variable">Toddling</span> <span class="variable">is:</span> <span class="selfeval">3</span> <span class="selfeval">4</span>
+<span class="variable">Childhold</span> <span class="variable">is:</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span> <span class="selfeval">9</span> <span class="selfeval">10</span> <span class="selfeval">11</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 050 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,87 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Processing_a_String_One_Characte"> Processing a String One Character at a Time </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to process a string a character at a time
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+You can convert the string into a list and process it using <code>map</code> or <code>for-each</code>.  Assuming that <code>do-something-with-char</code> is a function that processes characters:
+<div class="scheme">
+  <pre>(<span class="builtin">map</span> <span class="variable">do-something-with-char</span> (<span class="builtin">string-&gt;list</span> <span class="variable">a-string</span>))
+(<span class="builtin">for-each</span> <span class="variable">do-something-with-char</span> (<span class="builtin">string-&gt;list</span> <span class="variable">a-string</span>))
+</pre>
+</div>
+depending on whether or not you want a list as the result or if you're relying on side effects.  You can also use the iterative approach:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">do</span> ((<span class="variable">i</span> <span class="selfeval">0</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))
+    ((<span class="builtin">=</span> <span class="variable">i</span> (<span class="builtin">string-length</span> <span class="variable">a-string</span>)) <span class="variable">a-string</span>)
+    (<span class="variable">do-something-with-char</span> (<span class="builtin">string-ref</span> <span class="variable">a-string</span> <span class="variable">i</span>)))
+</pre>
+</div>
+<p />
+<a href="http://srfi.schemers.org/srfi-13/srfi-13.html#FoldUnfoldMap" target="_top">SRFI-13</a> also defines <code>string-map</code>, <code>string-for-each</code>, <code>string-fold</code>, and <code>string-for-each-index</code>, which are all extremely useful.  <code>string-map</code> works like <code>map</code> but obviates the need to convert between list and string:
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"string.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"13"</span>))
+(<span class="keyword">define</span> <span class="variable">a-string</span> <span class="selfeval">"Hello, Scheme!"</span>)
+(<span class="variable">string-map</span> <span class="variable">do-something-with-char</span> <span class="variable">a-string</span>)
+</pre>
+</div>
+Note that string-map creates a new string.  To modify a string in place, use <code>string-map!</code>, but remember that you have to have a mutable string in the first place to do this, so <code>string-map!</code> would fail in the example just given.  Also, if you're relying on side effects, <code>string-map</code> will get upset, in this case, you want <code>string-for-each</code>:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">string-map</span> <span class="builtin">display</span> <span class="variable">a-string</span>)
+<span class="variable">string-set!:</span> <span class="variable">expects</span> <span class="variable">type</span> <span class="variable">&lt;character&gt;</span> <span class="variable">as</span> <span class="variable">3rd</span> <span class="variable">argument</span><span class="keyword">,</span>
+<span class="variable">given:</span> <span class="selfeval">#&lt;void&gt;</span><span class="comment">; other arguments were: "\0\0\0\0\0\0\0\0\0\0\0\0\0\0" 13
+</span><span class="builtin">&gt;</span> (<span class="variable">string-for-each</span> <span class="builtin">display</span> <span class="variable">a-string</span>)
+<span class="variable">Hello</span><span class="keyword">,</span> <span class="variable">Scheme!</span>
+</pre>
+</div>
+<code>string-for-each-index</code> is similar to <code>string-for-each</code>, except that the function you pass to it expects an index to the string, instead of the character itself:
+<div class="scheme">
+  <pre>(<span class="variable">string-for-each-index</span>
+  (<span class="keyword">lambda</span> (<span class="variable">i</span>)
+    (<span class="builtin">display</span> (<span class="builtin">string-ref</span> <span class="variable">a-string</span> <span class="variable">i</span>))) <span class="variable">a-string</span>)
+</pre>
+</div>
+Finally, <code>string-fold</code> and <code>string-fold-right</code> represent the ultimate in character processing, generalizing the effect of <code>string-map</code>.  For example, you can produce a list of characters in a string like this:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">string-fold-right</span> <span class="builtin">cons</span> <span class="keyword">'</span>() <span class="selfeval">"Hello, World!"</span>)
+(<span class="selfeval">#\H</span> <span class="selfeval">#\e</span> <span class="selfeval">#\l</span> <span class="selfeval">#\l</span> <span class="selfeval">#\o</span> <span class="selfeval">#\,</span> <span class="selfeval">#\space</span> <span class="selfeval">#\W</span> <span class="selfeval">#\o</span> <span class="selfeval">#\r</span> <span class="selfeval">#\l</span> <span class="selfeval">#\d</span> <span class="selfeval">#\!</span>)
+<span class="builtin">&gt;</span> <span class="comment">; in reverse order
+</span><span class="builtin">&gt;</span> (<span class="variable">string-fold</span> <span class="builtin">cons</span> <span class="keyword">'</span>() <span class="selfeval">"Hello, World!"</span>)
+(<span class="selfeval">#\!</span> <span class="selfeval">#\d</span> <span class="selfeval">#\l</span> <span class="selfeval">#\r</span> <span class="selfeval">#\o</span> <span class="selfeval">#\W</span> <span class="selfeval">#\space</span> <span class="selfeval">#\,</span> <span class="selfeval">#\o</span> <span class="selfeval">#\l</span> <span class="selfeval">#\l</span> <span class="selfeval">#\e</span> <span class="selfeval">#\H</span>)
+</pre>
+</div>
+Of course, this doesn't demonstrate the real power of <code>string-fold</code>; that lies mostly in the 2nd argument, which can be any 2 argument function.  The first argument will be the current character, and the 2nd will be the result of the previous application of the function (on the 1st invocation, it will be the 3rd argument to <code>string-fold</code>).
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 05 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringChapter">StringChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 060 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,85 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<ul>
+<li> <a href="/Cookbook/BeingPltSpecific#Being_PLT_Specific">Being PLT Specific</a>
+<ul>
+<li> <a href="/Cookbook/BeingPltSpecific#Future_Plans_for_Multiple_Implem">Future Plans for Multiple Implementations</a>
+</li>
+<li> <a href="/Cookbook/BeingPltSpecific#Author_Recommendations">Author Recommendations</a>
+</li>
+<li> <a href="/Cookbook/BeingPltSpecific#Comments">Comments</a>
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<h1><a name="Being_PLT_Specific"> </a> Being PLT Specific </h1>
+<p />
+The reality of Scheme today is that many of the kinds of tasks which the Cookbook is intended to address cannot easily be implemented in a way that is portable across multiple Scheme implementations.  Although it is quite feasible to write portable Scheme code to perform primarily algorithmic tasks with basic I/O capabilities, the details of support for practical requirements such as GUIs, network communication, threading, database access, and foreign function interfaces are largely specific to each Scheme implementation.  These non-portable requirements are a big part of what the Cookbook is intended to address.
+<p />
+The Cookbook is not just an ordinary wiki consisting of a more or less ad-hoc collection of pages.  It is organized in a book-like form based on classification information associated with individual entries, with one of its goals being the eventual production of a printed book.  Supporting multiple Scheme implementations in this context, while ensuring that the result is usable and manageable, poses some technical challenges.
+<p />
+As a result, in those cases where portable code is not practical, the Cookbook currently focuses on the use of <a href="/Cookbook/PltScheme">PLT Scheme</a>.  Where possible and appropriate, portable techniques, in particular <a href="/Cookbook/SRFI">SRFI</a>s, are used.  Some guidelines for Cookbook contributors can be found under <a href="/Cookbook/BeingPltSpecific#Author_Recommendations">Author Recommendations</a> below.
+<p />
+<h2>
+  <a name="Future_Plans_for_Multiple_Implem"> Future Plans for Multiple Implementations </a>
+</h2>
+<p />
+We would like the Cookbook to be able to better support other Scheme implementations.  Some technical support for this already exists.  For example, code snippets included in the Cookbook are kept in a separate area, the Scm web, and included in the Cookbook topics.  It would be possible to provide different code snippets for different implementations, and include the appropriate versions in a given topic automatically, based on a user's choice of implementation.
+<p />
+However, work will be needed to implement such capabilities in a usable way, without placing an undue burden on contributors and editors.  Anyone interested in working on the Cookbook's implementation, whether to make it more implementation-independent or anything else, should contact <a href="/Main/AntonVanStraaten">AntonVanStraaten</a>, or join the <a href="http://lists.sourceforge.net/lists/listinfo/schematics-development" target="_top">schematics-development mailing list</a>.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 08 Sep 2004
+<p />
+<h2>
+  <a name="Author_Recommendations"> Author Recommendations </a>
+</h2>
+<p />
+Here are a few suggestions for a PLT-specific cookbook, in which our primary goal is to provide information to users of PLT Scheme.  However, we also want the reader to be aware of what is PLT-specific, so that they can converse in the broader Scheme community and avoid unnecessary nonportability in their code; and I think we have a secondary goal of helping the reader to use other Schemes, since one of the benefits of Scheme is that you <em>can</em> retarget to any of a wealth of good implementations if you need to.
+<p />
+<ol>
+<li> Avoid <em>totally</em> gratuitous PLT-isms.  For example, I wouldn't use <code>match</code> simply to get the first element of the list in an example (unless the example were intended to illustrate <code>match</code>, or there were symmetry with other uses of <code>match</code> in the example).  However, use PLTisms with impunity wherever they help.
+</li>
+<li> When introducing a non-R5RS-ism in a discussion, a subtle reference to PLT-ismness (e.g., "The PLT <code>match</code> syntax can be used...") would be helpful.  Likewise, we could say "The Scheme <code>do</code> syntax..." or "The R5RS <code>do</code> syntax..." when introducing a Scheme concept that isn't PLT-specific.
+</li>
+<li> Some convention similar in intent to a sidebar or a box could be used to say whether and how you can do the same thing in particular other popular Scheme implementations.  For example, "This works in R5RS implementations with <a href="/Cookbook/SRFI">SRFI</a>-6," "R5RS <code>syntax-rules</code> is similar but does not use PLT syntax objects, so...," "Other Scheme implementations have different module systems.  Bigloo's module system is documented in...," and "An equivalent but more verbose R5RS procedure that doesn't use <code>match</code> is..." [ <a href="/Cookbook/SiteToDo">SiteToDo</a>: <em>we currently don't have any way of doing sidebars or boxes</em> ]
+</li>
+</ol>
+<p />
+-- <a href="/Main/NeilVanDyke">NeilVanDyke</a> - 11 May 2004
+<p />
+<p />
+<h2>
+  <a name="Comments"> Comments </a>
+</h2>
+<p />
+I suppose this is only a small step from a multiple-implementation cookbook.  But, as a reader interested mainly in PLT, I'd hate to wade through piles of examples employing non-PLT object systems and such. (At least that would be a problem in print, though fancy hypertext could ellide irrelevant implementations in a convenient way, if someone wanted
+to volunteer Anton to invent that. :)
+<p />
+-- <a href="/Main/NeilVanDyke">NeilVanDyke</a> - 11 May 2004
+<p />
+The above all sounds fine to me, except for the part where I have to invent stuff.  :)  We probably <em>could</em> do something fancy with hypertext, but I'll be happy just to get a decent automatic table of contents capability!
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 19 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/AuthorRecipes">AuthorRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 050 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

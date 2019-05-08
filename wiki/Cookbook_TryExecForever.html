@@ -1,0 +1,78 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Try_executing_a_program_until_su"> Try executing a program until success </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+We want to constantly launch a program until it returns successfully, but we'd rather not use a Bash script.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Scheme can help script your system.  The following script keeps running a program until success:
+<p />
+try-forever.scm
+<p />
+<div class="scheme">
+  <pre><span class="selfeval">#!/bin/sh</span>
+<span class="comment">#|
+exec mzscheme -C "$0" "$@"
+|#</span>
+(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"process.ss"</span>))
+(<span class="keyword">define</span> (<span class="variable">main</span> <span class="variable">args</span>)
+  (<span class="keyword">define</span> <span class="variable">me</span> (<span class="builtin">car</span> <span class="variable">args</span>))
+  (<span class="keyword">define</span> <span class="variable">program</span> (<span class="variable">find-executable-path</span> (<span class="builtin">cadr</span> <span class="variable">args</span>) <span class="selfeval">#f</span>))
+  (<span class="keyword">define</span> <span class="variable">program-args</span> (<span class="builtin">cddr</span> <span class="variable">args</span>))
+  (<span class="keyword">let</span> <span class="variable">loop</span> ()
+    (<span class="keyword">unless</span> (<span class="builtin">apply</span> <span class="variable">system*</span> <span class="variable">program</span> <span class="variable">program-args</span>)
+      (<span class="variable">loop</span>))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Sample usage:
+<p />
+<pre>./try-forever.scm /sbin/dhclient -e -d eth0</pre>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 23 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

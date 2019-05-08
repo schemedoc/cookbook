@@ -1,0 +1,94 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Processing_Every_Word_in_a_File"> Processing Every Word in a File </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You need to do something to every word in a file, similar to the <code>foreach</code> function of csh.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">for-each-word</span>
+  (<span class="keyword">lambda</span> (<span class="variable">filename</span> <span class="variable">proc</span>)
+    (<span class="builtin">with-input-from-file</span> <span class="variable">filename</span>
+      (<span class="keyword">lambda</span> ()
+        (<span class="keyword">let</span> <span class="variable">read-word</span> ((<span class="variable">char</span> (<span class="builtin">read-char</span>))
+                        (<span class="variable">word</span> <span class="keyword">'</span>()))
+          (<span class="keyword">cond</span> ((<span class="builtin">eof-object?</span> <span class="variable">char</span>)
+                 <span class="selfeval">#t</span>)
+                ((<span class="variable">word-boundary?</span> <span class="variable">char</span>)
+                 (<span class="variable">proc</span> (<span class="builtin">list-&gt;string</span> (<span class="builtin">reverse</span> <span class="variable">word</span>)))
+                 (<span class="variable">read-word</span> (<span class="builtin">read-char</span>)
+                            <span class="keyword">'</span>()))
+                (<span class="selfeval">#t</span>
+                 (<span class="variable">read-word</span> (<span class="builtin">read-char</span>)
+                            (<span class="builtin">cons</span> <span class="variable">char</span> <span class="variable">word</span>)))))))))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+This problem is very similar to <a href="/Cookbook/FileRead">FileRead</a> and <a href="/Cookbook/FileReadingLines">FileReadingLines</a>, and it may well be more efficient to adapt <a href="/Cookbook/FileReadingLines">FileReadingLines</a> to split lines into words (using <code>string-tokenize</code> from <a href="/Cookbook/SRFI">SRFI</a>-13, for example) than to start from first principles.
+<p />
+First, you need to decide how to recognize the end of a "word", for example like this:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">word-boundary?</span>
+  (<span class="keyword">lambda</span> (<span class="variable">character</span>)
+    (<span class="builtin">list?</span> (<span class="builtin">memq</span> <span class="variable">character</span> <span class="keyword">'</span>(<span class="selfeval">#\space</span> <span class="selfeval">#\tab</span> <span class="selfeval">#\newline</span>)))))
+</pre>
+</div>
+<p />
+<p />
+And second, you need a procedure that will actually do something with the words of the file, such as <code>display</code>.
+<p />
+<p />
+<p />
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 13 Aug 2004
+-- <a href="/Main/ChristianBecker">ChristianBecker</a> - 31 Mar 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> <a href="/Cookbook/RecipeStub">RecipeStub</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,243 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Aggregating_Widgets_in_a_Single_"> Aggregating Widgets in a Single Widget </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You would like to deal with many widgets as though they were a single widget.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre><span class="selfeval">#lang</span> <span class="variable">scheme/gui</span>
+  (<span class="keyword">define</span> <span class="variable">my-widget%</span>
+    (<span class="variable">class</span> <span class="variable">vertical-panel%</span>
+       (<span class="variable">init-field</span> <span class="variable">parent</span>)
+       (<span class="variable">super-new</span> [<span class="variable">parent</span> <span class="variable">parent</span>])
+         (<span class="variable">new</span> <span class="variable">button%</span>
+           [<span class="variable">label</span> <span class="selfeval">"Press Me"</span>]
+           [<span class="variable">parent</span> <span class="variable">this</span>] [<span class="variable">callback</span> <span class="variable">void</span>])
+         (<span class="variable">new</span> <span class="variable">text-field%</span>
+           [<span class="variable">label</span> <span class="selfeval">"Enter Text"</span>]
+           [<span class="variable">parent</span> <span class="variable">this</span>] [<span class="variable">callback</span> <span class="variable">void</span>])))
+  (<span class="keyword">define</span> <span class="variable">top-frame</span> (<span class="variable">instantiate</span> <span class="variable">frame%</span> () (<span class="variable">label</span> <span class="selfeval">"Example"</span>)))
+  (<span class="keyword">define</span> <span class="variable">new-my-widget</span> (<span class="variable">new</span> <span class="variable">my-widget%</span> (<span class="variable">parent</span> <span class="variable">top-frame</span>)))
+  (<span class="variable">send</span> <span class="variable">top-frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+</pre>
+</div>
+<p />
+Addenda
+<p />
+this can be done as a macro;
+<p />
+<p />
+<div class="scheme">
+  <pre><span class="selfeval">#lang</span> <span class="variable">scheme/gui</span>
+<span class="comment">;; create aggregate widget
+</span>(<span class="keyword">define-syntax</span> <span class="variable">define-aggregate-widget</span>
+  (<span class="keyword">syntax-rules</span> ()
+  ((<span class="variable">_</span> <span class="variable">new-aggregate-widget-classname</span> <span class="variable">container</span> . <span class="variable">sub-widget-args</span>)
+  (<span class="keyword">define</span> <span class="variable">new-aggregate-widget-classname</span>
+    (<span class="variable">class</span> <span class="variable">container</span>
+      (<span class="variable">init-field</span> <span class="variable">parent</span>)
+      (<span class="variable">super-new</span> (<span class="variable">parent</span> <span class="variable">parent</span>))
+      .
+      <span class="variable">sub-widget-args</span>   <span class="comment">;; child widget macros in order
+</span>      )))))
+<span class="comment">;; embed (parent this) into the arguments of the 'new' form
+</span>(<span class="keyword">define-syntax</span> <span class="variable">new-widget</span>
+ (<span class="keyword">syntax-rules</span> ()
+  ((<span class="variable">_</span> <span class="variable">new-widget-classname</span> . <span class="variable">args</span>)
+   (<span class="variable">new</span> <span class="variable">new-widget-classname</span> (<span class="variable">parent</span> <span class="variable">this</span>) . <span class="variable">args</span>))))
+(<span class="variable">define-aggregate-widget</span> <span class="variable">my3%</span> <span class="variable">horizontal-panel%</span>
+            (<span class="variable">new-widget</span> <span class="variable">button%</span> (<span class="variable">label</span> <span class="selfeval">"Press Me"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>))
+            (<span class="variable">new-widget</span> <span class="variable">button%</span> (<span class="variable">label</span> <span class="selfeval">"Press Me1"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>))
+            (<span class="variable">new-widget</span> <span class="variable">button%</span> (<span class="variable">label</span> <span class="selfeval">"Press Me2"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>))
+            (<span class="variable">new-widget</span> <span class="variable">button%</span> (<span class="variable">label</span> <span class="selfeval">"Press Me3"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>))
+            (<span class="variable">new-widget</span> <span class="variable">button%</span> (<span class="variable">label</span> <span class="selfeval">"Press Me4"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>))
+         (<span class="variable">new-widget</span> <span class="variable">text-field%</span> (<span class="variable">label</span> <span class="selfeval">"Enter Text"</span>) (<span class="variable">callback</span> <span class="variable">void</span>) (<span class="variable">stretchable-width</span> <span class="selfeval">#t</span>)))
+(<span class="keyword">define</span> <span class="variable">top-frame</span> (<span class="variable">instantiate</span> <span class="variable">frame%</span> () (<span class="variable">label</span> <span class="selfeval">"Example"</span>)))
+(<span class="keyword">define</span> <span class="variable">new-my3</span> (<span class="variable">new</span> <span class="variable">my3%</span> (<span class="variable">parent</span> <span class="variable">top-frame</span>)))
+(<span class="variable">send</span> <span class="variable">top-frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+</pre>
+</div>
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 17 Jul 2008
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<strong>GUI programming is non-standard. A PLT Solution has been given.</strong>
+<p />
+When designing a GUI, it is common to design widget groups that are reused. This is done by creating a subclass of the panel type and defining the widgets in that class.
+<p />
+The above sample displays a push button with the label "Push Me" above a Text Box with the label "Enter Text".
+<p />
+The first thing to do is start scheme with the graphics toolkit enabled:
+<p />
+<div class="scheme">
+  <pre><span class="selfeval">#lang</span> <span class="variable">scheme/gui</span>
+</pre>
+</div>
+(this is equivalent to importing the required libraries)
+<p />
+Then, we would like to define a new  widget class and bind it to a name. It is customary to name classes with a <strong>%</strong> suffix. This will be a subclass of the vertical-panel% widget which will provide layout geometry for child widgets.
+<p />
+<div class="scheme">
+  <pre>  (<span class="keyword">define</span> <span class="variable">my-widget%</span>
+    (<span class="variable">class</span> <span class="variable">vertical-panel%</span>
+   <span class="comment">;...
+</span>  ))
+</pre>
+</div>
+<p />
+Since panel widgets cannot be top level windows (<strong>frames</strong> in the <a href="/Cookbook/MrEd">MrEd</a> and wxWidget nomenclature), we must give this widget a parent that must be set on instantiation. This is done with the init-field expression:
+<p />
+<div class="scheme">
+  <pre>  (<span class="variable">init-field</span> <span class="variable">parent</span>)
+</pre>
+</div>
+<p />
+If we wanted, we could set it to an initial value much the same way we set initial values in a <strong>let</strong> expression.
+<p />
+Next instantiate the vertical-panel[Initialize the superclass]. As we mentioned before, panels cannot be top level windows, so they must have parents. That means we need to pass the parent parameter to the super-instantiate expression:
+<p />
+<div class="scheme">
+  <pre>
+       (<span class="variable">super-new</span> [<span class="variable">parent</span> <span class="variable">parent</span>])
+</pre>
+</div>
+<p />
+Don't worry that the parent expression has the same name as the parameter. The values are resolved by position in the expression as well as name, so Scheme won't be confused.
+<p />
+The next step is to instantiate the component widgets. This is quite straight forward:
+<p />
+<div class="scheme">
+  <pre>
+         (<span class="variable">new</span> <span class="variable">button%</span>
+           [<span class="variable">label</span> <span class="selfeval">"Press Me"</span>]
+           [<span class="variable">parent</span> <span class="variable">this</span>] [<span class="variable">callback</span> <span class="variable">void</span>])
+         (<span class="variable">new</span> <span class="variable">text-field%</span>
+           [<span class="variable">label</span> <span class="selfeval">"Enter Text"</span>]
+           [<span class="variable">parent</span> <span class="variable">this</span>] [<span class="variable">callback</span> <span class="variable">void</span>])
+</pre>
+</div>
+<p />
+The keyword ''this'' allows us to place the component widgets (button and text-field) within the vertical-panel.
+<p />
+Constructing and showing the window are straight forward:
+<div class="scheme">
+  <pre>  (<span class="keyword">define</span> <span class="variable">top-frame</span> (<span class="variable">instantiate</span> <span class="variable">frame%</span> () (<span class="variable">label</span> <span class="selfeval">"Example"</span>)))
+  (<span class="keyword">define</span> <span class="variable">new-my-widget</span> (<span class="variable">new</span> <span class="variable">my-widget%</span> (<span class="variable">parent</span> <span class="variable">top-frame</span>)))
+  (<span class="variable">send</span> <span class="variable">top-frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+</pre>
+</div>
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+Refactored to include changes suggested by comments and updated for PLT-Scheme 4+. (please see the history)
+<p />
+Thanks to <a href="/Main/DanielSilva">DanielSilva</a> and <a href="/Main/EwanHiggs">EwanHiggs</a>
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 16 Jul 2008
+<p />
+<p />
+Here is another example - but but the widget is created from drawing toolkit elements, rather than existing widgets.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;  make new widget'scatter-chart%'
+</span><span class="comment">;; do this all in Pretty Big language (DrScheme only)
+</span>(<span class="keyword">define</span> <span class="variable">scatter-chart%</span> (<span class="variable">class</span> <span class="variable">pane%</span> ()
+                         (<span class="variable">init-field</span> <span class="variable">parent</span>)
+                         <span class="comment">; Make the drawing area
+</span>                         (<span class="variable">super-instantiate</span> () (<span class="variable">parent</span> <span class="variable">parent</span>) <span class="comment">; instantiate this FIRST
+</span>                           [<span class="variable">min-width</span> <span class="selfeval">100</span>] [<span class="variable">stretchable-width</span> <span class="selfeval">#f</span>]
+                           (<span class="variable">min-height</span> <span class="selfeval">200</span>) [<span class="variable">stretchable-height</span> <span class="selfeval">#f</span>])
+                         <span class="comment">;; internal data
+</span>                         (<span class="keyword">define</span> <span class="variable">list-of-points</span> <span class="keyword">'</span>()) <span class="comment">;; start with empty list
+</span>                         (<span class="keyword">define</span> <span class="variable">canvas</span> (<span class="variable">new</span> <span class="variable">canvas%</span> [<span class="variable">parent</span> <span class="variable">this</span>]
+                                             (<span class="variable">paint-callback</span> (<span class="keyword">lambda</span> (<span class="variable">canvas</span> <span class="variable">dc</span>) (<span class="variable">draw-chart</span>)))
+                                             [<span class="variable">min-width</span> <span class="selfeval">100</span>] [<span class="variable">stretchable-width</span> <span class="selfeval">#f</span>]
+                                             [<span class="variable">min-height</span> <span class="selfeval">200</span>] [<span class="variable">stretchable-height</span> <span class="selfeval">#f</span>]
+                                             ))
+                         (<span class="keyword">define</span> <span class="variable">dc</span> (<span class="variable">send</span> <span class="variable">canvas</span> <span class="variable">get-dc</span>)) <span class="comment">; Get the canvas's drawing context
+</span>                         <span class="comment">; Make some pens and brushes for use later
+</span>                         (<span class="keyword">define</span> <span class="variable">no-pen</span> (<span class="variable">make-object</span> <span class="variable">pen%</span> <span class="selfeval">"BLACK"</span> <span class="selfeval">1</span> <span class="keyword">'</span><span class="variable">transparent</span>))
+                         (<span class="keyword">define</span> <span class="variable">blue-brush</span> (<span class="variable">make-object</span> <span class="variable">brush%</span> <span class="selfeval">"BLUE"</span> <span class="keyword">'</span><span class="variable">solid</span>))
+                         (<span class="keyword">define</span> <span class="variable">yellow-brush</span> (<span class="variable">make-object</span> <span class="variable">brush%</span> <span class="selfeval">"YELLOW"</span> <span class="keyword">'</span><span class="variable">solid</span>))
+                         <span class="comment">;; public methods
+</span>                         <span class="comment">;; add-point : new-point
+</span>                         (<span class="variable">define/public</span> (<span class="variable">add-point</span> <span class="variable">new-point</span>)
+                           (<span class="keyword">set!</span> <span class="variable">list-of-points</span> (<span class="builtin">cons</span> <span class="variable">new-point</span> <span class="variable">list-of-points</span>)) <span class="comment">;; add to the list
+</span>                           (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">draw-rectangle</span> <span class="selfeval">0</span> <span class="variable">new-point</span> <span class="selfeval">200</span> <span class="selfeval">1</span>)) <span class="comment">;; and draw the line
+</span>                         <span class="comment">;; draw-chart : draw a chart based on the list of integers supplied
+</span>                         <span class="comment">;; see http://download.plt-scheme.org/doc/371/html/mred/mred-Z-H-397.html
+</span>                         (<span class="variable">define/public</span> (<span class="variable">draw-chart</span>)
+                           (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">set-pen</span> <span class="variable">no-pen</span>)
+                           (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">set-brush</span> <span class="variable">blue-brush</span>)
+                           (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">draw-rectangle</span> <span class="selfeval">0</span> <span class="selfeval">0</span> <span class="selfeval">100</span> <span class="selfeval">200</span>)  <span class="comment">; big blue rectangle
+</span>                           (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">set-brush</span> <span class="variable">yellow-brush</span>)
+                           (<span class="builtin">map</span>
+                            (<span class="keyword">lambda</span> (<span class="variable">y</span>) (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">draw-rectangle</span> <span class="selfeval">0</span> <span class="variable">y</span> <span class="selfeval">200</span> <span class="selfeval">1</span>)) <span class="comment">; draw a line for each integer.
+</span>                            <span class="variable">list-of-points</span> ))
+                         (<span class="variable">draw-chart</span>))) <span class="comment">; draw it for the first time when this class is instantiated
+</span>
+<span class="comment">; Make a  frame
+</span>(<span class="keyword">define</span> <span class="variable">frame</span> (<span class="variable">new</span> <span class="variable">frame%</span> [<span class="variable">label</span> <span class="selfeval">"scatter-chart% Example"</span>] [<span class="variable">width</span> <span class="selfeval">100</span>] [<span class="variable">height</span> <span class="selfeval">200</span>]))
+<span class="comment">; Show the frame
+</span>(<span class="variable">send</span> <span class="variable">frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+<span class="comment">; Wait a second to let the window get ready
+</span><span class="comment">;(sleep/yield 1)
+</span>(<span class="keyword">define</span> <span class="variable">new-my-widget</span> (<span class="variable">new</span> <span class="variable">scatter-chart%</span> (<span class="variable">parent</span> <span class="variable">frame</span>) ))  <span class="comment">; instantiate the widget in the frame
+</span>(<span class="keyword">define</span> <span class="variable">new-his-widget</span> (<span class="variable">new</span> <span class="variable">scatter-chart%</span> (<span class="variable">parent</span> <span class="variable">frame</span>) )) <span class="comment">; make another one
+</span>
+(<span class="variable">send</span> <span class="variable">new-my-widget</span> <span class="variable">draw-chart</span>)
+<span class="comment">; Draw the face
+</span>(<span class="keyword">define</span> (<span class="variable">go</span>)
+  (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">y</span>)
+       (<span class="variable">send</span> <span class="variable">new-my-widget</span> <span class="variable">add-point</span> <span class="variable">y</span>) <span class="comment">; add a point at a time
+</span>         (<span class="variable">sleep/yield</span> <span class="selfeval">0.05</span>)) <span class="comment">; draw it slowly
+</span>       <span class="keyword">'</span>(<span class="selfeval">10</span> <span class="selfeval">30</span> <span class="selfeval">22</span> <span class="selfeval">77</span> <span class="selfeval">78</span> <span class="selfeval">79</span> <span class="selfeval">17</span> <span class="selfeval">65</span> <span class="selfeval">97</span> <span class="selfeval">54</span> <span class="selfeval">55</span> <span class="selfeval">56</span> <span class="selfeval">57</span> <span class="selfeval">91</span> <span class="selfeval">33</span> <span class="selfeval">55</span> <span class="selfeval">95</span> <span class="selfeval">99</span> <span class="selfeval">125</span> <span class="selfeval">155</span> <span class="selfeval">157</span> <span class="selfeval">159</span> <span class="selfeval">188</span> <span class="selfeval">187</span> <span class="selfeval">186</span> <span class="selfeval">191</span>))) <span class="comment">;; list of datapoints
+</span>
+(<span class="variable">go</span>)  <span class="comment">;; !!!
+</span></pre>
+</div>
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 21 Sep 2007
+<p />
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/EwanHiggs">EwanHiggs</a> - 01 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> GUIRecipes </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 030 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

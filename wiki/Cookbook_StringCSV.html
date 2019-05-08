@@ -1,0 +1,63 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Processing_Comma_Separated_Value"> Processing Comma Separated Values </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to work with comma separated value records, such as those exported from popular spreadsheet and database programs.  (n.b. This recipe works for any similarly delimited format).
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+The naive implementation might be something like this:
+<div class="scheme">
+  <pre>(<span class="variable">string-tokenize</span> <span class="variable">csv-string</span> (<span class="variable">char-set-complement</span> (<span class="variable">char-set</span> <span class="selfeval">#\,</span>)))
+</pre>
+</div>
+The shortcomings show up pretty quickly.  For starters, CSV format encloses fields in quotes, so fields can contain commas.  On top of that, quoted fields can contain quotes, escaped with a backslash (#\\).  Let's imagine a CSV format for books, where the format is author,title,ISBN,publisher:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">csv</span> <span class="selfeval">"David Halberstam, \"War in a Time of Peace: Bush, Clinton, and the Generals\", B0000C37EA, Scribner"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">string-tokenize</span> <span class="variable">csv</span> (<span class="variable">char-set-complement</span> (<span class="variable">char-set</span> <span class="selfeval">#\,</span>)))
+(<span class="selfeval">"David Halberstam"</span> <span class="selfeval">" \"War in a Time of Peace: Bush"</span> <span class="selfeval">" Clinton"</span> <span class="selfeval">" and the Generals\""</span> <span class="selfeval">" B0000C37EA"</span> <span class="selfeval">" Scribner"</span>)
+</pre>
+</div>
+Clearly, the easy solution won't work for the general case.  Essentially, we need to do state machine processing for this.  As we traverse the string, we'll encounter the following states: <code>in-field</code> (when the current position is inside a field), <code>in-quote</code> (when we're inside a quoted string), <code>delim</code> (when we encounter a delimiter), and <code>escape-char</code> (when we encounter a backslash).
+<p />
+<p />
+<p />
+A couple proposed solutions:
+<a href="http://mail.gnu.org/archive/html/guile-user/2003-10/msg00001.html" target="_top">http://mail.gnu.org/archive/html/guile-user/2003-10/msg00001.html</a>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 20 Apr 2004
+<p />
+I just released a portable library of CSV utilities.  Will write up
+a cookbook recipe or two (maybe a separate recipe for "Converting CSV to XML") soon.  In the meantime, please give it a try with your CSV files and let me know how well it works.  <a href="http://www.neilvandyke.org/csv-scm/" target="_top">http://www.neilvandyke.org/csv-scm/</a>
+<p />
+-- <a href="/Main/NeilVanDyke">NeilVanDyke</a> - 31 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 220 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

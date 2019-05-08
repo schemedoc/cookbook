@@ -1,0 +1,172 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="How_To_Run_SICP_Programs_in_DrSc"> </a> How To Run SICP Programs in <a href="/Cookbook/DrScheme">DrScheme</a> </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Getting a program from SICP to run in <a href="/Cookbook/DrScheme">DrScheme</a>.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<h4>
+  <a name="Choose_the_Proper_Language"> Choose the Proper Language </a>
+</h4>
+<p />
+<ul>
+<li> In the "Language" menu choose "Choose Language".
+</li>
+<li> Click the arrow at PLT and then choose "Pretty Big".
+</li>
+</ul>
+<p />
+<h4>
+  <a name="Streams"> Streams </a>
+</h4>
+<p />
+<span style="background : #FFFFCE;">
+  <font color="#0000FF">SICP</font>
+</span><a href="/edit/Cookbook/SICP?topicparent=Cookbook.MiscSICP">?</a> uses a primitive named <code>cons-stream</code>. Paste
+the following at the top of the definition window to
+make this primitive available.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"defmacro.ss"</span>))
+<span class="comment">; cons-stream : obj stream -&gt;  stream
+</span><span class="comment">;   construct a stream whose first element is obj and whose tail is stream
+</span><span class="comment">;   [cons-stream is a special form]
+</span>(<span class="keyword">define-macro</span> <span class="variable">cons-stream</span>
+  (<span class="keyword">lambda</span> (<span class="builtin">car</span> <span class="builtin">cdr</span>)
+    <span class="keyword">`</span>(<span class="builtin">cons</span> <span class="keyword">,</span><span class="builtin">car</span> (<span class="keyword">delay</span> <span class="keyword">,</span><span class="builtin">cdr</span>))))
+</pre>
+</div>
+<p />
+For other SICP stream functions, see:
+<a href="http://list.cs.brown.edu/pipermail/plt-scheme/2003-March/001945.html" target="_top">http://list.cs.brown.edu/pipermail/plt-scheme/2003-March/001945.html</a>.
+<p />
+<h4>
+  <a name="Non_deterministic_programming"> Non-deterministic programming </a>
+</h4>
+<p />
+Chapter 4.3 on non-deterministic programming uses the special form <code>amb</code>.
+Insert the following at the top of the definition window.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"defmacro.ss"</span>))
+(<span class="keyword">define</span> <span class="variable">amb-fail</span> <span class="keyword">'</span><span class="builtin">*</span>)
+(<span class="keyword">define</span> <span class="variable">initialize-amb-fail</span>
+  (<span class="keyword">lambda</span> ()
+    (<span class="keyword">set!</span> <span class="variable">amb-fail</span>
+      (<span class="keyword">lambda</span> ()
+        (<span class="variable">error</span> <span class="selfeval">"amb tree exhausted"</span>)))))
+(<span class="variable">initialize-amb-fail</span>)
+(<span class="keyword">define-macro</span> <span class="variable">amb</span>
+  (<span class="keyword">lambda</span> <span class="variable">alts...</span>
+    <span class="keyword">`</span>(<span class="keyword">let</span> ((<span class="variable">+prev-amb-fail</span> <span class="variable">amb-fail</span>))
+       (<span class="builtin">call/cc</span>
+        (<span class="keyword">lambda</span> (<span class="variable">+sk</span>)
+          <span class="keyword">,@</span>(<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">alt</span>)
+                   <span class="keyword">`</span>(<span class="builtin">call/cc</span>
+                     (<span class="keyword">lambda</span> (<span class="variable">+fk</span>)
+                       (<span class="keyword">set!</span> <span class="variable">amb-fail</span>
+                         (<span class="keyword">lambda</span> ()
+                           (<span class="keyword">set!</span> <span class="variable">amb-fail</span> <span class="variable">+prev-amb-fail</span>)
+                           (<span class="variable">+fk</span> <span class="keyword">'</span><span class="variable">fail</span>)))
+                       (<span class="variable">+sk</span> <span class="keyword">,</span><span class="variable">alt</span>))))
+                 <span class="variable">alts...</span>)
+          (<span class="variable">+prev-amb-fail</span>))))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="The_Picture_Language"> The Picture Language </a>
+</h3>
+<p />
+The picture language is available as a <span style="background : #FFFFCE;">
+  <font color="#0000FF">.plt</font>
+</span><a href="/edit/Cookbook/Plt?topicparent=Cookbook.MiscSICP">?</a>-file from Michael Sperber.
+<p />
+<//www-pu.informatik.uni-tuebingen.de/users/sperber/software/picture.plt>
+<p />
+For instruction on installing it, see ee <a href="/Cookbook/HowToInstallPLTFile">HowToInstallPLTFile</a>.
+<p />
+To use it, read on.
+<p />
+<pre>
+07:58:14 &lt;soegaard&gt; You were asking about the picture language in SICP, right?
+07:58:38 &lt;jim&gt; soegaard: yes
+07:58:58 &lt;soegaard&gt; Mike Sperber implemented it for PLT Scheme.
+07:59:18 &lt;jim&gt; cool :)
+07:59:45 &lt;soegaard&gt; In DrScheme go to the file menu, and choose "Install .plt file"
+08:00:07 &lt;soegaard&gt; Then enter
+08:00:08 &lt;soegaard&gt; http://www-pu.informatik.uni-tuebingen.de/users/sperber/software/picture.plt
+08:06:33 &lt;soegaard&gt; jim: I am looking for documentation to start it, it must be there somewhere
+08:13:45 &lt;soegaard&gt; ah!
+08:14:22 &lt;soegaard&gt; jim: In the "Language" menu choose "Add TeachPack".
+08:15:24 &lt;soegaard&gt; jim: Then choose the file picture.ss hidden in the TeachPack directory (on my machine: C:/documents
+and settings/js/Application Date/PLT 208.1/teachpack/picture.ss
+08:15:38 &lt;soegaard&gt; jim: Press "Go"
+08:15:56 &lt;soegaard&gt; jim: Then try: (paint (corner-split einstein 1))
+08:16:30 &lt;jim&gt; soegaard: trying to find the teachpack (I installed the file as root in linux)
+08:31:19 &lt;soegaard&gt; jim: And (paint (corner-split einstein 1)) works?
+08:32:51 &lt;jim&gt; we're getting there. it knows paint but not corner-split
+08:33:19 &lt;jim&gt; hah! it works
+08:33:28 &lt;soegaard&gt; jim: ah! I loaded one of the example files first
+08:33:32 &lt;jim&gt; (paint einstein)
+08:34:08 &lt;soegaard&gt; jim: I loaded example.scm first and corner-split is defined there.
+08:34:50 &lt;jim&gt; are there stick figures?
+08:36:01 &lt;soegaard&gt; jim: Open the file collects/painters.ss and see all the provided procedures.
+08:36:14 &lt;jim&gt; ahh
+08:36:21 &lt;soegaard&gt; jim: There is a segments-&gt;painter which can be used to make stick figures.
+08:37:45 &lt;jim&gt; soegaard: ok, good enough... now how can I make the imagelarger?
+08:38:00 &lt;soegaard&gt; use paint-hi-res
+08:39:41 &lt;jim&gt; soegaard: -very- good :) thank you very much :)
+08:39:51 &lt;soegaard&gt; no problem
+</pre>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The <code>amb</code> -macro was taken from "Teach Yourself Scheme in a Fixnum of Days"
+by Dorai Sitaram. This book is integrated in <a href="/Cookbook/DrScheme">DrScheme</a> - to read it open the
+<a href="/Cookbook/HelpDesk">HelpDesk</a>, click at manuals, then click at its title.
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 16 Jan 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Other </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ <///www-pu.informatik.uni-tuebingen.de/users/sperber/software/picture.plt></div>
+</div>

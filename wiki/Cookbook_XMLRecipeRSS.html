@@ -1,0 +1,109 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Reading_and_Writing_RSS_Files"> </a> Reading and Writing RSS Files </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to create an RSS (Rich Site Summary) file, or read one produced by another application.  Handling RSS can be a difficult problem because of multiple incompatible specs calling themselves RSS, the generall looseness of the format, and issues with escaping and encoding content properly.  RSS is a case study in how difficult it is to produce valid XML, partly because RSS traditionally includes fragments of HTML, which is marked up text, but not necessarily valid XML.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Let's stipulate that regardless of the RSS format, there's only a few things we're actually interested in: we want to come up with a list of items, where each item contains a date, a URL for the item, a description, and optionally, a title.  We'll use <a href="http://www.cs.uvm.edu/~dvanhorn/scheme/word-of-the-day.ss" target="_top">David van Horn's script for scraping the word-a-day RSS Feed</a> from wordsmith.org.  David is using the <code>xml</code> library that ships with PLT, and it seems to work well enough, so we'll go with that.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"xml.ss"</span> <span class="selfeval">"xml"</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"match.ss"</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"url.ss"</span> <span class="selfeval">"net"</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"1.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="comment">; url is a url as defined by url.ss
+</span>(<span class="keyword">define</span> (<span class="variable">get-rss</span> <span class="variable">url</span>)
+  (<span class="variable">xml-&gt;xexpr</span>
+   ((<span class="variable">eliminate-whitespace</span> <span class="keyword">'</span>(<span class="variable">rss</span> <span class="variable">channel</span> <span class="variable">item</span>) (<span class="keyword">lambda</span> (<span class="variable">x</span>) <span class="variable">x</span>))
+    (<span class="variable">document-element</span> (<span class="variable">call/input-url</span> <span class="variable">url</span> <span class="variable">get-pure-port</span> <span class="variable">read-xml</span>)))))
+</pre>
+</div>
+<p />
+The <code>get-rss</code> function is used to return an S-Expression from a URL, i.e. retrieve some XML from a URL and convert it into an S-Expression.  The <code>eliminate-whitespace</code> function returns a function that will remove strings containing only whitespace from the elements named in the first argument.  This cleans up the S-Expression so the <code>match</code> expression we'll write is easier; we don't need to account for whitespace, which isn't significant to us anyway.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">rss-&gt;item</span> <span class="variable">rss</span>)
+  (<span class="keyword">letrec</span> ((<span class="variable">good-item</span> (<span class="keyword">lambda</span> (<span class="variable">p</span>) (<span class="keyword">and</span> (<span class="builtin">pair?</span> <span class="variable">p</span>) <span class="variable">p</span>))))
+    (<span class="variable">filter</span> <span class="variable">good-item</span>
+            (<span class="variable">match</span> <span class="variable">rss</span>
+              ((<span class="keyword">'</span><span class="variable">rss</span> <span class="variable">_</span>  (<span class="keyword">'</span><span class="variable">channel</span> <span class="variable">_</span> . <span class="variable">items</span>))
+               (<span class="builtin">map</span>
+                (<span class="variable">match-lambda</span>
+                    ((<span class="keyword">'</span><span class="variable">item</span> <span class="variable">_</span>
+                       (<span class="keyword">'</span><span class="variable">title</span> <span class="variable">_</span> <span class="variable">title</span>)
+                       (<span class="keyword">'</span><span class="variable">link</span> <span class="variable">_</span> <span class="variable">link</span>)
+                       (<span class="keyword">'</span><span class="variable">description</span> <span class="variable">_</span> . <span class="variable">desc</span> ) . <span class="variable">_</span>)
+                     (<span class="builtin">list</span> <span class="variable">link</span> <span class="variable">title</span> <span class="variable">desc</span>))
+                  ((<span class="keyword">'</span><span class="variable">item</span>
+                     (<span class="keyword">'</span><span class="variable">title</span> <span class="variable">_</span> <span class="variable">title</span>)
+                     (<span class="keyword">'</span><span class="variable">link</span> <span class="variable">_</span> <span class="variable">link</span>)
+                     (<span class="variable">_</span> . <span class="variable">_</span>)
+                     (<span class="keyword">'</span><span class="variable">body</span> <span class="variable">_</span> . <span class="variable">body</span>))
+                   (<span class="builtin">list</span> <span class="variable">link</span> <span class="variable">title</span> <span class="variable">body</span>))
+                  (<span class="variable">_</span> <span class="keyword">'</span>()))
+                <span class="variable">items</span>))
+              ((<span class="keyword">'</span><span class="variable">rdf:RDF</span> (<span class="variable">_</span> ...) <span class="variable">_</span> (<span class="keyword">'</span><span class="variable">channel</span> . <span class="variable">_</span>). <span class="variable">items</span>)
+               (<span class="builtin">map</span>
+                (<span class="variable">match-lambda</span>
+                    ((<span class="keyword">'</span><span class="variable">item</span> <span class="variable">_</span>
+                       (<span class="keyword">'</span><span class="variable">title</span> <span class="variable">_</span> <span class="variable">title</span>)
+                       (<span class="keyword">'</span><span class="variable">link</span> <span class="variable">_</span> <span class="variable">link</span>)
+                       (<span class="keyword">'</span><span class="variable">description</span> <span class="variable">_</span> . <span class="variable">desc</span> ) . <span class="variable">_</span>)
+                     (<span class="builtin">list</span> <span class="variable">link</span> <span class="variable">title</span> <span class="variable">desc</span>))
+                  (<span class="variable">_</span> <span class="keyword">'</span>()))
+                <span class="variable">items</span>))
+              ))))
+</pre>
+</div>
+<p />
+This expanded version of David's match expression has been wrapped in a function.  <code>rss-&gt;item</code> will handle RSS 2.0 and 0.91 in the first case and RSS 1.0 (RDF) in the second case.  The matching is done in a nested manner, the initial <code>match</code> finds the items in the &lt;channel&gt; element, and then uses <code>match-lambda</code> to filter the child items found by the first match.  The output of the match is a list of the link, title, and description elements; however, the match can also return an empty list, so we use <a href="/Cookbook/SRFI">SRFI</a>-1's <code>filter</code> on the output of the whole thing to identify non-empty lists.  Our <code>good-item</code> function returns either #f or the match.
+<p />
+This match is a bit fragile, since RSS doesn't dictate in what order child elements can appear under &lt;item&gt;.  However, in practice it works well enough.
+<p />
+<h3>
+  <a name="Resources"> Resources </a>
+</h3>
+<a href="http://www.feedvalidator.org" target="_top">Feed Validaton</a>
+<p />
+<a href="http://blogs.law.harvard.edu/tech/rss" target="_top">RSS 2.0 Specification</a>
+<p />
+<a href="http://purl.org/rss/1.0/" target="_top">RSS 1.0 Specification</a>
+<p />
+<a href="http://www.xml.com/lpt/a/2003/01/22/dive-into-xml.html" target="_top">Parsing RSS At All Costs</a>
+<p />
+<a href="http://www.neilvandyke.org/htmlprag/" target="_top">HtmlPrag</a>
+<p />
+<p />
+-- <a href="/Main/HectorEGomezMorales">HectorEGomezMorales</a> - 05 May 2004
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 06 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/XmlRecipes">XmlRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 090 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

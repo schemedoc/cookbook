@@ -1,0 +1,152 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Functional_Heap"> Functional Heap </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+A heap is data structure that in its basic form supports the operations <code>insert</code> and <code>delete-min</code>. More advanced heaps also
+support <code>merge</code>.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+One solution is to use pairing heaps. Pairing heaps supports
+<code>make-empty</code>, <code>empty?</code>, <code>find-min</code>, <code>insert</code>, <code>merge</code> and <code>delete-min</code>.
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">heap</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">provide</span> <span class="variable">make-empty</span> <span class="variable">empty?</span> <span class="variable">find-min</span> <span class="variable">insert</span> <span class="variable">merge</span> <span class="variable">delete-min</span>)
+  <span class="comment">; for first, second and rest
+</span>  (<span class="keyword">require</span> (<span class="variable">all-except</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span> <span class="selfeval">"mzlib"</span>) <span class="variable">empty?</span>))
+  <span class="comment">; A PAIRING HEAP is either
+</span>  <span class="comment">;    (make-heap &lt;= '() )
+</span>  <span class="comment">; or
+</span>  <span class="comment">;    (make-heap &lt;= (make-node elm heaps))
+</span>  <span class="comment">; where &lt;= is an order on the elements, elm is an element,
+</span>  <span class="comment">; and heaps is a list of heap-ordered trees.
+</span>
+  (<span class="keyword">define-struct</span> <span class="variable">heap</span> (<span class="builtin">&lt;=</span> <span class="variable">node-or-empty</span>) (<span class="variable">make-inspector</span>))
+  (<span class="keyword">define-struct</span> <span class="variable">node</span> (<span class="variable">elm</span> <span class="variable">heaps</span>) (<span class="variable">make-inspector</span>))
+  <span class="comment">; heaps : heap -&gt; (list heap)
+</span>  <span class="comment">;  given a non-empty heap H return the list of subheaps
+</span>  <span class="comment">;  (for internal use)
+</span>  (<span class="keyword">define</span> (<span class="variable">heaps</span> <span class="variable">H</span>)
+    (<span class="variable">node-heaps</span> (<span class="variable">heap-node-or-empty</span> <span class="variable">H</span>)))
+  <span class="comment">; make-empty : (element element -&gt; boolean) -&gt; heap
+</span>  <span class="comment">;  return an empty heap with &lt;= as element order
+</span>  (<span class="keyword">define</span> (<span class="variable">make-empty</span> <span class="builtin">&lt;=</span>)
+    (<span class="variable">make-heap</span> <span class="builtin">&lt;=</span> <span class="keyword">'</span>()))
+  <span class="comment">; empty? : heap -&gt; boolean
+</span>  <span class="comment">;  is the heap H empty?
+</span>  (<span class="keyword">define</span> (<span class="variable">empty?</span> <span class="variable">H</span>)
+    (<span class="keyword">and</span> (<span class="variable">heap?</span> <span class="variable">H</span>)
+         (<span class="builtin">null?</span> (<span class="variable">heap-node-or-empty</span> <span class="variable">H</span>))))
+  <span class="comment">; find-min : heap -&gt; element
+</span>  <span class="comment">;  return the smallest element of the heap H with relation to
+</span>  <span class="comment">;  the heap order &lt;=
+</span>  (<span class="keyword">define</span> (<span class="variable">find-min</span> <span class="variable">H</span>)
+    (<span class="keyword">when</span> (<span class="variable">empty?</span> <span class="variable">H</span>)
+      (<span class="variable">error</span> <span class="selfeval">"find-min: An empty heap has no root; given "</span> <span class="variable">H</span>))
+    (<span class="variable">node-elm</span> (<span class="variable">heap-node-or-empty</span> <span class="variable">H</span>)))
+  <span class="comment">; merge : heap heap -&gt; heap
+</span>  (<span class="keyword">define</span> (<span class="variable">merge</span> <span class="variable">H1</span> <span class="variable">H2</span>)
+    <span class="comment">; return a heap holding the elements of both H1 and H2
+</span>    (<span class="keyword">let</span> ([<span class="builtin">&lt;=</span> (<span class="variable">heap-&lt;=</span> <span class="variable">h1</span>)])
+      (<span class="keyword">cond</span>
+        [(<span class="variable">empty?</span> <span class="variable">H1</span>)  <span class="variable">H2</span>]
+        [(<span class="variable">empty?</span> <span class="variable">H2</span>)  <span class="variable">H1</span>]
+        [<span class="keyword">else</span>         (<span class="keyword">let</span> ([<span class="variable">x</span> (<span class="variable">find-min</span> <span class="variable">H1</span>)]
+                            [<span class="variable">y</span> (<span class="variable">find-min</span> <span class="variable">H2</span>)])
+                        (<span class="keyword">if</span> (<span class="builtin">&lt;=</span> <span class="variable">x</span> <span class="variable">y</span>)
+                            (<span class="variable">make-heap</span> <span class="builtin">&lt;=</span> (<span class="variable">make-node</span> <span class="variable">x</span> (<span class="builtin">cons</span> <span class="variable">H2</span> (<span class="variable">heaps</span> <span class="variable">H1</span>))))
+                            (<span class="variable">make-heap</span> <span class="builtin">&lt;=</span> (<span class="variable">make-node</span> <span class="variable">y</span> (<span class="builtin">cons</span> <span class="variable">H1</span> (<span class="variable">heaps</span> <span class="variable">H2</span>))))))])))
+  <span class="comment">; insert : element heap -&gt; heap
+</span>  <span class="comment">;  return a new heap holding the elements of the heap H and the element x
+</span>  (<span class="keyword">define</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="variable">x</span>)
+    (<span class="variable">merge</span> (<span class="variable">make-heap</span> (<span class="variable">heap-&lt;=</span> <span class="variable">h</span>) (<span class="variable">make-node</span> <span class="variable">x</span> <span class="keyword">'</span>()))
+           <span class="variable">H</span>))
+  <span class="comment">; merge-heap-pairs : (list heap) -&gt; heap
+</span>  <span class="comment">;  return a new heap holding all the elements of the heaps in the list
+</span>  (<span class="keyword">define</span> (<span class="variable">merge-heap-pairs</span> <span class="builtin">&lt;=</span> <span class="variable">hs</span>)
+    (<span class="keyword">cond</span>
+      [(<span class="builtin">null?</span> <span class="variable">hs</span>)        (<span class="variable">make-empty</span> <span class="builtin">&lt;=</span>)]
+      [(<span class="builtin">null?</span> (<span class="variable">rest</span> <span class="variable">hs</span>)) (<span class="variable">first</span> <span class="variable">hs</span>)]
+      [<span class="keyword">else</span>              (<span class="variable">merge</span> (<span class="variable">merge</span> (<span class="variable">first</span> <span class="variable">hs</span>) (<span class="variable">second</span> <span class="variable">hs</span>))
+                                (<span class="variable">merge-heap-pairs</span> <span class="builtin">&lt;=</span> (<span class="variable">rest</span> (<span class="variable">rest</span> <span class="variable">hs</span>))))]))
+  <span class="comment">; delete-min : heap -&gt; heap
+</span>  <span class="comment">;  return a new heap holding all the elements of H but the smallest
+</span>  (<span class="keyword">define</span> (<span class="variable">delete-min</span> <span class="variable">H</span>)
+    (<span class="variable">make-heap</span> (<span class="variable">heap-&lt;=</span> <span class="variable">H</span>)
+               (<span class="variable">heap-node-or-empty</span> (<span class="variable">merge-heap-pairs</span> (<span class="variable">heap-&lt;=</span> <span class="variable">H</span>) (<span class="variable">heaps</span> <span class="variable">H</span>))))))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> <span class="variable">heap</span>)
+(<span class="variable">print-struct</span> <span class="selfeval">#t</span>)
+(<span class="keyword">define</span> <span class="variable">H</span> (<span class="variable">make-empty</span> <span class="builtin">string&lt;=?</span>))
+(<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>)
+(<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>)
+(<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>)
+(<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>) <span class="selfeval">"qux"</span>)
+(<span class="variable">find-min</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>) <span class="selfeval">"qux"</span>))
+(<span class="variable">find-min</span> (<span class="variable">delete-min</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>) <span class="selfeval">"qux"</span>)))
+(<span class="variable">find-min</span> (<span class="variable">delete-min</span> (<span class="variable">delete-min</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>) <span class="selfeval">"qux"</span>))))
+(<span class="variable">find-min</span> (<span class="variable">delete-min</span> (<span class="variable">delete-min</span> (<span class="variable">delete-min</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> (<span class="variable">insert</span> <span class="variable">H</span> <span class="selfeval">"foo"</span>) <span class="selfeval">"bar"</span>) <span class="selfeval">"baz"</span>) <span class="selfeval">"qux"</span>)))))
+(<span class="keyword">define</span> (<span class="variable">heap-sort</span> <span class="builtin">&lt;=</span> <span class="variable">xs</span>)
+  (<span class="keyword">do</span> ([<span class="variable">H</span>  (<span class="variable">make-empty</span> <span class="builtin">&lt;=</span>) (<span class="variable">insert</span> <span class="variable">H</span> (<span class="builtin">car</span> <span class="variable">xs</span>))]
+       [<span class="variable">xs</span> <span class="variable">xs</span>              (<span class="builtin">cdr</span> <span class="variable">xs</span>)])
+    [(<span class="builtin">null?</span> <span class="variable">xs</span>)
+     (<span class="keyword">do</span> ([<span class="variable">H</span>  <span class="variable">H</span>   (<span class="variable">delete-min</span> <span class="variable">H</span>)]
+          [<span class="variable">xs</span> <span class="keyword">'</span>() (<span class="builtin">cons</span> (<span class="variable">find-min</span> <span class="variable">H</span>) <span class="variable">xs</span>)])
+       [(<span class="variable">empty?</span> <span class="variable">H</span>) (<span class="builtin">reverse</span> <span class="variable">xs</span>)])]))
+(<span class="variable">heap-sort</span> <span class="builtin">string&lt;=?</span> (<span class="builtin">list</span> <span class="selfeval">"foo"</span> <span class="selfeval">"bar"</span> <span class="selfeval">"baz"</span> <span class="selfeval">"qux"</span>))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+For applications that do not use merge, pairing heaps are almost as fast as splay trees. For applications that use merge, pairing heaps are much faster.
+<p />
+The operations have the following running times:
+<p />
+<pre>
+ Time               worst case   amortized
+  make-empty         O(1)         O(1)
+  empty?             O(1)         O(1)
+  find-min           O(1)         O(1)
+  insert             O(1)         O(log n) \ conjectured better: O(1)
+  merge              O(1)         O(log n) /
+  delete-min         O(n)         O(log n)
+</pre>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 17 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DataStructureRecipes">DataStructureRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

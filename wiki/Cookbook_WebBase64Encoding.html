@@ -1,0 +1,81 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Encoding_Data_Using_Base_64"> Encoding Data Using Base 64 </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to encode a string using the Base64 encoding, for instance to send a username and password using HTTP Basic Authentication
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The following routine encodes a string into it's Base64 equivalent using the default string to byte conversion.  Note that lines are not broken at 76 characters.  This is the correct rule for most web applications.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"base64.ss"</span> <span class="selfeval">"net"</span>))
+<span class="comment">;; base64-encode : string -&gt; string
+</span>(<span class="keyword">define</span> (<span class="variable">base64-encode</span> <span class="builtin">string</span>)
+  (<span class="keyword">let</span> ((<span class="variable">output</span> (<span class="variable">open-output-string</span>)))
+    (<span class="variable">base64-encode-stream</span>
+     (<span class="variable">open-input-string</span> <span class="builtin">string</span>)
+     <span class="variable">output</span>
+     <span class="selfeval">#</span><span class="selfeval">""</span>)
+    (<span class="variable">get-output-string</span> <span class="variable">output</span>)))
+</pre>
+</div>
+<p />
+An example usage:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">base64-encode</span> <span class="selfeval">"Scheme Rules"</span>)
+<span class="selfeval">"C2nozw1lihj1bgvz"</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The <code>net</code> collection provides routines to perform Base64 encoding.  They are oriented towards encoding attachments for inclusion in email.  In this situation line length is limited to 76 characters.  Most other applications, for example HTTP Basic Authentication, don't have this limitation.
+<p />
+Base64 is only defined for 8-bit values, so some conversion must be used to turn string characters to bytes.  The implementation above uses the UTF-8 encoding, which is the default for string ports.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 17 Dec 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/WebRecipes">WebRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,56 @@
+<div id="contentbox">
+ <div class="widget">
+  ; adapted from url.ss in net collection, but linked with ssl-tcp-unit
+(module ssl-url mzscheme
+  (require (lib "unit.ss")    ; for PLT versions earlier than v371, use "unitsig.ss"
+           (lib "contract.ss")
+           (lib "url-structs.ss" "net")
+           (lib "url-sig.ss" "net")
+           (lib "url-unit.ss" "net")
+           (lib "tcp-sig.ss" "net")
+           (lib "ssl-tcp-unit.ss" "net"))
+<p />
+  (define-compound-unit url+tcp@
+    (import)
+    (export URL)
+    (link [((TCP : tcp^)) (make-ssl-tcp@ #f #f #f #f #f #f #f)]
+          [((URL : url^)) url@ TCP]))
+<p />
+  (define-values/invoke-unit/infer
+    url+tcp@)
+<p />
+  (provide
+   (struct url (scheme
+                user
+                host
+                port
+                path
+                query
+                fragment))
+   (struct path/param (path param)))
+<p />
+  (provide/contract
+   (string-&gt;url ((union bytes? string?) . -&gt; . url?))
+   (url-&gt;string (url? . -&gt; . string?))
+<p />
+   (get-pure-port (opt-&gt; (url?) ((listof string?)) input-port?))
+   (get-impure-port (opt-&gt; (url?) ((listof string?)) input-port?))
+   (post-pure-port (opt-&gt; (url? (union false/c bytes?)) ((listof string?)) input-port?))
+   (post-impure-port (opt-&gt; (url? bytes?) ((listof string?)) input-port?))
+   (display-pure-port (input-port? . -&gt; . void?))
+   (purify-port (input-port? . -&gt; . string?))
+   (netscape/string-&gt;url (string? . -&gt; . url?))
+   (call/input-url (opt-&gt;* (url?
+             (opt-&gt; (url?) ((listof string?)) input-port?)
+             (input-port? . -&gt; . any))
+            ((listof string?))
+            any))
+   (combine-url/relative (url? string? . -&gt; . url?))
+   (url-exception? (any/c . -&gt; . boolean?))
+   (current-proxy-servers
+    (case-&gt; ((union false/c (listof (list/c string? string? number?))) . -&gt; . void?)
+            (-&gt; (union false/c (listof (list/c string? string? number?))))))))
+<p />
+<p />
+ </div>
+</div>

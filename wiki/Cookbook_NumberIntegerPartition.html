@@ -1,0 +1,100 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Generating_the_Partitions_of_an_"> Generating the Partitions of an Natural Number </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Generate the partitions of a natural number (a non-negative integer).
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+This Scheme code recursively generates all the partitions of its input:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"1.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="comment">;; Partition : Nat -&gt; (Listof (Listof Number))
+</span>(<span class="keyword">define</span> (<span class="variable">partitions</span> <span class="variable">n</span>)
+   (<span class="keyword">cond</span> [(<span class="builtin">=</span> <span class="variable">n</span> <span class="selfeval">0</span>) (<span class="builtin">list</span> <span class="keyword">'</span>())]
+         [<span class="keyword">else</span> (<span class="variable">fold-right</span> <span class="builtin">append</span> ()
+                           (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+                                  (<span class="keyword">if</span> (<span class="keyword">and</span> (<span class="builtin">pair?</span> <span class="variable">p</span>)
+                                           (<span class="keyword">or</span> (<span class="builtin">null?</span> (<span class="builtin">cdr</span> <span class="variable">p</span>)) (<span class="builtin">&lt;</span> (<span class="builtin">car</span> <span class="variable">p</span>) (<span class="builtin">cadr</span> <span class="variable">p</span>))))
+                                      (<span class="builtin">list</span> (<span class="builtin">cons</span> <span class="selfeval">1</span> <span class="variable">p</span>) (<span class="builtin">cons</span> (<span class="builtin">+</span> <span class="selfeval">1</span> (<span class="builtin">car</span> <span class="variable">p</span>)) (<span class="builtin">cdr</span> <span class="variable">p</span>)))
+                                      (<span class="builtin">list</span> (<span class="builtin">cons</span> <span class="selfeval">1</span> <span class="variable">p</span>))))
+                                (<span class="variable">partitions</span> (<span class="builtin">-</span> <span class="variable">n</span> <span class="selfeval">1</span>))))]))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">0</span>)
+(())
+<span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">1</span>)
+((<span class="selfeval">1</span>))
+<span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">2</span>)
+((<span class="selfeval">1</span> <span class="selfeval">1</span>) (<span class="selfeval">2</span>))
+<span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">3</span>)
+((<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span>) (<span class="selfeval">1</span> <span class="selfeval">2</span>) (<span class="selfeval">3</span>))
+<span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">4</span>)
+((<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span>) (<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">2</span>) (<span class="selfeval">2</span> <span class="selfeval">2</span>) (<span class="selfeval">1</span> <span class="selfeval">3</span>) (<span class="selfeval">4</span>))
+<span class="builtin">&gt;</span> (<span class="variable">partitions</span> <span class="selfeval">5</span>)
+((<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span>) (<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">2</span>) (<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">2</span>) (<span class="selfeval">1</span> <span class="selfeval">1</span> <span class="selfeval">3</span>) (<span class="selfeval">2</span> <span class="selfeval">3</span>) (<span class="selfeval">1</span> <span class="selfeval">4</span>) (<span class="selfeval">5</span>))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+This code above is a simple modification of that posted at <a href="http://list.cs.brown.edu/pipermail/plt-scheme/2004-December/007498.html" target="_top">http://list.cs.brown.edu/pipermail/plt-scheme/2004-December/007498.html</a> by <span style="background : #FFFFCE;">
+  <font color="#0000FF">MatthiasFelleisen</font>
+</span><a href="/edit/Cookbook/MatthiasFelleisen?topicparent=Cookbook.NumberIntegerPartition">?</a>.  The entire thread is worth reading for a discussion of alternative implementations.
+<p />
+Parititions are discussed on many web pages.  For instance:
+<p />
+<ul>
+<li> <a href="http://planetmath.org/encyclopedia/IntegerPartition.html" target="_top">http://planetmath.org/encyclopedia/IntegerPartition.html</a>
+</li>
+<li> <a href="http://mathworld.wolfram.com/Partition.html" target="_top">http://mathworld.wolfram.com/Partition.html</a>
+</li>
+</ul>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 20 Dec 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

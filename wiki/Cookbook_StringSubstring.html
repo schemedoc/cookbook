@@ -1,0 +1,53 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Accessing_Substrings"> Accessing Substrings </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to extract part of a string.
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+R5RS <code>substring</code> is the most general solution.  <code>substring</code> takes a string, a start index, and (optionally) an end index.  For example:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">substring</span> <span class="selfeval">"Hello, World!"</span> <span class="selfeval">7</span>)
+<span class="selfeval">"World!"</span>
+<span class="builtin">&gt;</span> (<span class="builtin">substring</span> <span class="selfeval">"Hello, World!"</span> <span class="selfeval">0</span> <span class="selfeval">5</span>)
+<span class="selfeval">"Hello"</span>
+<span class="builtin">&gt;</span> (<span class="builtin">substring</span> <span class="selfeval">"Hello, World!"</span> <span class="selfeval">7</span> <span class="selfeval">12</span>)
+<span class="selfeval">"World"</span>
+</pre>
+</div>
+<code>substring</code> always allocates a new string.
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+If you have <a href="/Cookbook/SRFI">SRFI</a>-13, you may find a more suitable function for getting a substring.  First of all, <code>substring/shared</code> may return a string that shares storage with the original argument.  <a href="/Cookbook/SRFI">SRFI</a>-13 also defines a <code>string-copy</code> that takes start and end arguments, effectively making it a version of <code>substring/shared</code> that always allocates a new string.
+Finally, if you need to take a substring from the start or end of a string, <code>string-take</code> and <code>string-drop</code> allow you to make a substring by taking or omitting characters from the start of a string.  <code>string-take-right</code> and <code>string-drop-right</code> do the same from the end of a string.
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 22 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 030 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

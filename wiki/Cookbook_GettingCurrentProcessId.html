@@ -1,0 +1,65 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Getting_the_current_process_id_P"> </a> Getting the current process id (PID) using "foreign.ss" </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+We may want to get the current process id (PID) of the current running process.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+We can use the foreign function library to access C's getpid() function:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">get-process-id</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">provide</span> <span class="variable">get-process-id</span>)
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"foreign.ss"</span>))
+  (<span class="variable">unsafe!</span>)
+  (<span class="keyword">define</span> <span class="variable">get-process-id</span> (<span class="variable">get-ffi-obj</span> <span class="keyword">'</span><span class="variable">getpid</span> (<span class="variable">ffi-lib</span> <span class="selfeval">#f</span>) (<span class="variable">_fun</span> <span class="variable">-&gt;</span> <span class="variable">_int</span>))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Another approach might be to write an extension (<a href="http://list.cs.brown.edu/pipermail/plt-scheme/2004-February/004499.html" target="_top">http://list.cs.brown.edu/pipermail/plt-scheme/2004-February/004499.html</a>), or to use the c-ffi (<a href="http://list.cs.brown.edu/pipermail/plt-scheme/2004-February/004510.html" target="_top">http://list.cs.brown.edu/pipermail/plt-scheme/2004-February/004510.html</a>).
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 03 May 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ForeignInterfaceChapter">ForeignInterfaceChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

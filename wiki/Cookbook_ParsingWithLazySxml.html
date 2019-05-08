@@ -1,0 +1,176 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Parsing_Large_XML_Files_with_SXM"> </a> Parsing Large XML Files with SXML's lazy:xml-&gt;sxml and lazy:sxpath </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Some XML files are too large to hold in memory all at once without significant overhead, and the traditional solution --- SAX --- is often a bit too low level for writing a simple solution.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The <strong>sxml</strong> <a href="/Cookbook/PLaneT">PLaneT</a> package provides a lazy pull-style parser that we can use to progressively parse through a large XML file.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"sxml.ss"</span> (<span class="selfeval">"lizorkin"</span> <span class="selfeval">"sxml.plt"</span> <span class="selfeval">1</span> <span class="selfeval">4</span>)))
+(<span class="keyword">define</span> <span class="variable">lazy-doc</span>
+  (<span class="builtin">call-with-input-file</span> <span class="selfeval">"some-big-file.xml"</span>
+    (<span class="keyword">lambda</span> (<span class="variable">ip</span>)
+      (<span class="variable">lazy:xml-&gt;sxml</span> <span class="variable">ip</span> <span class="keyword">'</span>()))))
+</pre>
+</div>
+<p />
+At this point, <strong>lazy-doc</strong> is a lazy sxml tree, which we can then query using <strong>lazy:sxpath</strong>.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"sxml.ss"</span> (<span class="selfeval">"lizorkin"</span> <span class="selfeval">"sxml.plt"</span> <span class="selfeval">1</span> <span class="selfeval">4</span>)))
+(<span class="keyword">let*</span> ([<span class="variable">ip</span>
+        (<span class="variable">open-input-string</span> <span class="selfeval">"&lt;html&gt;&lt;p&gt;hello&lt;/p&gt;&lt;p&gt;world&lt;/p&gt;&lt;/html&gt;"</span>)]
+       [<span class="variable">lazy-doc</span> (<span class="variable">lazy:xml-&gt;sxml</span> <span class="variable">ip</span> <span class="keyword">'</span>())])
+  (<span class="builtin">display</span> ((<span class="variable">lazy:sxpath</span> (<span class="builtin">list</span> <span class="selfeval">"html"</span> <span class="selfeval">"p"</span>)) <span class="variable">lazy-doc</span>))
+  (<span class="builtin">newline</span>))
+</pre>
+</div>
+<p />
+When we run this, we see that we get an odd stream:
+<div class="scheme">
+  <pre>((<span class="variable">p</span> <span class="variable">hello</span>) <span class="variable">#&lt;struct:promise&gt;</span>)
+</pre>
+</div>
+and we can <strong>force</strong> the second element to access more results.  This allows us to do parsing in pull-parsing style.
+<p />
+<p />
+As a more realistic example, here is a test module to parse some essential details from the <a href="http://geneontology.org" target="_top">Gene Ontology</a>, a standard hierarchy of terms used in bioinformatics:
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">gene-ontology</span> <span class="variable">mzscheme</span>
+  <span class="comment">;; This code shows how one might parse a large xml file progressively
+</span>  <span class="comment">;; by taking advantage of the lazy parsing in the sxml module.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; Input: an RDF file from the Gene Ontology (http://geneontology.org) that
+</span>  <span class="comment">;; conforms to the DTD found at: http://www.geneontology.org/dtd/go.dtd.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; Output: a sample parsing of all the terms in the RDF that
+</span>  <span class="comment">;; shows accession, name, and definition.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; I believe one can always download the latest copy of the Gene Ontology
+</span>  <span class="comment">;; by grabbing:
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; http://archive.godatabase.org/latest-termdb/go_daily-termdb.rdf-xml.gz
+</span>
+  (<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"sxml.ss"</span> (<span class="selfeval">"lizorkin"</span> <span class="selfeval">"sxml.plt"</span> <span class="selfeval">1</span> <span class="selfeval">4</span>))
+           (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"file.ss"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"pretty.ss"</span>))
+  (<span class="keyword">provide</span> (<span class="variable">all-defined</span>))
+  <span class="comment">;; Our test code will just parse a term and print it out.  We'll call this
+</span>  <span class="comment">;; at the end of our module.
+</span>  (<span class="keyword">define</span> (<span class="variable">test</span>)
+    (<span class="variable">call-with-input-file*</span>
+        (<span class="builtin">vector-ref</span> (<span class="variable">current-command-line-arguments</span>) <span class="selfeval">0</span>)
+      (<span class="keyword">lambda</span> (<span class="variable">ip</span>)
+        (<span class="variable">fold-term-elts</span> (<span class="keyword">lambda</span> (<span class="variable">term-elt</span> <span class="variable">acc</span>)
+                          (<span class="variable">pretty-print</span> (<span class="variable">term-elt-&gt;Term</span> <span class="variable">term-elt</span>))
+                          (<span class="builtin">newline</span>))
+                        (<span class="variable">void</span>)
+                        <span class="variable">ip</span>))))
+  <span class="comment">;; We'll say that a Term is a
+</span>  <span class="comment">;;
+</span>  <span class="comment">;;     (make-Term i n d)
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; where i, n are strings.  d is either a string or void.  This is a
+</span>  <span class="comment">;; simplification, since the real Gene Ontology provides a lot of
+</span>  <span class="comment">;; other interesting attributes (including hierarchical data).
+</span>  (<span class="keyword">define-struct</span> <span class="variable">Term</span> (<span class="variable">id</span> <span class="variable">name</span> <span class="variable">definition</span>) <span class="selfeval">#f</span>)
+  <span class="comment">;; fold-lazy-sxpath-list: (sxml Y -&gt; Y) Y sxpath-sxml-stream -&gt; Y
+</span>  <span class="comment">;; Given the particular kind of lazy-list given by sxml's lazy:sxpath's query,
+</span>  <span class="comment">;; does a fold across its structure.
+</span>  (<span class="keyword">define</span> (<span class="variable">fold-lazy-sxpath-list</span> <span class="variable">f</span> <span class="variable">acc</span> <span class="variable">lazy-list</span>)
+    (<span class="keyword">cond</span> [(<span class="variable">empty?</span> <span class="variable">lazy-list</span>)
+           <span class="variable">acc</span>]
+          [<span class="keyword">else</span>
+           (<span class="variable">fold-lazy-sxpath-list</span> <span class="variable">f</span>
+                                  (<span class="variable">f</span> (<span class="variable">first</span> <span class="variable">lazy-list</span>) <span class="variable">acc</span>)
+                                  (<span class="builtin">force</span> (<span class="variable">second</span> <span class="variable">lazy-list</span>)))]))
+  <span class="comment">;; make-namespaced-tag: string string -&gt; symbol
+</span>  <span class="comment">;; Builds up a namespaced tag from the namespace ns and the suffix.
+</span>  (<span class="keyword">define</span> (<span class="variable">make-namespaced-tag</span> <span class="variable">ns</span> <span class="variable">suffix</span>)
+    (<span class="builtin">string-&gt;symbol</span> (<span class="builtin">string-append</span> <span class="variable">ns</span> <span class="selfeval">":"</span> <span class="variable">suffix</span>)))
+  <span class="comment">;; go-tag: string -&gt; symbol
+</span>  (<span class="keyword">define</span> (<span class="variable">go-tag</span> <span class="variable">suffix</span>)
+    (<span class="variable">make-namespaced-tag</span> <span class="selfeval">"http://www.geneontology.org/dtds/go.dtd#"</span> <span class="variable">suffix</span>))
+  <span class="comment">;; rdf-tag: string -&gt; symbol
+</span>  (<span class="keyword">define</span> (<span class="variable">rdf-tag</span> <span class="variable">suffix</span>)
+    (<span class="variable">make-namespaced-tag</span> <span class="selfeval">"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</span> <span class="variable">suffix</span>))
+  <span class="comment">;; term-elt: sxml-fragment -&gt; Term
+</span>  <span class="comment">;; Given an sxml fragment element elt, extracts a Term.
+</span>  (<span class="keyword">define</span> (<span class="variable">term-elt-&gt;Term</span> <span class="variable">elt</span>)
+    (<span class="keyword">define</span> <span class="variable">name-query</span> (<span class="variable">sxpath</span> (<span class="builtin">list</span> (<span class="variable">go-tag</span> <span class="selfeval">"name"</span>) <span class="selfeval">"text()"</span>)))
+    (<span class="keyword">define</span> <span class="variable">defn-query</span> (<span class="variable">sxpath</span> (<span class="builtin">list</span> (<span class="variable">go-tag</span> <span class="selfeval">"definition"</span>) <span class="selfeval">"text()"</span>)))
+    (<span class="keyword">define</span> <span class="variable">id-query</span> (<span class="variable">sxpath</span> (<span class="builtin">list</span> (<span class="variable">go-tag</span> <span class="selfeval">"accession"</span>) <span class="selfeval">"text()"</span>)))
+    (<span class="keyword">define</span> (<span class="variable">first-or-void</span> <span class="variable">a-list</span>)
+      (<span class="keyword">cond</span>
+        [(<span class="variable">empty?</span> <span class="variable">a-list</span>) (<span class="variable">void</span>)]
+        [<span class="keyword">else</span> (<span class="variable">first</span> <span class="variable">a-list</span>)]))
+    (<span class="variable">make-Term</span> (<span class="variable">first</span> (<span class="variable">id-query</span> <span class="variable">elt</span>))
+               (<span class="variable">first</span> (<span class="variable">name-query</span> <span class="variable">elt</span>))
+               (<span class="variable">first-or-void</span> (<span class="variable">defn-query</span> <span class="variable">elt</span>))))
+  <span class="comment">;; fold-term-elts: (elt Y) Y input-port -&gt; Y
+</span>  <span class="comment">;; Given an input port ip whose contents conform to the gene ontology
+</span>  <span class="comment">;; RDF, folds f across every term element we can find in ip, using acc
+</span>  <span class="comment">;; as the initial accumulator.
+</span>  (<span class="keyword">define</span> (<span class="variable">fold-term-elts</span> <span class="variable">f</span> <span class="variable">acc</span> <span class="variable">ip</span>)
+    (<span class="keyword">define</span> <span class="variable">doc</span> (<span class="variable">lazy:xml-&gt;sxml</span> <span class="variable">ip</span> <span class="keyword">'</span>()))
+    (<span class="keyword">define</span> <span class="variable">query</span> (<span class="variable">lazy:sxpath</span> (<span class="builtin">list</span> (<span class="variable">go-tag</span> <span class="selfeval">"go"</span>)
+                                     (<span class="variable">rdf-tag</span> <span class="selfeval">"RDF"</span>)
+                                     (<span class="variable">go-tag</span> <span class="selfeval">"term"</span>))))
+    (<span class="variable">fold-lazy-sxpath-list</span> <span class="variable">f</span> <span class="variable">acc</span> (<span class="variable">query</span> <span class="variable">doc</span>)))
+  <span class="comment">;; Finally, fire this test code up:
+</span>  (<span class="variable">test</span>))
+</pre>
+</div>
+<p />
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 08 May 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/XmlChapter">XmlChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

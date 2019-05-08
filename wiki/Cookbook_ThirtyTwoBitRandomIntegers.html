@@ -1,0 +1,90 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Generating_simple_32_bit_random_"> Generating simple 32-bit random integers in portable Scheme </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to generate pseudo-random integers in the range [0,2**32].
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The following is a simple, portable (R5RS) generator of pseudo-random integers in Scheme.  Chapter 7 of <a href="http://www.nr.com/" target="_top">Numerical Recipes</a> presents
+it as the "fast" linear congruential pseudo-random number
+generator (`ranqd1').  Please read the description of the
+algorithm and learn about its limitations before using this routine for any
+serious purpose.
+<p />
+Here is the code:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">gen-ranqd1</span> <span class="variable">seed</span>)
+  (<span class="keyword">let</span> ((<span class="variable">random</span> <span class="variable">seed</span>))
+    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">set!</span> <span class="variable">random</span> (<span class="builtin">modulo</span> (<span class="builtin">+</span> (<span class="builtin">*</span> <span class="variable">random</span> <span class="selfeval">1664525</span>) <span class="selfeval">1013904223</span>) <span class="selfeval">#x100000000</span>))
+      <span class="variable">random</span>)))
+</pre>
+</div>
+<p />
+You can use the following to test it with your Scheme implementation:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">let</span> ((<span class="variable">random</span> (<span class="variable">gen-ranqd1</span> <span class="selfeval">0</span>))
+      (<span class="variable">expected-results</span> <span class="keyword">'</span>(<span class="selfeval">#x3c6ef35f</span>
+                          <span class="selfeval">#x47502932</span>
+                          <span class="selfeval">#xd1ccf6e9</span>
+                          <span class="selfeval">#xaaf95334</span>
+                          <span class="selfeval">#x6252e503</span>
+                          <span class="selfeval">#x9f2ec686</span>
+                          <span class="selfeval">#x57fe6c2d</span>
+                          <span class="selfeval">#xa3d95fa8</span>
+                          <span class="selfeval">#x81fdbee7</span>
+                          <span class="selfeval">#x94f0af1a</span>
+                          <span class="selfeval">#xcbf633b1</span>)))
+  (<span class="builtin">for-each</span> (<span class="keyword">lambda</span> (<span class="variable">expected</span>)
+              (<span class="keyword">let</span> ((<span class="variable">rnd</span> (<span class="variable">random</span>)))
+                (<span class="keyword">if</span> (<span class="builtin">not</span> (<span class="builtin">=</span> <span class="variable">rnd</span> <span class="variable">expected</span>))
+                    (<span class="variable">error</span> (<span class="variable">format</span> <span class="selfeval">#f</span> <span class="selfeval">"FAILED: expected ~a, got ~a"</span> <span class="variable">expected</span> <span class="variable">rnd</span>)))))
+            <span class="variable">expected-results</span>))
+</pre>
+</div>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/EmilioLopes">EmilioLopes</a> - 11 Feb 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,74 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Retrieving_an_Element_from_a_Has"> Retrieving an Element from a Hash </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You need to retrieve an item from a Hash.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Just use <code>hash-table-get</code>.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">hash-table-get-example</span>)
+  (<span class="keyword">let</span> ((<span class="variable">example-hash-table</span> (<span class="variable">make-hash-table</span> <span class="keyword">'</span><span class="variable">equal</span>)))
+    (<span class="variable">hash-table-put!</span> <span class="variable">example-hash-table</span> <span class="selfeval">"key1"</span> <span class="selfeval">"value1"</span>)
+    (<span class="variable">hash-table-put!</span> <span class="variable">example-hash-table</span> <span class="selfeval">"key2"</span> <span class="selfeval">"value2"</span>)
+    (<span class="variable">hash-table-put!</span> <span class="variable">example-hash-table</span> <span class="selfeval">"key3"</span> <span class="selfeval">"value3"</span>)
+    (<span class="variable">hash-table-get</span> <span class="variable">example-hash-table</span> <span class="selfeval">"key2"</span>)))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">hash-table-get-example</span>)
+<span class="selfeval">"value2"</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Note the <code>'equal</code> argument to <code>make-hash-table</code>.  Without it, we would not be able to use strings as our keys.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/LukeRenn">LukeRenn</a> - 21 Feb 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/HashRecipes">HashRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 020 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

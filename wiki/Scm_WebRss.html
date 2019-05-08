@@ -1,0 +1,285 @@
+<div id="contentbox">
+ <div class="widget">
+  <channel about="http://schemecookbook.org/view/Scm">
+  </channel><title>TWiki's Scm web</title>
+  <link>http://schemecookbook.org/view/Scm
+  <description>The Scm web of TWiki. TWiki is a Web-Based Collaboration Platform for the Corporate World.</description>
+  <image resource="http://schemecookbook.org/twiki/pub/twikilogo88x31.gif" />
+  <language>en-us</language>
+  <rights>Copyright 2008, Peter Thoeny and contributing authors.</rights>
+  <publisher>Peter Thoeny [Peter@Thoeny.com]</publisher>
+  <creator>Peter Thoeny [Peter@Thoeny.com]</creator>
+  <source>TWiki</source>
+  <interwiki>
+    <description link="http://schemecookbook.org/view/Scm/">
+      <value>TWiki.Scm</value>
+    </description>
+  </interwiki>
+  <items>
+    <seq>
+      <li resource="http://schemecookbook.org/view/Scm/WebStatistics" />
+      <li resource="http://schemecookbook.org/view/Scm/SslUrl" />
+      <li resource="http://schemecookbook.org/view/Scm/IfItSyntaxLoc" />
+      <li resource="http://schemecookbook.org/view/Scm/ColonMatrixExpansion" />
+      <li resource="http://schemecookbook.org/view/Scm/DoExpansionSRFI42" />
+      <li resource="http://schemecookbook.org/view/Scm/NewSRFI42Generator" />
+      <li resource="http://schemecookbook.org/view/Scm/WebHome" />
+      <li resource="http://schemecookbook.org/view/Scm/FileProcessWords" />
+      <li resource="http://schemecookbook.org/view/Scm/DefineWordBoundary" />
+      <li resource="http://schemecookbook.org/view/Scm/MatchByName" />
+      <li resource="http://schemecookbook.org/view/Scm/ReadingLinesSample" />
+      <li resource="http://schemecookbook.org/view/Scm/ReadingLinesWithFoldSample" />
+      <li resource="http://schemecookbook.org/view/Scm/HashPresence" />
+      <li resource="http://schemecookbook.org/view/Scm/WebNotify" />
+      <li resource="http://schemecookbook.org/view/Scm/NumRecPassword" />
+      <li resource="http://schemecookbook.org/view/Scm/ReadingLinesWithFold" />
+    </seq>
+  </items>
+<image about="http://schemecookbook.org/twiki/pub/twikilogo88x31.gif">
+  </image><title>TWiki.Scm</title>
+  <link>http://schemecookbook.org/view/Scm
+  <url>http://schemecookbook.org/twiki/pub/TWiki/TWikiLogos/twikilogo88x31.gif</url>
+<item about="http://schemecookbook.org/view/Scm/WebStatistics">
+  </item><title>WebStatistics</title>
+  <link>http://schemecookbook.org/view/Scm/WebStatistics
+  <description> Statistics for Scm Web Month: Topic views: Topic saves: File uploads: Most popular topic views: Top contributors for topic save and uploads: Nov 2008 212 0 0 15 WebHome ...</description>
+  <date>2008-11-03T13:28:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.guest">
+      <value>guest</value>
+    </description>
+  </contributor>
+  <version>1.132</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/WebStatistics</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/WebStatistics</history>
+<item about="http://schemecookbook.org/view/Scm/SslUrl">
+  </item><title>SslUrl</title>
+  <link>http://schemecookbook.org/view/Scm/SslUrl
+  <description>; adapted from url.ss in net collection, but linked with ssl-tcp-unit (module ssl-url mzscheme (require (lib "unit.ss") ; for PLT versions earlier than v371, use  ...</description>
+  <date>2007-09-12T02:11:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.AntonVanStraaten">
+      <value>AntonVanStraaten</value>
+    </description>
+  </contributor>
+  <version>1.4</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/SslUrl</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/SslUrl</history>
+<item about="http://schemecookbook.org/view/Scm/IfItSyntaxLoc">
+  </item><title>IfItSyntaxLoc</title>
+  <link>http://schemecookbook.org/view/Scm/IfItSyntaxLoc
+  <description>(define-syntax (if-it stx) (syntax-case stx () (src-if-it test then else) (with-syntax ( it (datum- syntax-object (syntax src-if-it) 'it) ) (syntax/loc stx (let ( ...</description>
+  <date>2007-08-24T22:38:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.WillFarr">
+      <value>WillFarr</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/IfItSyntaxLoc</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/IfItSyntaxLoc</history>
+<item about="http://schemecookbook.org/view/Scm/ColonMatrixExpansion">
+  </item><title>ColonMatrixExpansion</title>
+  <link>http://schemecookbook.org/view/Scm/ColonMatrixExpansion
+  <description>(:matrix x (index i j) M) (let ((m matrix) (rows #f) (cols #f)) (set! rows (matrix-rows m)) (set! cols (matrix-cols m)) (let loop ((i 0) (j 0)) (if ( j+1 cols)) (if ...</description>
+  <date>2007-08-24T18:52:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.WillFarr">
+      <value>WillFarr</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/ColonMatrixExpansion</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/ColonMatrixExpansion</history>
+<item about="http://schemecookbook.org/view/Scm/DoExpansionSRFI42">
+  </item><title>DoExpansionSRFI42</title>
+  <link>http://schemecookbook.org/view/Scm/DoExpansionSRFI42
+  <description>(:do (let ( ) ) ( ) (let ( ) ) ( )) (let ( ) (let loop ( ) (if (let ( ) payload (if (loop ) ))))) </description>
+  <date>2007-08-24T18:46:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.WillFarr">
+      <value>WillFarr</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/DoExpansionSRFI42</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/DoExpansionSRFI42</history>
+<item about="http://schemecookbook.org/view/Scm/NewSRFI42Generator">
+  </item><title>NewSRFI42Generator</title>
+  <link>http://schemecookbook.org/view/Scm/NewSRFI42Generator
+  <description> (define-syntax :matrix (syntax-rules (index) ((:matrix cc x (index i j) mexpr) (:do cc (let ((m mexpr) (rows #f) (cols #f)) (set! rows (matrix-rows m)) (set! cols ...</description>
+  <date>2007-08-24T18:39:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.WillFarr">
+      <value>WillFarr</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/NewSRFI42Generator</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/NewSRFI42Generator</history>
+<item about="http://schemecookbook.org/view/Scm/WebHome">
+  </item><title>WebHome</title>
+  <link>http://schemecookbook.org/view/Scm/WebHome
+  <description> Schematics Cookbook Source Code Repository This is the Scm web, where source code files for the Cookbook.WebHome Cookbook are stored. Files stored here can be included ...</description>
+  <date>2007-05-19T02:00:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.JeffBuckley">
+      <value>JeffBuckley</value>
+    </description>
+  </contributor>
+  <version>1.6</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/WebHome</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/WebHome</history>
+<item about="http://schemecookbook.org/view/Scm/FileProcessWords">
+  </item><title>FileProcessWords</title>
+  <link>http://schemecookbook.org/view/Scm/FileProcessWords
+  <description> begin scheme (define for-each-word (lambda (filename proc) (with-input-from-file filename (lambda () (let read-word ((char (read-char)) (word '())) (cond ((eof-object ...</description>
+  <date>2006-06-22T12:44:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.MichaelBurschik">
+      <value>MichaelBurschik</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/FileProcessWords</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/FileProcessWords</history>
+<item about="http://schemecookbook.org/view/Scm/DefineWordBoundary">
+  </item><title>DefineWordBoundary</title>
+  <link>http://schemecookbook.org/view/Scm/DefineWordBoundary
+  <description> begin scheme (define word-boundary? (lambda (character) (if (list? (memq character '(#\space #   ab #\newline))) #t #f))) end </description>
+  <date>2006-06-22T12:41:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.MichaelBurschik">
+      <value>MichaelBurschik</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/DefineWordBoundary</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/DefineWordBoundary</history>
+<item about="http://schemecookbook.org/view/Scm/MatchByName">
+  </item><title>MatchByName</title>
+  <link>http://schemecookbook.org/view/Scm/MatchByName
+  <description>;; tested in PLT Scheme 300.3 (require (lib "plt-match.ss")) (define-struct expr (srcloc)) (define-struct (id expr) (name)) (define-struct (lam expr) (arg body))  ...</description>
+  <date>2006-01-01T19:07:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.RichardCobbe">
+      <value>RichardCobbe</value>
+    </description>
+  </contributor>
+  <version>1.1</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/MatchByName</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/MatchByName</history>
+<item about="http://schemecookbook.org/view/Scm/ReadingLinesSample">
+  </item><title>ReadingLinesSample</title>
+  <link>http://schemecookbook.org/view/Scm/ReadingLinesSample
+  <description> begin scheme (for-each-line-in-file "ReadingLines.scm" (let ((line-num 0)) (lambda (line) (printf "~a: ~a ~n" line-num line) (set! line-num (add1 line-num))))) end ...</description>
+  <date>2005-10-27T18:59:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.GeorgeHerson">
+      <value>GeorgeHerson</value>
+    </description>
+  </contributor>
+  <version>1.2</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/ReadingLinesSample</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/ReadingLinesSample</history>
+<item about="http://schemecookbook.org/view/Scm/ReadingLinesWithFoldSample">
+  </item><title>ReadingLinesWithFoldSample</title>
+  <link>http://schemecookbook.org/view/Scm/ReadingLinesWithFoldSample
+  <description> begin scheme (fold-lines-in-file "ReadingLinesWithFold.scm" (lambda (line line-num) (printf "~a: ~a ~n" line-num line) (add1 line-num)) 1) end </description>
+  <date>2005-10-27T18:58:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.GeorgeHerson">
+      <value>GeorgeHerson</value>
+    </description>
+  </contributor>
+  <version>1.2</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/ReadingLinesWithFoldSample</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/ReadingLinesWithFoldSample</history>
+<item about="http://schemecookbook.org/view/Scm/HashPresence">
+  </item><title>HashPresence</title>
+  <link>http://schemecookbook.org/view/Scm/HashPresence
+  <description>(define hash-has-key? (let ((symbol (gensym))) (lambda (table key) (not (eq? (hash-table-get table key (lambda () symbol)) symbol))))) </description>
+  <date>2004-09-16T11:16:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.NoelWelsh">
+      <value>NoelWelsh</value>
+    </description>
+  </contributor>
+  <version>1.3</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/HashPresence</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/HashPresence</history>
+<item about="http://schemecookbook.org/view/Scm/WebNotify">
+  </item><title>WebNotify</title>
+  <link>http://schemecookbook.org/view/Scm/WebNotify
+  <description>This is a subscription service to be automatically notified by e-mail when topics change in this Scm web. This is a convenient service, so you do not have to come ...</description>
+  <date>2004-09-04T07:25:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.AntonVanStraaten">
+      <value>AntonVanStraaten</value>
+    </description>
+  </contributor>
+  <version>1.3</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/WebNotify</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/WebNotify</history>
+<item about="http://schemecookbook.org/view/Scm/NumRecPassword">
+  </item><title>NumRecPassword</title>
+  <link>http://schemecookbook.org/view/Scm/NumRecPassword
+  <description>(require (lib "14.ss" "srfi") (lib "27.ss" "srfi") (lib "42.ss" "srfi")) (define (generate-8-password) (string-append-ec (:range i 0 8) (let ((bigcs (substring (char ...</description>
+  <date>2004-06-01T20:58:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.JensAxelSoegaard">
+      <value>JensAxelSoegaard</value>
+    </description>
+  </contributor>
+  <version>1.2</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/NumRecPassword</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/NumRecPassword</history>
+<item about="http://schemecookbook.org/view/Scm/ReadingLinesWithFold">
+  </item><title>ReadingLinesWithFold</title>
+  <link>http://schemecookbook.org/view/Scm/ReadingLinesWithFold
+  <description> begin scheme (define (fold-lines-in-file filename proc init . mode) (with-input-from-file filename (lambda () (apply fold-lines proc init (current-input-port) mode ...</description>
+  <date>2004-05-27T03:53:00Z</date>
+  <contributor>
+    <description link="http://schemecookbook.org/view?topic=Main.AntonVanStraaten">
+      <value>AntonVanStraaten</value>
+    </description>
+  </contributor>
+  <version>1.2</version>
+  <status>updated</status>
+  <importance>major</importance>
+  <diff>http://schemecookbook.org/rdiff/Scm/ReadingLinesWithFold</diff>
+  <history>http://schemecookbook.org/rdiff/Scm/ReadingLinesWithFold</history>
+<p />
+<p />
+ </div>
+</div>

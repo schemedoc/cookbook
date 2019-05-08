@@ -1,0 +1,107 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="How_to_use_a_timer"> How to use a timer </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+How to use a timer to update elements of a GUI.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<div class="scheme">
+  <pre><span class="comment">;;;
+</span><span class="comment">;;; Clock
+</span><span class="comment">;;;
+</span>
+<span class="comment">;; This program demonstrates how to use a timer
+</span><span class="comment">;; together with a GUI.
+</span>
+(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+<span class="comment">;;; GUI
+</span>
+<span class="comment">; The GUI consists of a frame with the title "Clock".
+</span><span class="comment">; The contents of the frame is a message, where the
+</span><span class="comment">; time is written every second.
+</span>
+(<span class="keyword">define</span> <span class="variable">frame</span> (<span class="variable">make-object</span> <span class="variable">frame%</span> <span class="selfeval">"Clock"</span>))
+(<span class="keyword">define</span> <span class="variable">time-message</span> (<span class="variable">make-object</span> <span class="variable">message%</span> <span class="selfeval">"The time is written here"</span> <span class="variable">frame</span>))
+(<span class="variable">send</span> <span class="variable">frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+<span class="comment">;;; DATE AND STRING FUNCTIONS
+</span>
+<span class="comment">; pad2 makes sure the string length is 2 by padding with
+</span><span class="comment">; an extra 0, if neccessary
+</span>(<span class="keyword">define</span> (<span class="variable">pad2</span> <span class="variable">s</span>)
+  (<span class="keyword">if</span> (<span class="builtin">&lt;</span> (<span class="builtin">string-length</span> <span class="variable">s</span>) <span class="selfeval">2</span>)
+      (<span class="builtin">string-append</span> <span class="selfeval">"0"</span> <span class="variable">s</span>)
+      <span class="variable">s</span>))
+<span class="comment">; time-&gt;string : -&gt; string
+</span><span class="comment">;   returns a string with the current time
+</span>(<span class="keyword">define</span> (<span class="variable">time-&gt;string</span>)
+  (<span class="keyword">let*</span> ([<span class="variable">date</span>     (<span class="variable">seconds-&gt;date</span> (<span class="variable">current-seconds</span>))]
+         [<span class="variable">seconds</span>  (<span class="builtin">number-&gt;string</span> (<span class="variable">date-second</span> <span class="variable">date</span>))]
+         [<span class="variable">minutes</span>  (<span class="builtin">number-&gt;string</span> (<span class="variable">date-minute</span> <span class="variable">date</span>))]
+         [<span class="variable">hours</span>    (<span class="builtin">number-&gt;string</span> (<span class="variable">date-hour</span> <span class="variable">date</span>))] )
+    (<span class="builtin">string-append</span> (<span class="variable">pad2</span> <span class="variable">hours</span>)
+                   <span class="selfeval">":"</span>
+                   (<span class="variable">pad2</span> <span class="variable">minutes</span>)
+                   <span class="selfeval">":"</span>
+                   (<span class="variable">pad2</span> <span class="variable">seconds</span>))))
+<span class="comment">;;; TIMER
+</span>
+<span class="comment">; The timer calls the callback function every
+</span><span class="comment">; 1000 milliseconds (that is every second)
+</span>
+(<span class="variable">instantiate</span> <span class="variable">timer%</span> ()
+  (<span class="variable">notify-callback</span> (<span class="keyword">lambda</span> ()
+                     (<span class="variable">send</span> <span class="variable">time-message</span> <span class="variable">set-label</span> (<span class="variable">time-&gt;string</span>))))
+  (<span class="variable">interval</span> <span class="selfeval">1000</span>)
+  (<span class="variable">just-once?</span> <span class="selfeval">#f</span>) )
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 24 Feb 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> GUIRecipes </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 005 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

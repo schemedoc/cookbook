@@ -1,0 +1,85 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Non_deterministic_Context_Free_G"> Non-deterministic Context Free Grammars </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+The <em>amb</em> procedure works wonders.  It does -seem- to have a serious issue, if formed as offered in "Teach Yourself Scheme in Fixnum Days" and other places.
+<p />
+That problem is arbitraririly (lazy) recursively defining amb functions.  It just seems to refuse to work...Either from the recursion, or from the promises, which brings us to Context Free Grammars.
+<p />
+It's very easy to define a CFG's branches as an AMB of promises
+<p />
+Here's an example of what I mean. ("force-tree" just runs through every branch of a list and forces any promises it finds, until no promises exist in that tree)
+<p />
+<pre>
+;Define a
+&gt; (define (cfgA) (amb (list "") (list "a" (delay (cfgA)) "b") ))
+&gt; (define foo (cfgA))
+("")
+&gt; foo
+("")
+&gt; (amb)
+("a" ("") "b")
+&gt; foo
+("a" ("") "b")
+&gt; (amb) ;;Weird output here..it doesn't change one bit!
+("a" ("") "b")
+&gt; foo
+("a" ("") "b")
+&gt; (amb) ;;Strange here, too!  Why exhaust the tree when we have options?
+. Amb tree exhausted
+</pre>
+<p />
+It seems to me amb doesn't work well with promises... If that were to resolve, a million new things would be work-trivial (while probably not overly efficient) in Scheme.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/CJayMartin">CJayMartin</a> - 10 Nov 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

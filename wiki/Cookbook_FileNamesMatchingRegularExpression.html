@@ -1,0 +1,97 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Finding_All_Files_Whose_Name_Mat"> Finding All Files Whose Name Match a Regular Expression </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to find all files whose names match a traditional shell regular expression (for example <strong>.</strong>).  All known as globbing.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use the function <code>glob</code> below:
+<p />
+<div class="scheme">
+  <pre>  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"13.ss"</span> <span class="selfeval">"srfi"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"1.ss"</span> <span class="selfeval">"srfi"</span>))
+  <span class="comment">;; glob-&gt;regexp : string -&gt; regexp
+</span>  (<span class="keyword">define</span> (<span class="variable">glob-&gt;regexp</span> <span class="variable">pattern</span>)
+      (<span class="variable">regexp</span>
+       (<span class="builtin">list-&gt;string</span>
+       (<span class="variable">string-fold-right</span>
+        (<span class="keyword">lambda</span> (<span class="variable">char</span> <span class="variable">seed</span>)
+          (<span class="keyword">case</span> <span class="variable">char</span>
+            ((<span class="selfeval">#\*</span>) (<span class="builtin">cons</span> <span class="selfeval">#\.</span> (<span class="builtin">cons</span> <span class="selfeval">#\*</span> <span class="variable">seed</span>)))
+            ((<span class="selfeval">#\.</span>) (<span class="builtin">cons</span> <span class="selfeval">#\\</span> (<span class="builtin">cons</span> <span class="selfeval">#\.</span> <span class="variable">seed</span>)))
+            (<span class="keyword">else</span> (<span class="builtin">cons</span> <span class="variable">char</span> <span class="variable">seed</span>))))
+      (<span class="builtin">list</span> <span class="selfeval">#\$</span>)
+      <span class="variable">pattern</span>))))
+  <span class="comment">;; make-glob-matcher : string -&gt; (path -&gt; (U #t #f))
+</span>  (<span class="keyword">define</span> (<span class="variable">make-glob-matcher</span> <span class="variable">pattern</span>)
+    (<span class="keyword">let</span> ((<span class="variable">rx</span> (<span class="variable">glob-&gt;regexp</span> <span class="variable">pattern</span>)))
+      (<span class="keyword">lambda</span> (<span class="variable">path</span>)
+        (<span class="keyword">if</span> (<span class="variable">regexp-match</span> <span class="variable">rx</span> (<span class="variable">path-&gt;string</span> <span class="variable">path</span>))
+            <span class="selfeval">#t</span>
+            <span class="selfeval">#f</span>))))
+  <span class="comment">;; glob : path string -&gt; (list-of path)
+</span>  (<span class="keyword">define</span> (<span class="variable">glob</span> <span class="variable">path</span> <span class="variable">pattern</span>)
+    (<span class="variable">filter</span> (<span class="variable">make-glob-matcher</span> <span class="variable">pattern</span>)
+         (<span class="variable">directory-list</span> <span class="variable">path</span>)))
+</pre>
+</div>
+<p />
+For example:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">directory-list</span> (<span class="variable">current-directory</span>))
+(<span class="variable">#&lt;path:plot.ss~&gt;</span> <span class="variable">#&lt;path:analyse.ss&gt;</span> <span class="variable">#&lt;path:analyse.ss~&gt;</span> <span class="variable">#&lt;path:plot.ss&gt;</span> <span class="variable">#&lt;path:data.ss~&gt;</span> <span class="variable">#&lt;path:data.ss&gt;</span>)
+<span class="builtin">&gt;</span> (<span class="variable">glob</span> (<span class="variable">current-directory</span>) <span class="selfeval">"*.ss"</span>)
+(<span class="variable">#&lt;path:analyse.ss&gt;</span> <span class="variable">#&lt;path:plot.ss&gt;</span> <span class="variable">#&lt;path:data.ss&gt;</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+It is simple to find files matching a regular expression.  You just convert the file name to a string, and use <code>regexp-match</code> to test.  However the regular expression syntax is different to the traditional shell regular expression syntax. For example the pattern <strong>.</strong> will not work.  Hence you must convert the traditional syntax to that accepted by <code>regexp-match</code>.  That is the function of <code>glob-&gt;regexp</code>.  From there it is simple to construct a glob matcher from <a href="/Cookbook/MzScheme">MzScheme</a>'s library of regular expression and path manipulation functions.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 01 Feb 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

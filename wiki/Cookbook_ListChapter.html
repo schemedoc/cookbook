@@ -1,0 +1,98 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h1>
+  <a name="List_Recipes"> List Recipes </a>
+</h1>
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+Being a flavor of <strong>Lisp</strong> (LISt Processing), Scheme contains lists as a low-level feature of the language.  Unfortunately, the standard set of tools for handling lists is relatively minimal.  Consequently, scheme programmers are well advised to become familiar with <a href="http://srfi.schemers.org/srfi-1/srfi-1.html" target="_top">SRFI 1</a>.
+<p />
+Lists are ordered collections of values.  They may contain any data type, and are extremely cheap to extend by adding new elements.  However, their very nature makes traversing the list have a cost proportional to the number of elements in the list.  As the list grows, the cost to access an element takes more time.
+<p />
+Lists are created using either the constructor <code>list</code>, or the list syntax:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Lists can also be constructed using the ancient Lisp primitive <code>cons</code>, and can be broken apart using the <code>car</code> and <code>cdr</code> functions.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+This section provide a variety of recipes for efficient list handling.
+<p />
+<p />
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+<ul>
+<li> <a href="/Cookbook/ListRecipeExtractingSublist">Extracting a sublist</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeExtractingUniqueElements">Extracting Unique Elements from a List</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeFilterElements">Finding All Elements in a List Matching Certain Criteria</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeListMinus">Finding Elements in One Array but Not Another</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeSplittingInHalves">Splitting a list in halves</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListCircularList">Building a Circular List</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListFlatten">How to flatten a list.</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeConstructing">Constructing Lists</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/ListRecipeFiltering">Filtering Lists</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ListRecipeTraversing">Traversing Lists</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+</ul>
+<p />
+<p />
+<h2>
+  <a name="References"> References </a>
+</h2>
+<p />
+<a href="/Cookbook/ToDo">ToDo</a>: Links to R5RS, <a href="/Cookbook/SRFI">SRFI</a>1, list.ss in mzlib.
+      HTDP on list recipes
+<p />
+<p />
+<p />
+<p />
+<p />
+<br>
+<hr>
+<a href="/Cookbook/ListChapterComments">(edit comments)</a>
+<p />
+<p />
+<ul>
+<li> Set ALLOWTOPICCHANGE = <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Chapter </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TOC">TOC</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 07 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

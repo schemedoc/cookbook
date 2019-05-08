@@ -1,0 +1,98 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h1>
+  <a name="Databases"> Databases </a>
+</h1>
+<p />
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+Relational databases, along with the file system and structured markup, are one of the primary means of storing and exchanging data between applications.  As such, they are an important part of any programmer's toolkit.
+<p />
+Database access in Scheme is generally achieved at the lowest levels through the use of an <span style="background : #FFFFCE;">
+  <font color="#0000FF">ExtensionLibrary</font>
+</span><a href="/edit/Cookbook/ExtensionLibrary?topicparent=Cookbook.DatabaseChapter">?</a>.  These libraries are usually written to either the Scheme implementation's native FFI interface, or using a tool such as SWIG, which automates the creation of FFI wrappers for a number of Schemes, including PLT.  With such an approach, you'll need access to a compiler for your platform (almost certainly a C compiler) and some knowlege of compiling C code.
+For PLT, another alternative would be to use <a href="http://www.cs.uvm.edu/~dvanhorn/scheme/" target="_top">David van Horn's c-syntax</a> module to expose the low-level C interface for your database.  PLT also provides the <span style="background : #FFFFCE;">
+  <font color="#0000FF">SrPersist</font>
+</span><a href="/edit/Cookbook/SrPersist?topicparent=Cookbook.DatabaseChapter">?</a> library for working with ODBC data sources.  This would be a nice option for a database that has an ODBC provider but where no FFI library exists for PLT, or if you don't have access to a C compiler or the knowlege of how to use one.
+<p />
+At a higher level, Schematics provides <a href="/Cookbook/SchemeQL">SchemeQL</a>, which provides a higher level interface on top of <span style="background : #FFFFCE;">
+  <font color="#0000FF">SrPersist</font>
+</span><a href="/edit/Cookbook/SrPersist?topicparent=Cookbook.DatabaseChapter">?</a>.
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+<ul>
+<li> <a href="/Cookbook/SaveBinaryDataInSQL">Save Binary Data in SQL</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/WriteSqlInSchemeLikeSyntax">Write SQL In Scheme Like Syntax</a> (Recipe)
+</li>
+</ul>
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+<p />
+<a href="/Cookbook/WriteSqlInSchemeLikeSyntax">WriteSqlInSchemeLikeSyntax</a>: belongs here, but I did something wrong -- <a href="/Main/HiSeeComments">HiSeeComments</a>
+<p />
+Fixed - the parent topic for recipes in the database chapter should be <a href="/Cookbook/DatabaseRecipes">DatabaseRecipes</a>
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 01 Jul 2008
+<p />
+<p />
+<p />
+<p />
+<p />
+<br>
+<hr>
+<a href="/Cookbook/DatabaseChapterComments">(edit comments)</a>
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+<p />
+<a href="/Cookbook/WriteSqlInSchemeLikeSyntax">WriteSqlInSchemeLikeSyntax</a>: belongs here, but I did something wrong -- <a href="/Main/HiSeeComments">HiSeeComments</a>
+<p />
+Fixed - the parent topic for recipes in the database chapter should be <a href="/Cookbook/DatabaseRecipes">DatabaseRecipes</a>
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 01 Jul 2008
+<p />
+<p />
+<p />
+<ul>
+<li> Set ALLOWTOPICCHANGE = <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>
+</li>
+</ul>
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Chapter </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TOC">TOC</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 19 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

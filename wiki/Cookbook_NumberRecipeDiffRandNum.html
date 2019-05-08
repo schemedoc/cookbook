@@ -1,0 +1,62 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Generating_Different_Random_Numb"> Generating Different Random Numbers  </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You notice that several processes are getting the same "random" number sequence.  You would like each process to be receiving its own unique
+random numbers.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use the <code>random-seed</code> function to seed the pseudo-random number generator with a new seed value.
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">random-seed</span> <span class="selfeval">1988282</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The pseudo-random number generator used in the scheme implementation
+defaults to the <code>current-milliseconds</code> value, so processes that happen to start at the same time could potentially seed with the same value.  Using the <code>random-seed</code> function allows you to modify this default behavior.
+<p />
+Seeding a pseudo-random number generator sets its internal state deterministically.  Seeding a generator with a particular number forces it to produce a sequence of pseudo-random numbers that is the same across runs and across platforms.  This could be useful if you wish to provide the illusion of randomness.
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+Bruce Schneier's excellent Applied Cryptography ; John Wiley &amp; Sons (1995)
+<p />
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 090 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

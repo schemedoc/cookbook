@@ -1,0 +1,78 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Walking_Directory_Trees"> Walking Directory Trees </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You need to look at every file in a directory, or an entire directory tree, that matches a given pattern.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+The function <code>find-files</code> in <code>(lib "file.ss" "mzlib")</code>  provides a very flexible way to do this.
+<code>find-files</code> takes 2 arguments, a one argument function that accepts a file name (full path) and returns #t if the file should be included in the result list, and the path to root the search at.  If you omit the 2nd argument, or specify #f, <code>find-files</code> starts at the current directory.  A few examples:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"file.ss"</span> <span class="selfeval">"mzlib"</span>))
+<span class="comment">; list all files and directories under /tmp
+</span>(<span class="variable">find-files</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) <span class="variable">x</span>) <span class="selfeval">"/tmp"</span>)
+<span class="comment">; list all subdirectories of /tmp
+</span>(<span class="variable">find-files</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) (<span class="variable">directory-exists?</span> <span class="variable">x</span>)) <span class="selfeval">"/tmp"</span>)
+<span class="comment">; list all files with extension .scm under /tmp
+</span>(<span class="variable">find-files</span>
+  (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+    (<span class="keyword">and</span> (<span class="builtin">equal?</span> (<span class="variable">filename-extension</span> <span class="variable">x</span>) <span class="selfeval">"scm"</span>)
+         (<span class="builtin">not</span> (<span class="variable">directory-exists?</span> <span class="variable">x</span>))))
+  <span class="selfeval">"/tmp"</span>)
+<span class="comment">; list all files under /tmp that are &gt; 1024 bytes
+</span>(<span class="variable">find-files</span>
+   (<span class="keyword">lambda</span> (<span class="variable">x</span>) (<span class="keyword">and</span> (<span class="builtin">not</span> (<span class="variable">directory-exists?</span> <span class="variable">x</span>))
+                    (<span class="builtin">&gt;</span> (<span class="variable">file-size</span> <span class="variable">x</span>) <span class="selfeval">1024</span>)))
+   <span class="selfeval">"/tmp"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+The examples given all just act on metadata of the file, there's no reason you can't inspect the contents of the file in the filter function, though that will make <code>find-files</code> much slower.  Also, it can be a little tricky to get <code>find-files</code> to not recurse directory trees, at least on Windows.  Generally, you include a <code>directory-exists?</code> test in your filter:
+<p />
+<div class="scheme">
+  <pre><span class="comment">; list files only in the \windows directory, don't recurse directories.
+</span>(<span class="variable">find-files</span>
+   (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+     (<span class="keyword">and</span> (<span class="builtin">not</span> (<span class="variable">directory-exists?</span> <span class="variable">x</span>))
+          (<span class="builtin">equal?</span> (<span class="variable">path-only</span> <span class="variable">x</span>) <span class="selfeval">"\\windows\\"</span>)))
+   <span class="selfeval">"\\windows"</span>)
+</pre>
+</div>
+<p />
+<code>fold-files</code>, also in <code>file.ss</code> is a more powerful version of <code>find-files</code>.
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 29 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

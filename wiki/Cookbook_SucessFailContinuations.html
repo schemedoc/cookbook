@@ -1,0 +1,103 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="How_to_Succeed_and_Fail_with_Con"> How to Succeed and Fail with Continuations </a>
+</h2>
+You need to walk a data structure, and the nodes you visit determine what to do.  A simple example is to search a rose-tree for a given value.  A more complex example is accumulate a set of bindings based on the nodes you encounter.
+<p />
+Use continuations!  Pass in two stub procedures (succ, fail) that know what to do in the base case, and extend those procedures at each successive stage.  Then, tail-call those procedures when needed -- ie. call success with the accumulator, or fail with nothing.
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+Compute a procedure that generates the accessor for the (first) matching symbol in a DFS search of a rose-tree of symbols.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">search</span>
+  (<span class="keyword">lambda</span> (<span class="variable">sym</span> <span class="variable">tree</span>)
+    (<span class="variable">search-path</span> <span class="variable">sym</span>
+                 <span class="variable">tree</span>
+                 (<span class="keyword">lambda</span> (<span class="variable">path</span>) <span class="variable">path</span>) <span class="comment">;success
+</span>                 (<span class="keyword">lambda</span> ()           <span class="comment">;failure
+</span>                   (<span class="keyword">lambda</span> (<span class="variable">t</span>)
+                     (<span class="variable">error</span> <span class="keyword">'</span><span class="variable">not-found</span> <span class="selfeval">"~a"</span> <span class="variable">sym</span>))))))
+(<span class="keyword">define</span> <span class="variable">search-path</span>
+  (<span class="keyword">lambda</span> (<span class="variable">sym</span> <span class="variable">tree</span> <span class="variable">succ</span> <span class="variable">fail</span>)
+    (<span class="keyword">if</span> (<span class="builtin">symbol?</span> <span class="variable">tree</span>)
+        (<span class="keyword">if</span> (<span class="builtin">eqv?</span> <span class="variable">sym</span> <span class="variable">tree</span>)
+            (<span class="variable">succ</span> (<span class="keyword">lambda</span> (<span class="variable">t</span>) <span class="variable">t</span>)) <span class="comment">;succeed with trivial result
+</span>            (<span class="variable">fail</span>))               <span class="comment">;let fail get another crack
+</span>        (<span class="keyword">if</span> (<span class="builtin">null?</span> <span class="variable">tree</span>)
+            (<span class="variable">fail</span>)                <span class="comment">;let fail try again
+</span>            (<span class="variable">search-path</span> <span class="variable">sym</span>
+                         (<span class="builtin">car</span> <span class="variable">tree</span>)
+                         (<span class="keyword">lambda</span> (<span class="variable">path</span>) <span class="comment">;success means taking a car
+</span>                           (<span class="variable">succ</span> (<span class="keyword">lambda</span> (<span class="variable">t</span>) (<span class="variable">path</span> (<span class="builtin">car</span> <span class="variable">t</span>)))))
+                         (<span class="keyword">lambda</span> ()     <span class="comment">;failure means searching more ...
+</span>                           (<span class="variable">search-path</span> <span class="variable">sym</span>
+                                        (<span class="builtin">cdr</span> <span class="variable">tree</span>)
+                                        (<span class="keyword">lambda</span> (<span class="variable">path</span>) <span class="comment">;... with cdring and ...
+</span>                                          (<span class="variable">succ</span> (<span class="keyword">lambda</span> (<span class="variable">t</span>) (<span class="variable">path</span> (<span class="builtin">cdr</span> <span class="variable">t</span>)))))
+                                        <span class="variable">fail</span>)))))))    <span class="comment">;... failing up
+</span></pre>
+</div>
+<hr>
+<div class="scheme">
+  <pre>(<span class="keyword">let</span> ((<span class="variable">t</span> <span class="keyword">'</span><span class="variable">a</span>))
+  ((<span class="variable">search</span> <span class="keyword">'</span><span class="variable">a</span> <span class="variable">t</span>) <span class="variable">t</span>))
+(<span class="keyword">let</span> ((<span class="variable">t</span> <span class="keyword">'</span><span class="variable">a</span>))
+  (<span class="variable">search</span> <span class="keyword">'</span><span class="variable">b</span> <span class="variable">t</span>))
+(<span class="keyword">let</span> ((<span class="variable">t</span> <span class="keyword">'</span>(<span class="variable">a</span> <span class="variable">b</span> <span class="variable">c</span>)))
+  (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) ((<span class="variable">search</span> <span class="variable">x</span> <span class="variable">t</span>) <span class="variable">t</span>)) <span class="variable">t</span>))
+(<span class="keyword">let</span> ((<span class="variable">t</span> <span class="keyword">'</span>(((<span class="variable">a</span> <span class="variable">b</span> <span class="variable">c</span>) <span class="variable">d</span> (<span class="variable">e</span> (<span class="variable">f</span>) <span class="variable">g</span>)) <span class="variable">h</span>))
+      (<span class="variable">ss</span> <span class="keyword">'</span>(<span class="variable">a</span> <span class="variable">b</span> <span class="variable">c</span> <span class="variable">d</span> <span class="variable">e</span> <span class="variable">f</span> <span class="variable">g</span> <span class="variable">h</span>)))
+  (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) ((<span class="variable">search</span> <span class="variable">x</span> <span class="variable">t</span>) <span class="variable">t</span>)) <span class="variable">ss</span>))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+I learned this technique from Gregor Kiczales, but it is described in various places, including SICP2, EOPL2, and Friedman's papers.  The earlier I've traced it is to deBruijn 1989.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+Kanren logical programming system is based on two continuations.
+<a href="http://kanren.sourceforge.net/" target="_top">http://kanren.sourceforge.net/</a>
+<p />
+-- <a href="/Main/OlegK">OlegK</a> - 14 Sep 2004
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/ChrisDutchyn">ChrisDutchyn</a> - 10 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,90 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Evaluating_untrusted_code"> Evaluating untrusted code </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+We want to evaluate code outside our control (e.g., deserializing s-expressions in data files).
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Restrict the evaluated code so it has no file or network access:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">safe-eval</span> <span class="variable">sxp</span>)
+  (<span class="variable">parameterize</span> ([<span class="variable">current-security-guard</span>
+                  (<span class="variable">make-security-guard</span> (<span class="variable">current-security-guard</span>)
+                                       (<span class="keyword">lambda</span> (<span class="variable">procname</span> <span class="variable">path</span> <span class="variable">access</span>)
+                                         (<span class="variable">error</span> <span class="variable">procname</span>
+                                                <span class="selfeval">"No file access"</span>))
+                                       (<span class="keyword">lambda</span> (<span class="variable">procname</span> <span class="variable">host</span> <span class="variable">port</span> <span class="variable">conn</span>)
+                                         (<span class="variable">error</span> <span class="variable">procname</span>
+                                               <span class="selfeval">"No network access"</span>)))])
+    (<span class="builtin">eval</span> <span class="variable">sxp</span>)))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+This is a nice recipe.  Are these security guards v300 specific?  There is more to say in this recipe: one can prevent 'dangerous' functions from being executed by evaluating the code in a namespace that doesn't include the functions in question.  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 09 Dec 2004
+<p />
+Moved this recipe to <a href="/Cookbook/DynamicChapter">DynamicChapter</a>.  Please help move other related recipes out of <a href="/Cookbook/IdiomChapter">IdiomChapter</a> and into <a href="/Cookbook/DynamicChapter">DynamicChapter</a>.  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 15 Apr 2005
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+You might also like to try to white-list the allowed functions.  I've been using the following code.  I don't know if there's some clever way to fool this, but it should allow finer control of the untrusted code.  Please post any corrections.
+<p />
+<div class="scheme">
+  <pre>(<span class="builtin">eval</span> (<span class="variable">cleanse</span> <span class="variable">sxp</span>))
+(<span class="keyword">define</span> <span class="variable">cleanse</span> (<span class="keyword">lambda</span> ( <span class="variable">sxp</span>)
+                  (<span class="keyword">if</span> (<span class="variable">proper-list?</span> <span class="variable">sxp</span>)
+                      (<span class="keyword">begin</span>
+                        (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">v</span>) (<span class="keyword">if</span> (<span class="variable">proper-list?</span>  <span class="variable">v</span>) (<span class="variable">cleanse</span> <span class="variable">v</span>))) <span class="variable">sxp</span>)
+                        (<span class="variable">check-allowed-funcs</span> (<span class="builtin">car</span> <span class="variable">sxp</span>))))))
+(<span class="keyword">define</span> <span class="variable">check-allowed-funcs</span> (<span class="keyword">lambda</span>  (<span class="variable">f</span>)
+                              (<span class="keyword">case</span> <span class="variable">f</span>
+                                ((<span class="variable">my-define</span> <span class="variable">my-apply</span> <span class="keyword">lambda</span> <span class="builtin">+</span> <span class="builtin">-</span> <span class="builtin">/</span> <span class="builtin">*</span> <span class="variable">whatever</span>) (<span class="builtin">display</span> (<span class="variable">format</span> <span class="selfeval">"~a ok~%"</span> <span class="variable">f</span>)))
+                                (<span class="keyword">else</span> (<span class="builtin">display</span> (<span class="variable">format</span> <span class="selfeval">"~a not allowed!~n"</span> <span class="variable">f</span>)) (<span class="variable">exit</span>)))))
+</pre>
+</div>
+-- Jepri - 21 Nov 2005
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 09 Dec 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DynamicRecipes">DynamicRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

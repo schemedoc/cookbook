@@ -1,0 +1,51 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Introduction"> Introduction  </a>
+</h2>
+<p />
+A string is a sequence of characters. A string is written
+by enclosing the characters with a doublequote ("). Some
+special characters must be preceded by a backslash, these
+include doublequote and backslash. The technique of marking
+special characters are called <code>escaping</code> and backslash it self
+is called an <code>escape character</code>.
+<p />
+Examples of literal strings:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+In Scheme, strings are sequences of characters.  Since you can't talk about strings without talking about characters, you should know that mzScheme versions prior to 299 support the <a href="http://www.unicode.org/charts/PDF/U0000.pdf" target="_top">Basic Latin</a> and <a href="http://www.unicode.org/charts/PDF/U0080.pdf" target="_top">Latin-1 Supplement</a>, AKA ISO-8859-1.  Version 299 and above supports the full Unicode character set, using UTF-8 as the internal representation.
+<p />
+You can specify a literal character with the sequence #\ followed by the character, i.e.
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+Character literals can also be represented by #\u followed by a hex number:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+You can convert between characters and integers using the <code>char-&gt;integer</code> and <code>integer-&gt;char</code> functions:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 22 Oct 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Section </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringChapter">StringChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

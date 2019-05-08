@@ -1,0 +1,100 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Reading_and_Writing_Structures"> Reading and Writing Structures </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to save a structure to disk and read it at a later time.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+    (If you're using <a href="/Cookbook/MzScheme">MzScheme</a> 299, use the "serialize.ss" library.  Otherwise keep reading :-))
+<p />
+Print convert the structure before you write to disk.
+<p />
+<p />
+When you read it again use <code>read</code> followed by <code>eval</code>.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"pconvert.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="keyword">define-struct</span> <span class="variable">user</span> (<span class="variable">name</span> <span class="variable">password</span>) (<span class="variable">make-inspector</span>))
+<span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">guest</span> (<span class="variable">make-user</span> <span class="selfeval">"Anonymous"</span> <span class="selfeval">"1234"</span>))
+<span class="builtin">&gt;</span> <span class="variable">guest</span>
+<span class="variable">#&lt;struct:user&gt;</span>
+<span class="builtin">&gt;</span> (<span class="variable">constructor-style-printing</span> <span class="selfeval">#t</span>)
+<span class="builtin">&gt;</span> (<span class="variable">print-convert</span> <span class="variable">guest</span>)
+(<span class="variable">make-user</span> <span class="selfeval">"Anonymous"</span> <span class="selfeval">"1234"</span>)
+<span class="builtin">&gt;</span> (<span class="keyword">let</span> ([<span class="variable">output</span> (<span class="variable">open-output-string</span>)])
+    (<span class="builtin">write</span> (<span class="variable">print-convert</span> <span class="variable">guest</span>) <span class="variable">output</span>)
+    (<span class="variable">get-output-string</span> <span class="variable">output</span>))
+<span class="selfeval">"(make-user \"Anonymous\" \"1234\")"</span>
+<span class="builtin">&gt;</span> (<span class="builtin">read</span> (<span class="variable">open-input-string</span> <span class="selfeval">"(make-user \"Anonymous\" 1234)"</span>))
+(<span class="variable">make-user</span> <span class="selfeval">"Anonymous"</span> <span class="selfeval">1234</span>)
+<span class="builtin">&gt;</span> (<span class="builtin">eval</span> (<span class="builtin">read</span> (<span class="variable">open-input-string</span> <span class="selfeval">"(make-user \"Anonymous\" 1234)"</span>)))
+<span class="variable">#&lt;struct:user&gt;</span>
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Note the call to <code>make-inspector</code> in the structure definition.   We need an inspector to "see inside" the structure otherwise <code>print-convert</code> can't see the contents of the structure.
+<p />
+Note that <code>print-convert</code> is in general useful for serialization purposes.
+<p />
+Please remember that when further converting a print-converted list into a string with, say, <code>format</code>, you need to use "~s" instead of "~a" in the format string (so that the value is output with <code>write</code> instead of <code>display</code>).
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+<a href="/Cookbook/IdiomSerializeToFile">IdiomSerializeToFile</a>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+See <a href="http://list.cs.brown.edu/pipermail/plt-scheme/2005-March/008262.html" target="_top">http://list.cs.brown.edu/pipermail/plt-scheme/2005-March/008262.html</a> for a relevant discussion thread.
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 23 Mar 2005
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 04 Jun 2004
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 23 Mar 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StructureRecipes">StructureRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

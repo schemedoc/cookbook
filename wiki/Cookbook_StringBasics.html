@@ -1,0 +1,90 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="String_Basics"> String Basics </a>
+</h2>
+In Scheme, literal strings are enclosed in quotes.  According to R5RS, "A string constant may continue from one line to the next, but the exact contents of such a string are unspecified.", probably to account for platform differences in handling newlines.  The PLT and mzScheme interpreters allow you to write string literals with linebreaks inline, i.e.
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span>(<span class="keyword">define</span> <span class="variable">a-string</span> <span class="selfeval">"A literal string with a linebreak (\"\\n\")
+in it"</span>)
+<span class="variable">&gt;a-string</span>
+<span class="selfeval">"A literal string with a linebreak (\"\\n\")\nin it"</span>
+<span class="builtin">&gt;</span>(<span class="builtin">display</span> <span class="variable">a-string</span>)
+<span class="variable">A</span> <span class="variable">literal</span> <span class="builtin">string</span> <span class="variable">with</span> <span class="variable">a</span> <span class="variable">linebreak</span> (<span class="selfeval">"\n"</span>)
+<span class="variable">in</span> <span class="variable">it</span>
+</pre>
+</div>
+R5RS provides the <code>string-&gt;list</code> and <code>list-&gt;string</code> functions to convert between strings and lists:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-&gt;list</span> <span class="selfeval">"Hello"</span>)
+(<span class="selfeval">#\H</span> <span class="selfeval">#\e</span> <span class="selfeval">#\l</span> <span class="selfeval">#\l</span> <span class="selfeval">#\o</span>)
+<span class="builtin">&gt;</span> (<span class="builtin">list-&gt;string</span> <span class="keyword">'</span>(<span class="selfeval">#\S</span> <span class="selfeval">#\c</span> <span class="selfeval">#\h</span> <span class="selfeval">#\e</span> <span class="selfeval">#\m</span> <span class="selfeval">#\e</span>))
+<span class="selfeval">"Scheme"</span>
+</pre>
+</div>
+If you want to find out what character is at a specific position in a string, use <code>(string-ref <strong>string</strong> *i*)</code>, where i is a 0-based index in the string:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span>(<span class="builtin">string-ref</span> <span class="variable">a-string</span> <span class="selfeval">0</span>)
+<span class="selfeval">#\A</span>
+</pre>
+</div>
+<code>string-length</code> will tell you how long a string is.
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-length</span> <span class="variable">a-string</span>)
+<span class="selfeval">46</span>
+</pre>
+</div>
+You may have heard that Scheme provides mutable strings.  If you want to modify a string in place, the <code>string-set!</code> function will do that for you.  However, if you gave the string as a literal to the REPL, <code>string-set!</code> will give you a surprise:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-set!</span> <span class="variable">a-string</span> <span class="selfeval">0</span> <span class="selfeval">#\1</span>)
+<span class="variable">string-set!:</span> <span class="variable">expects</span> <span class="variable">type</span> <span class="variable">&lt;mutable-string&gt;</span> <span class="variable">as</span> <span class="variable">1st</span> <span class="variable">argument</span><span class="keyword">,</span> <span class="variable">given:</span> <span class="selfeval">"A literal string with a linebreak (\"\\n\")\r\nin it"</span><span class="comment">; other arguments were: 0 #\1
+</span></pre>
+</div>
+You can make a copy of a string using <code>string-copy</code>.  This will yield a mutable string:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">a-copy</span> (<span class="builtin">string-copy</span> <span class="variable">a-string</span>))
+<span class="builtin">&gt;</span> (<span class="builtin">string-set!</span> <span class="variable">a-copy</span> <span class="selfeval">0</span> <span class="selfeval">#\1</span>)
+<span class="builtin">&gt;</span> <span class="variable">a-copy</span>
+<span class="selfeval">"1 literal string with a linebreak (\"\\n\")\r\nin it"</span>
+</pre>
+</div>
+You can allocate a new string with <code>make-string</code>.  <code>make-string</code> comes in 2 forms, the second allows you to specify an initial character:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">make-string</span> <span class="selfeval">5</span>)
+<span class="selfeval">"\0\0\0\0\0"</span>
+<span class="builtin">&gt;</span> (<span class="builtin">make-string</span> <span class="selfeval">5</span> <span class="selfeval">#\*</span>)
+<span class="selfeval">"*****"</span>
+</pre>
+</div>
+You can also use <code>string-append</code> to join strings.  This
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-append</span> <span class="selfeval">"Hello"</span> <span class="selfeval">", "</span> <span class="selfeval">"Scheme"</span> <span class="selfeval">"!"</span>)
+<span class="selfeval">"Hello, Scheme!"</span>
+</pre>
+</div>
+R5RS provides a number of <a href="http://www.schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-9.html#%_sec_6.3.5" target="_top">useful string functions</a>, but you should also be aware of <a href="http://srfi.schemers.org/srfi-13/srfi-13.html" target="_top">SRFI 13 (String Library)</a> and <a href="http://srfi.schemers.org/srfi-14/srfi-14.html" target="_top">SRFI-14 (Character Set Library)</a>, which add a number of very useful functions.
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 05 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,101 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Changing_the_Library_Collection_"> Changing the Library (Collection) Search Path </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to change the path in which <a href="/Cookbook/PltScheme">PltScheme</a> searches for library (collection) paths.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+There are two main ways of doing this:
+<p />
+<ol>
+<li> Programmatically change the parameter <code>current-library-collections-path</code>
+</li>
+<li> Set the <code>PLTCOLLECTS</code> environment variable
+</li>
+</ol>
+<p />
+An example of the former that appends the path <code>../lib</code> to the search path is:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+which will add this path starting from the location of the file where
+this code appears.
+<p />
+For the second approach, the <code>PLTCOLLECTS</code> environment variable holds
+a list of paths to search: a string holding paths that are separated
+by colon (semi-colon on Windows).  An empty path in this string
+indicates where the default collects path goes, so:
+<p />
+<ul>
+<li> <code>/foo/collects</code> means search for libraries only in
+     <code>/foo/collects</code>.  If you want to use the standard PLT libraries,
+     then they should be included in this directory.
+</li>
+<li> <code>:/foo/collects</code> (<code>;/foo/collects</code> on Windows) will search for
+     libraries in the default location and then in <code>/foo/collects</code>,
+     which means that you can put additional libraries there.
+</li>
+<li> <code>/foo/collects:</code> will search for libraries first in
+     <code>/foo/collects</code> and then in the default location, making it
+     possible to override libraries if they exist there.
+</li>
+</ul>
+<p />
+Note: Starting from PLT Scheme v301.12, the PLT executables search
+for the collects path relative to the executable.  You can override
+this using the new <code>-X</code> (or <code>--collects</code>) command-line argument.
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+The first method won't work inside a module - module expands at compile time, while (current-library-collection-paths ...) gets evaluated at run time.  In such case only the second approach works.
+<p />
+-- <a href="/Main/YinSoChen">YinSoChen</a> - 21 Apr 2007
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 06 May 2006
+<p />
+-- <a href="/Main/EliBarzilay">EliBarzilay</a> - 07 May 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/GettingStartedRecipes">GettingStartedRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

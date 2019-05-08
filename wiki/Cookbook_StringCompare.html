@@ -1,0 +1,72 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Comparing_Strings"> Comparing Strings </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You need to compare two strings.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+All of the R5RS functions are in the form string<b>
+  <i>op</i>
+</b>?, e.g. <code>string&lt;=?</code> or <code>string&gt;?</code>.  The operators defined are &gt;, &gt;=, &lt;, &lt;=, and =.
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string&lt;=?</span> <span class="selfeval">"ABC"</span> <span class="selfeval">"abc"</span>)
+<span class="selfeval">#t</span>
+<span class="builtin">&gt;</span> (<span class="builtin">string&lt;=?</span> <span class="selfeval">"abc"</span> <span class="selfeval">"abc"</span>)
+<span class="selfeval">#t</span>
+<span class="builtin">&gt;</span> (<span class="builtin">string=?</span> <span class="selfeval">"ABC"</span> <span class="selfeval">"abc"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="builtin">string&lt;?</span> <span class="selfeval">"abd"</span> <span class="selfeval">"abc"</span>)
+<span class="selfeval">#f</span>
+</pre>
+</div>
+Lower case characters are considered greater than uppercase:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string&gt;?</span> <span class="selfeval">"AAA"</span> <span class="selfeval">"aaa"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="builtin">string&lt;?</span> <span class="selfeval">"AAA"</span> <span class="selfeval">"aaa"</span>)
+<span class="selfeval">#t</span>
+</pre>
+</div>
+There are also case insensitive versions in the form string-ci<b>
+  <i>op</i>
+</b>?
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-ci=?</span> <span class="selfeval">"AAA"</span> <span class="selfeval">"aaa"</span>)
+<span class="selfeval">#t</span>
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+TODO: talk about case sensitivity when you're working with text that's not English.
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 09 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 160 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

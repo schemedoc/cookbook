@@ -1,0 +1,94 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Printing_Correct_Plurals"> Printing Correct Plurals </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You would like to generate messages reporting quantities with correct grammar.  For example, you would like to say "There is 1 monster approaching" or "There are 2 monsters approaching", not "There are 1 monsters approaching."
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The most portable approach is to make use of Scheme's generic formatting logic to generate a string based on conditionals:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">monster-string</span> <span class="variable">n</span>)
+  (<span class="keyword">let</span> ((<span class="variable">text</span> (<span class="keyword">if</span> (<span class="builtin">=</span> <span class="variable">n</span> <span class="selfeval">1</span>) (<span class="builtin">list</span> <span class="selfeval">"is"</span> <span class="selfeval">1</span> <span class="selfeval">""</span>)
+              (<span class="builtin">list</span> <span class="selfeval">"are"</span> <span class="variable">n</span> <span class="selfeval">"s"</span>))))
+    (<span class="variable">printf</span> <span class="selfeval">"There ~a ~a monster~a approaching"</span>
+            (<span class="builtin">car</span> <span class="variable">text</span>) (<span class="builtin">cadr</span> <span class="variable">text</span>) (<span class="builtin">caddr</span> <span class="variable">text</span>))))
+<span class="builtin">&gt;</span> (<span class="variable">monster-string</span> <span class="selfeval">1</span>)
+<span class="variable">There</span> <span class="variable">is</span> <span class="selfeval">1</span> <span class="variable">monster</span> <span class="variable">approaching</span>
+<span class="builtin">&gt;</span> (<span class="variable">monster-string</span> <span class="selfeval">15</span>)
+<span class="variable">There</span> <span class="variable">are</span> <span class="selfeval">15</span> <span class="variable">monsters</span> <span class="variable">approaching</span>
+<span class="builtin">&gt;</span>
+</pre>
+</div>
+<p />
+An alternative approach would be to define a set of functions to present the correct syntax:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">is-are</span> <span class="variable">n</span>)
+  (<span class="keyword">if</span> (<span class="builtin">=</span> <span class="variable">n</span> <span class="selfeval">1</span>) <span class="selfeval">"is"</span> <span class="selfeval">"are"</span>))
+(<span class="keyword">define</span> (<span class="variable">plural</span> <span class="variable">n</span>)
+  (<span class="keyword">if</span> (<span class="builtin">=</span> <span class="variable">n</span> <span class="selfeval">1</span>) <span class="selfeval">""</span> <span class="selfeval">"s"</span>))
+(<span class="keyword">define</span> (<span class="variable">monster-string2</span> <span class="variable">n</span>)
+  (<span class="variable">printf</span> <span class="selfeval">"There ~a ~a monster~a approaching"</span>
+          (<span class="variable">is-are</span> <span class="variable">n</span>)
+          <span class="variable">n</span>
+          (<span class="variable">plural</span> <span class="variable">n</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">monster-string2</span> <span class="selfeval">1</span>)
+<span class="variable">There</span> <span class="variable">is</span> <span class="selfeval">1</span> <span class="variable">monster</span> <span class="variable">approaching</span>
+<span class="builtin">&gt;</span> (<span class="variable">monster-string2</span> <span class="selfeval">15</span>)
+<span class="variable">There</span> <span class="variable">are</span> <span class="selfeval">15</span> <span class="variable">monsters</span> <span class="variable">approaching</span>
+<span class="builtin">&gt;</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+This code should come with a warning that this is certainly not the way to go if you want to have display messages translated to other languages.  Pluralization rules differ drastically among languages (for instance, the in German, the definite article is changed by pluralization).
+<p />
+Not much else to say.  Perl's Lingua::EN support is far superior to Scheme here.  Good idea for a library we could write!
+<p />
+<p />
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+<p />
+<p />
+Comments go here
+<p />
+-- <a href="/Main/BrentAFulgham">BrentAFulgham</a> - 27 Aug 2004
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 29 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 150 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

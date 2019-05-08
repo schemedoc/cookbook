@@ -1,0 +1,84 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h1><a name="Transforming_CoreScheme_into_A_N"> </a> Transforming <span style="background : #FFFFCE;">
+  <font color="#0000FF">CoreScheme</font>
+</span><a href="/edit/Cookbook/CoreScheme?topicparent=Cookbook.PearlANormalForm">?</a> into A Normal Form </h1>
+<p />
+Compilers for higher order langauges often use different forms
+of temporary representations of the program.
+<p />
+In A normal form the program source is linearized and all
+temporary results are named. It is therefore easy to produce
+assembler from normalized programs.
+<p />
+The linear time algorithm below transforms expressions in
+<span style="background : #FFFFCE;">
+  <font color="#0000FF">CoreScheme</font>
+</span><a href="/edit/Cookbook/CoreScheme?topicparent=Cookbook.PearlANormalForm">?</a> into A Normal Form. The algorithm is from
+<a href="http://www.ccs.neu.edu/scheme/pubs/pldi93-fsdf.ps.gz" target="_top">"The Essence of Compiling with Continuations"</a> by
+Cormac Flanagan, Amr Sabry, Bruce Duba and Matthias Felleisen.
+The programming technique used was pionered by Danvy and Filinski.
+<p />
+<p />
+The abstract syntax for <span style="background : #FFFFCE;">
+  <font color="#0000FF">CoreScheme</font>
+</span><a href="/edit/Cookbook/CoreScheme?topicparent=Cookbook.PearlANormalForm">?</a> and the corresponding A normal
+form is:
+<pre>
+;; Abstract syntaks for Core Scheme (CS)
+     M  ::=   V                      Values
+         |    (let (x M) M)
+         |    (if0 M M M)
+         |    (M M ... M)
+         |    (O M ... M)            Primitive Operations
+     V  ::=  c                       Constants
+         |   x                       Variables
+         | (lambda x1 ... xn . M)
+;; A-normalized CS
+     M  ::=   V                             (return)
+         |    (let (x V) M)                 (bind)
+         |    (if0 V M M)                   (branch)
+         |    (V V1 ... Vn)                 (tail call)
+         |    (let ((x (V V1 ... Vn))) M)   (call)
+         |    (O V1 ... Vn)                 (prim-op)
+         |    (let ((x (O V1 ... Vn))) M)   (prim-op)
+     V  ::=  c | x | (lambda x ... x . M)   Values
+</pre>
+<p />
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="Contributors"> Contributors </a>
+</h2>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 21 May 2004
+<p />
+<h2>
+  <a name="Comments"> Comments </a>
+</h2>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Pearl </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/PearlsList">PearlsList</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

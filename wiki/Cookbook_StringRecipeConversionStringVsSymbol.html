@@ -1,0 +1,83 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Converting_Between_Strings_and_S"> Converting Between Strings and Symbols </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to convert a symbol to a string or vice versa
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The built-in function <code>string-&gt;symbol</code> converts from a string to a symbol, and <code>symbol-&gt;string</code> does the conversion in the other direction.
+<p />
+For example:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"hello"</span>)
+<span class="variable">hello</span>
+<span class="builtin">&gt;</span> (<span class="builtin">symbol-&gt;string</span> <span class="keyword">'</span><span class="variable">hello</span>)
+<span class="selfeval">"hello"</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Note that since version 299 PLT Scheme is case sensitive, so the symbols <code>'hello</code>, <code>'Hello</code> and 'HeLLo' will be different:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">and</span> (<span class="builtin">eq?</span> <span class="keyword">'</span><span class="variable">hello</span> <span class="keyword">'</span><span class="variable">Hello</span>) (<span class="builtin">eq?</span> <span class="keyword">'</span><span class="variable">hello</span> <span class="keyword">'</span><span class="variable">HeLLo</span>))
+<span class="selfeval">#f</span>
+</pre>
+</div>
+<p />
+Many other Schemes are case sensitive (though the trend is towards case insensitivity).
+Using <code>string-&gt;symbol</code> is one way of getting around the problem of case-insensitivity when case-sensitive symbols are needed (for example when processing XML):
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">eq?</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"hello"</span>) (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"Hello"</span>))
+<span class="selfeval">#f</span>
+</pre>
+</div>
+<p />
+Also note that in PLT Scheme there are special quoting rules for symbols that would otherwise be read as something else.  For example if you wanted to write a symbol that was bracketed, and so would normally be read as a list, you could write:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> <span class="keyword">'</span><span class="variable">\(#0000ff\)</span>
+|(<span class="selfeval">#0000ff</span>)|
+<span class="builtin">&gt;</span> <span class="keyword">'</span>|[<span class="selfeval">#0000ff</span>]|
+|[<span class="selfeval">#0000ff</span>]|
+</pre>
+</div>
+<p />
+The symbol doesn't really have the bars or the backslashes in it's
+name, it's just that it has to be written like that, so the brackets
+aren't interpreted as lists.
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 040 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

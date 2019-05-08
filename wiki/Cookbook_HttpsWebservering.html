@@ -1,0 +1,151 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Using_Apache_as_a_HTTPS_front_en"> </a> Using Apache as a HTTPS front end for the PLT web server </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+The PLT web server does not accept HTTPS connections on it's own.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use Apache to proxy the HTTPS requests for the PLT web server
+<p />
+First set up the PLT web server on port 8080.  Instructions for that are found here: <a href="/Cookbook/WebPLTWebServer">WebPLTWebServer</a> (<a href="http://schemecookbook.org/Cookbook/WebPLTWebServer" target="_top">http://schemecookbook.org/Cookbook/WebPLTWebServer</a>)
+<p />
+Once that's running (and you've tested that it's working), then install apache2.  Apache2 will normally install by default install on port 80 as a HTTP server.  Test it by going to <code>http://localhost/</code>.  You should be able to see the default Apache page.  Once you can see it, add:
+<p />
+<pre>
+  LoadModule ssl_module modules/mod_ssl.so
+</pre>
+<p />
+to <code>/etc/apache2/httpd.conf</code> and add the following options to the apache2: <code>-D SSL -D SSL_DEFAULT_VHOST</code>
+{on gentoo this is found in /etc/conf.d/apache2, and looks like:
+APACHE2_OPTS="-D DEFAULT_VHOST -D SSL -D SSL_DEFAULT_VHOST"}
+<p />
+<p />
+This will load the HTTPS extensions, and will hopefully set up the default HTTPS page configuration for you.  Test it by going to <code>https://localhost/</code>.  If you see the default Apache page, then it worked.
+<p />
+<p />
+Now we need it to send requests to the PLT server on port 8080.  First, add the following module entries to <code>/etc/apache2/httpd.conf</code>:
+<p />
+<pre>
+  LoadModule rewrite_module modules/mod_rewrite.so
+  LoadModule proxy_module modules/mod_proxy.so
+  LoadModule proxy_connect_module modules/mod_proxy_connect.so
+  LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
+  LoadModule proxy_http_module modules/mod_proxy_http.so
+</pre>
+<p />
+Then add the following directory entry to the same file (<code>/etc/apache2/httpd.conf</code>):
+<p />
+<pre>
+  &lt;Directory "/var/www/localhost/htdocs/"&gt;
+    Options Indexes MultiViews FollowSymLinks SymLinksIfOwnerMatch
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    RewriteEngine On
+    RewriteRule ^(.*)$ http://localhost:8080/$1 [P]
+  &lt;/Directory&gt;
+</pre>
+<p />
+<p />
+Test it by going to:
+<p />
+<pre>
+  lynx https://localhost/servlets/examples/add.ss
+</pre>
+<p />
+<p />
+If that works, we still have a security issue.  Go to <code>https://localhost/servlets/configure.ss</code>.  This allows you to reconfigure your system from a web browser on the local machine.  Since Apache proxies the request through localhost, every request looks like it came from the local machine.  We can stop this from happening.  Do the following commands at the command shell on your system:
+<p />
+<pre>
+  bash# ifconfig lo:2 10.200.200.200
+  bash# route add -host 10.200.200.200 lo:2
+</pre>
+<p />
+(note, these settings will clear upon reboot.  you need to add it to the networking configuration files for your system if you want it to say permanent)
+<p />
+Now, in <code>/etc/apache2/httpd.conf</code>, change the <code>RewriteRule</code> to look like:
+<p />
+<pre>
+  RewriteRule ^(.*)$ http://10.200.200.200:8080/$1 [P]
+</pre>
+<p />
+So the whole directory entry in <code>/etc/apache2/httpd.conf</code> should now look like:
+<p />
+<pre>
+  &lt;Directory "/var/www/localhost/htdocs/"&gt;
+    Options Indexes MultiViews FollowSymLinks SymLinksIfOwnerMatch
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    RewriteEngine On
+    RewriteRule ^(.*)$ http://10.200.200.200:8080/$1 [P]
+  &lt;/Directory&gt;
+</pre>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Other issues:
+<p />
+<ol>
+<li> If you want Apache to serve pages other then the PLT web server, you can change the direcory entry to use ``/plt-ws'' instead of root, and use a filter like <code>ExtFilterDefine plt mode=output cmd="/usr/bin/sed 's/\\/servlets;/\\/plt-ws\\/servlets;/'"</code>.  However this is not ideal.
+</li>
+<li> You may want to configure the PLT web server so it <strong>only</strong> responds to 10.200.200.200, and localhost.  (firewall/iptables, or plt config file?)
+</li>
+<li> Can/Should localhost confguration be disabled via a PLT web server configuration file?
+</li>
+</ol>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+This article isn't pretty.  Everyone should feel free to fix up this article.  However, If you want to add platform specific info, please add it as a seperate "alternate platform" thread, instead of breaking the current commands ;)
+<p />
+-- <a href="/Main/TempOne">TempOne</a> - 29 Nov 2005
+<p />
+Note that this can also be done using pure PLT Scheme.  The example at <a href="/Cookbook/WebFetchingHttpsUrl">WebFetchingHttpsUrl</a> shows how to fetch HTTPS URLs, which is done by creating a version of the URL module which uses SSL.  Something similar can be done with the web server.  PLT's <code>handin-server</code> collection provides an example of this - see <code>web-status-server.ss</code> in particular, which links <code>web-server-unit.ss</code> with <code>ssl-tcp-unit.ss</code>.
+<p />
+Even if this approach is used, the above entry may still be useful in various ways, including for purposes other than proxying HTTPS.  Perhaps the bulk of the topic should be moved to a more general entry about proxying the PLT web server.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 29 Nov 2005
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/TempOne">TempOne</a> - 29 Nov 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/WebRecipes">WebRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 055 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

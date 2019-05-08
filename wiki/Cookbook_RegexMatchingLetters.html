@@ -1,0 +1,130 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Matching_Letters"> Matching Letters </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to see if a value contains only alphabetic characters.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+A first approximation can be achieved using the standard character classes:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="selfeval">"^[A-Za-z]+$"</span> <span class="selfeval">"PLTScheme"</span>)
+(<span class="selfeval">"PLTScheme"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="selfeval">"^[A-Za-z]+$"</span> <span class="selfeval">"123-Have Fun"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="keyword">if</span> (<span class="variable">regexp-match</span> <span class="selfeval">"^[A-Za-z]+$"</span> <span class="selfeval">"Soup"</span>)
+      (<span class="variable">printf</span> <span class="selfeval">"I like alphabet soup!"</span>)
+      (<span class="variable">printf</span> <span class="selfeval">"I don't like number soup."</span>))
+<span class="variable">I</span> <span class="variable">like</span> <span class="variable">alphabet</span> <span class="variable">soup!</span>
+<span class="builtin">&gt;</span>
+</pre>
+</div>
+<p />
+Unfortunately, this does not properly handle foreign languages that might have additional characters outside the standard 26 english letters.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="selfeval">"^[A-Za-z]+$"</span> <span class="selfeval">"Moli�re"</span>)
+<span class="selfeval">#f</span>
+</pre>
+</div>
+<p />
+If you need to match alternative alphabets (as defined by the user's locale settings), you should use <a href="/Cookbook/SRFI">SRFI</a> 14 (Character-set Library) and the <code>char-set:letter</code> character set.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="builtin">exp</span>
+         (<span class="variable">regexp</span> (<span class="builtin">string-append</span> <span class="selfeval">"^["</span>
+                   (<span class="variable">char-set-&gt;string</span>
+                      (<span class="variable">char-set-difference</span>
+                        <span class="variable">char-set:letter</span> <span class="variable">char-set:punctuation</span>))
+                                <span class="selfeval">"]+$"</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="builtin">exp</span> <span class="selfeval">"PLTScheme"</span>)
+(<span class="selfeval">"PLTScheme"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="builtin">exp</span> <span class="selfeval">"Moli�re"</span>)
+(<span class="selfeval">"Moli�re"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<a href="/Cookbook/SRFI">SRFI</a> 14 provides a large set of character set and character set manipulation tools.  For the purposes of this recipe we can build a suitable regular expression by assembling it from the "beginning of line" character (<code>^</code>), the "match one-of" opening bracket (<code>[</code>), the set of letter characters from Unicode (<code>char-set:letter</code>) less the set of punctuation characters (<code>char-set:punctuation =), which we convert to a string, the "match one-of" closing bracket (=]</code>), the "match at least one" operator (<code>+</code>), and the "to end of line" character (<code>$</code>).
+<p />
+Here's how you'd use this in a program:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"14.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">define</span> (<span class="variable">test-alphabetic</span> <span class="variable">words</span>)
+  (<span class="keyword">letrec</span> ((<span class="builtin">exp</span>
+            (<span class="variable">regexp</span> (<span class="builtin">string-append</span> <span class="selfeval">"^["</span>
+                                   (<span class="variable">char-set-&gt;string</span>
+                                    (<span class="variable">char-set-difference</span>
+                                     <span class="variable">char-set:letter</span> <span class="variable">char-set:punctuation</span>))
+                                       <span class="selfeval">"]+$"</span>)))
+           (<span class="variable">checker</span> (<span class="keyword">lambda</span> (<span class="variable">words</span> <span class="variable">alphawords</span>)
+                      (<span class="keyword">if</span> (<span class="builtin">null?</span> <span class="variable">words</span>) <span class="variable">alphawords</span>
+                          (<span class="keyword">let</span> ((<span class="variable">word</span> (<span class="builtin">car</span> <span class="variable">words</span>))
+                          (<span class="keyword">if</span> (<span class="variable">regexp-match</span> <span class="builtin">exp</span> (<span class="builtin">car</span> <span class="variable">words</span>))
+                              (<span class="variable">checker</span> (<span class="builtin">cdr</span> <span class="variable">words</span>) (<span class="builtin">cons</span> (<span class="builtin">car</span> <span class="variable">words</span>) <span class="variable">alphawords</span>))
+                              (<span class="variable">checker</span> (<span class="builtin">cdr</span> <span class="variable">words</span>) <span class="variable">alphawords</span>))))))
+    (<span class="variable">checker</span> <span class="variable">words</span> <span class="keyword">'</span>())))<span class="selfeval">2004</span>
+(<span class="keyword">define</span> <span class="variable">test-words</span>
+  (<span class="builtin">list</span> <span class="selfeval">"silly"</span> <span class="selfeval">"fa�ade"</span> <span class="selfeval">"co�perate"</span> <span class="selfeval">"ni�o"</span> <span class="selfeval">"Ren�e"</span> <span class="selfeval">"Moli�re"</span>
+        <span class="selfeval">"h�moglobin"</span> <span class="selfeval">"na�ve"</span> <span class="selfeval">"tsch��"</span> <span class="selfeval">"random!stuff#here"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">test-alphabetic</span> <span class="variable">test-words</span>)
+(<span class="selfeval">"tsch��"</span> <span class="selfeval">"na�ve"</span> <span class="selfeval">"h�moglobin"</span> <span class="selfeval">"Moli�re"</span> <span class="selfeval">"Ren�e"</span> <span class="selfeval">"ni�o"</span> <span class="selfeval">"co�perate"</span> <span class="selfeval">"fa�ade"</span> <span class="selfeval">"silly"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="References"> References </a>
+</h3>
+<p />
+Your system's locale (3) manpage
+Mastering Regular Expressions
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+Even though we are able to handle most Latin-1 character sets, Scheme is really not fully Unicode compliant.  This will be addressed for PLT Scheme in the soon-to-be-released update.
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/BrentAFulgham">BrentAFulgham</a> - 18 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/RegexRecipes">RegexRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

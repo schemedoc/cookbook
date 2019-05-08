@@ -1,0 +1,64 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Changing_the_Indentation_of_a_St"> Changing the Indentation of a String </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You have a string made up of multiple lines, and you need to build a string, adding or removing spaces so that all lines are indented equally.
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"string.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"13"</span>))
+(<span class="keyword">define</span> (<span class="variable">reindent</span> <span class="variable">s</span> <span class="variable">num-spaces</span>)
+  (<span class="keyword">let</span> ((<span class="variable">lmargin</span> (<span class="builtin">make-string</span> <span class="variable">num-spaces</span> <span class="selfeval">#\space</span>))
+        (<span class="builtin">newline</span> (<span class="builtin">make-string</span> <span class="selfeval">1</span> <span class="selfeval">#\newline</span>)))
+    (<span class="variable">string-join</span> (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">a-line</span>)
+                        (<span class="builtin">string-append</span> <span class="variable">lmargin</span> (<span class="variable">string-trim</span> <span class="variable">a-line</span>)))
+                      (<span class="variable">string-tokenize</span> <span class="variable">s</span>))
+                 <span class="builtin">newline</span>)))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">display</span> (<span class="variable">reindent</span> <span class="selfeval">"one\ntwo\nthree"</span> <span class="selfeval">3</span>))
+   <span class="variable">one</span>
+   <span class="variable">two</span>
+   <span class="variable">three</span>
+<span class="builtin">&gt;</span> (<span class="builtin">display</span> (<span class="variable">reindent</span> <span class="selfeval">"one\n     two\n  three"</span> <span class="selfeval">3</span>))
+   <span class="variable">one</span>
+   <span class="variable">two</span>
+   <span class="variable">three</span>
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+This definition uses <code>string-tokenize</code> to split the string argument on newliness, then uses <code>map</code> to process each line, removing any existing leading space and then appending the proper indentation to the start of each line.  Finally, the result of <code>map</code> is passed to <code>string-join</code>, which joins the result with newlines.
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 26 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 130 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

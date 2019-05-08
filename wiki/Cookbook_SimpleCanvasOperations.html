@@ -1,0 +1,106 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Simple_Canvas_operations"> Simple Canvas operations </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to operate on and interact with a drawing canvas.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+See also ''PLT <a href="/Cookbook/MrEd">MrEd</a>: Graphical Toolbox Manual Chapter 5 Drawing Toolbox Overview''
+<p />
+Here is a simple example of;
+<ol>
+<li> putting an image on a canvas
+</li>
+<li> getting a mouseclick
+</li>
+<li> getting the colour of the canvas at the point of the click.
+</li>
+</ol>
+<p />
+I put it here because, while there are good examples in the <a href="/Cookbook/MrEd">MrEd</a> (gui) manual, this is one that isn't covered.
+<p />
+Use <a href="/Cookbook/DrScheme">DrScheme</a> language <a href="/Cookbook/MrEd">MrEd</a>
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; obtain a bitmap and stick it into a bitmap dc
+</span>(<span class="keyword">define</span> <span class="variable">plt</span>
+  (<span class="variable">make-object</span> <span class="variable">bitmap%</span> (<span class="variable">build-path</span> (<span class="variable">collection-path</span> <span class="selfeval">"icons"</span>)
+                                   <span class="selfeval">"plt.gif"</span>)))
+(<span class="keyword">define</span> <span class="variable">bm</span>
+  (<span class="variable">new</span> <span class="variable">bitmap-dc%</span> [<span class="variable">bitmap</span> <span class="variable">plt</span>]))
+<span class="comment">;; --- set up a frame with a canvas in which to display this image
+</span>(<span class="keyword">define</span> <span class="variable">frame</span>
+  (<span class="variable">new</span> <span class="variable">frame%</span> [<span class="variable">label</span> <span class="selfeval">"Test for Linda"</span>]
+       [<span class="variable">width</span> (<span class="variable">send</span> <span class="variable">plt</span> <span class="variable">get-width</span>)] [<span class="variable">height</span> (<span class="variable">send</span> <span class="variable">plt</span> <span class="variable">get-height</span>)]))
+(<span class="keyword">define</span> <span class="variable">canvas</span> (<span class="variable">new</span>
+                <span class="comment">;; --- create a class on the fly that overrides the callback for
+</span>                <span class="comment">;; --- mouse events in a canvas; you could name it, if needed
+</span>                (<span class="variable">class</span> <span class="variable">canvas%</span>
+                  <span class="comment">;; Event -&gt; Void
+</span>                  <span class="comment">;; act on each mouse event
+</span>                  (<span class="variable">define/override</span> (<span class="variable">on-event</span> <span class="variable">e</span>)
+                    (<span class="keyword">define</span> <span class="variable">kind</span> (<span class="variable">send</span> <span class="variable">e</span> <span class="variable">button-down?</span>))
+                    (<span class="keyword">define</span> <span class="variable">x</span> (<span class="variable">send</span> <span class="variable">e</span> <span class="variable">get-x</span>))
+                    (<span class="keyword">define</span> <span class="variable">y</span> (<span class="variable">send</span> <span class="variable">e</span> <span class="variable">get-y</span>))
+                    (<span class="keyword">define</span> <span class="variable">c</span> (<span class="variable">new</span> <span class="variable">color%</span>))
+                    (<span class="keyword">when</span> <span class="variable">kind</span>
+                      (<span class="keyword">if</span> (<span class="variable">send</span> <span class="variable">bm</span> <span class="variable">get-pixel</span> <span class="variable">x</span> <span class="variable">y</span> <span class="variable">c</span>)
+                          (<span class="variable">printf</span> <span class="selfeval">"color is ~s ~s ~s\n"</span>
+                                  (<span class="variable">send</span> <span class="variable">c</span> <span class="variable">red</span>) (<span class="variable">send</span> <span class="variable">c</span> <span class="variable">green</span>) (<span class="variable">send</span> <span class="variable">c</span> <span class="variable">blue</span>))
+                          (<span class="variable">printf</span> <span class="selfeval">"no color"</span>))))
+                  (<span class="variable">super-new</span>))
+                <span class="comment">;;--- provide a frame and a paint method for displaying plt.gif
+</span>                [<span class="variable">parent</span> <span class="variable">frame</span>]
+                [<span class="variable">paint-callback</span> (<span class="keyword">lambda</span> (<span class="variable">e</span> <span class="variable">dc</span>) (<span class="variable">send</span> <span class="variable">dc</span> <span class="variable">draw-bitmap</span> <span class="variable">plt</span> <span class="selfeval">0</span> <span class="selfeval">0</span>))]))
+<span class="comment">;; --- run program run
+</span>(<span class="variable">send</span> <span class="variable">frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+</pre>
+</div>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+Thanks to Matthias Felleisen for posting this on the PLT list in response to a query.
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 19 Dec 2007
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 19 Dec 2007
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> GUIRecipes </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 002 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,103 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Extracting_a_sublist"> Extracting a sublist </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+Given a list, extract a segment specified by a start and an end index (exclusive).
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"1"</span>))
+<span class="comment">; sublist : list integer integer -&gt; list
+</span><span class="comment">;  (sublist (list x0 x1 ... xn) s e)
+</span><span class="comment">;  =&gt; (list xs ... x_e-1)
+</span>(<span class="keyword">define</span> (<span class="variable">sublist</span> <span class="variable">a-list</span> <span class="variable">start</span> <span class="variable">end</span>)
+  (<span class="variable">take</span> (<span class="variable">drop</span> <span class="variable">a-list</span> <span class="variable">start</span>)
+        (<span class="builtin">-</span> <span class="variable">end</span> <span class="variable">start</span>)))
+<span class="comment">; sublist! : list integer integer -&gt; list
+</span><span class="comment">;  the linear update version of sublist,
+</span><span class="comment">;  sublist! may alter a-list to produce the result
+</span>(<span class="keyword">define</span> (<span class="variable">sublist!</span> <span class="variable">a-list</span> <span class="variable">start</span> <span class="variable">end</span>)
+  (<span class="variable">take!</span> (<span class="variable">drop</span> <span class="variable">a-list</span> <span class="variable">start</span>)
+         (<span class="builtin">-</span> <span class="variable">end</span> <span class="variable">start</span>)))
+</pre>
+</div>
+<p />
+This uses the <code>take</code> and <code>drop</code> functions from <a href="/Cookbook/SRFI">SRFI</a> 1.  The function <code>take</code> takes the first <code>n</code> elements from a list, while <code>drop</code> takes everything after the first <code>n</code> elements.  So you can see that we're dropping <code>start</code> elements from the front of the list and taking <code>{- end start)</code> elements from that result.
+<p />
+Example usage:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">sublist</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>)  <span class="selfeval">3</span> <span class="selfeval">5</span>)
+(<span class="selfeval">4</span> <span class="selfeval">5</span>)
+<span class="builtin">&gt;</span> (<span class="variable">sublist</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>)  <span class="selfeval">1</span> <span class="selfeval">5</span>)
+(<span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span>)
+<span class="builtin">&gt;</span> (<span class="variable">sublist</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>)  <span class="selfeval">1</span> <span class="selfeval">1</span>)
+()
+<span class="builtin">&gt;</span> (<span class="variable">sublist</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>)  <span class="selfeval">1</span> <span class="selfeval">2</span>)
+(<span class="selfeval">2</span>)
+<span class="builtin">&gt;</span> (<span class="variable">sublist</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>)  <span class="selfeval">7</span> <span class="selfeval">8</span>)
+(<span class="selfeval">8</span>)
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+A call to <code>sublist</code> will a return a newly allocated list holding
+the elements of the given segment.
+<p />
+The function <code>sublist!</code> will alter the given list, and will therefore not allocate a new list.
+<p />
+<p />
+Note: The <code>sublist</code> function corrresponds to using the slice operator in Python.
+<p />
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 29 Apr 2004, <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 12 May 2004
+<p />
+<h3>
+  <a name="Comments"> Comments </a>
+</h3>
+<p />
+I rewrote the text to use the language of <span style="background : #FFFFCE;">
+  <font color="#0000FF">SRFI1</font>
+</span><a href="/edit/Cookbook/SRFI1?topicparent=Cookbook.ListRecipeExtractingSublist">?</a>, i.e. using "sublist" instead of "slice".
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 13 May 2004
+<p />
+I changed a typo ("start" instead of "end") in the <code>drop</code> function.
+<p />
+-- <a href="/Main/GiovanniRuggiero">GiovanniRuggiero</a> - 29 Oct 2004
+<p />
+Changed (require (lib "1.ss" "srfi")) to (require (lib "list.ss" "srfi" "1")).
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 17 Jun 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ListRecipes">ListRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

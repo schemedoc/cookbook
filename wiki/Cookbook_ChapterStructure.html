@@ -1,0 +1,143 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1>
+  <a name="Cookbook_Chapter_Structure"> Cookbook Chapter Structure </a>
+</h1>
+<p />
+<p />
+<ul>
+<li> <a href="/Cookbook/ChapterStructure#Cookbook_Chapter_Structure">Cookbook Chapter Structure</a>
+<ul>
+<li> <a href="/Cookbook/ChapterStructure#Introduction">Introduction</a>
+</li>
+<li> <a href="/Cookbook/ChapterStructure#Chapters">Chapters</a>
+</li>
+<li> <a href="/Cookbook/ChapterStructure#Introduction_Section">Introduction Section</a>
+</li>
+<li> <a href="/Cookbook/ChapterStructure#Recipe_Section">Recipe Section</a>
+</li>
+<li> <a href="/Cookbook/ChapterStructure#Recipes">Recipes</a>
+</li>
+<li> <a href="/Cookbook/ChapterStructure#Comments_Section">Comments Section</a>
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+This is technical documentation of the Cookbook chapter structure.  Documentation for authors will be based on the automated creation of chapters via the <a href="/Cookbook/NewChapter">NewChapter</a> page - authors don't need to be familiar with the detail below.
+<p />
+<h2>
+  <a name="Chapters"> Chapters </a>
+</h2>
+<p />
+Chapters can be created via the <a href="/Cookbook/NewChapter">NewChapter</a> page, which uses <a href="/Cookbook/DefaultChapterTemplate">DefaultChapterTemplate</a> to create a new chapter.  This ensures that a chapter has the proper structure.  The source to <a href="/Cookbook/DefaultChapterTemplate">DefaultChapterTemplate</a> is as follows:
+<p />
+<pre>
+%STARTINCLUDE%
+---+ %URLPARAM{"title"}%
+%TMPL:P{"chapterquery"}%
+%STOPINCLUDE%
+&lt;br /&gt;
+---
+%TMPL:P{"chaptercommentlink"}%
+%INCLUDE{"%TOPIC%Comments"}%
+   * Set ALLOWTOPICCHANGE = Main.SchematicsEditorsGroup
+</pre>
+<p />
+The <code>chapterquery</code> referenced above is a TWiki query which selects all topics with a <a href="/Cookbook/TopicType">TopicType</a> of <em>Section</em> or <em>SectionStub</em> and whose <a href="/Cookbook/ParentTopic">ParentTopic</a> is the chapter in question.  This is typically used to include an Introduction section, a Recipes section, and a Comments section.  Other sections can also be included, for example a References section, or an Other Recipes section.  No change needs to be made to the above chapter source to achieve this; it's all based on the values specified in the <a href="/Cookbook/CookbookForm">CookbookForm</a> for the topics in question.
+<p />
+The standard Introduction, Recipe and Comments sections are described below.
+<p />
+<h2>
+  <a name="Introduction_Section"> Introduction Section </a>
+</h2>
+<p />
+This is an "ordinary", un-automated section, which simply contains introductory text for the chapter in question.  It will typically have a format like the following:
+<p />
+<pre>
+%STARTINCLUDE%
+---++ Introduction
+Froobnitzen are an advanced feature of Scheme which allows Scheme
+programs and their users to generate and travel through arbitrary
+wormholes in spacetime.  This chapter will show you how to use
+froobnitzen, and how to avoid accidentally destroying your planet
+of residence in the process.  Needless to say, we at Schematics
+disclaim all responsibility for the consequences if you choose to
+use froobnitzen in your programs...
+%STOPINCLUDE%
+-- Main.SpaceCowboySchemer - 13 Jun 2077
+</pre>
+<p />
+<h2>
+  <a name="Recipe_Section"> Recipe Section </a>
+</h2>
+<p />
+Most chapters have a Recipes section.  Recipe sections should have a <a href="/Cookbook/TopicType">TopicType</a> of <em>Section</em>, and their parent topic should be the chapter they are part of.  Their <a href="/Cookbook/TopicOrder">TopicOrder</a> should be set to a value which causes them to appear after any Introduction section - the typical value is <code>020</code>.
+<p />
+<strong>All</strong> recipe sections should have the following source:
+<p />
+<pre>
+%STARTINCLUDE%
+---++ Recipes
+%TMPL:P{"recipequery"}%
+%STOPINCLUDE%
+&lt;br /&gt;
+---
+   * Set ALLOWTOPICCHANGE = Main.SchematicsEditorsGroup
+</pre>
+<p />
+These Recipe topics are not currently created automatically, but they should be, and will be when chapter creation is fully automated.
+<p />
+The <code>recipequery</code> referenced above is a TWiki query which selects all topics with a <a href="/Cookbook/TopicType">TopicType</a> of <em>Recipe</em> or <em>RecipeStub</em> and whose <a href="/Cookbook/ParentTopic">ParentTopic</a> is the chapter in question.
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+Recipes themselves should be created via the <a href="/Cookbook/NewRecipe">NewRecipe</a> page.  They should have a <a href="/Cookbook/TopicType">TopicType</a> of <em>Recipe</em> or <em>RecipeStub</em>, and their <a href="/Cookbook/ParentTopic">ParentTopic</a> should be the Recipe <strong>Section</strong>, not the chapter topic.  The <a href="/Cookbook/TopicOrder">TopicOrder</a> of a Recipe will determine the order in which it appears in the list of recipes.  It is often the case that simpler, more basic recipes should appear before other recipes, and <a href="/Cookbook/TopicOrder">TopicOrder</a> can be used to achieve this.  Recipes created via the <a href="/Cookbook/NewRecipe">NewRecipe</a> page
+<p />
+<h2>
+  <a name="Comments_Section"> Comments Section </a>
+</h2>
+<p />
+Chapters should have a comments section for author comments and discussion, which is not considered part of the cookbook content.  The comment sections are not included by the chapter's section query, since they do not form part of the cookbook content and shouldn't appear e.g. in tables of contents.  Instead, the chapter comments section is included based on a naming convention, using the chapter's topic name with the word <em>Comments</em> appended, which results in a topic name such as XxxChapterComments.  This naming convention is required simply because the default chapter template uses the directive <code>%INCLUDE{"%TOPIC%Comments"}%</code> to include the comments section.
+<p />
+Chapter comment topics must have a <a href="/Cookbook/TopicType">TopicType</a> of <em>Comment</em>.  The parent topic should be the chapter they belong to.   The <a href="/Cookbook/TopicOrder">TopicOrder</a> doesn't matter, and can be left blank, since there is only one comments section per chapter and it is included explicitly at the correct point in the chapter.
+<p />
+Comment sections should be created with the following source:
+<p />
+<pre>
+%TMPL:P{"chaptercommenttip"}%
+%STARTINCLUDE%
+---++!! Comments
+%STOPINCLUDE%
+</pre>
+<p />
+Once chapter creation is fully automated, these comment topics will be created automatically when a chapter is created.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 14 Jun 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Admin </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

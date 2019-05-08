@@ -1,0 +1,99 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Writing_to_a_File"> Writing to a File </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to write text or data to a file.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+If you just have a string <code>s</code> to write to a file with name <code>fname</code>, this will work:
+<div class="scheme">
+  <pre>(<span class="builtin">call-with-output-file</span> <span class="variable">fname</span>
+    (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+      (<span class="builtin">display</span> <span class="variable">s</span> <span class="variable">p</span>)))
+</pre>
+</div>
+<p />
+Or, for the truly lazy, you can redirect standard out with <code>with-output-to-file</code> and just use <code>display</code> with no port argument:
+<p />
+<div class="scheme">
+  <pre>(<span class="builtin">with-output-to-file</span> <span class="variable">fname</span>
+  (<span class="keyword">lambda</span> ()
+    (<span class="builtin">display</span> <span class="variable">s</span>)))
+</pre>
+</div>
+<p />
+If you have a list of strings, you can join the list into a string, or you can write something like this (assuming <code>string-list</code> is your list of strings):
+<div class="scheme">
+  <pre>(<span class="builtin">call-with-output-file</span> <span class="variable">fname</span>
+  (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+    (<span class="builtin">for-each</span> (<span class="keyword">lambda</span> (<span class="variable">s</span>) (<span class="builtin">display</span> <span class="variable">s</span> <span class="variable">p</span>) (<span class="builtin">newline</span> <span class="variable">p</span>)) <span class="variable">string-list</span>))
+  <span class="keyword">'</span><span class="variable">replace</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+PLT's implementation of <code>call-with-output-file</code> takes optional arguments on the end.  <code>'replace</code> is a very important one, without this flag, <code>call-with-output-file</code> will fail if the file already exists:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">call-with-output-file</span> <span class="variable">fname</span>
+    (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+      (<span class="builtin">display</span> <span class="selfeval">"Hello, World!"</span> <span class="variable">p</span>)))
+<span class="builtin">&gt;</span> (<span class="builtin">call-with-output-file</span> <span class="variable">fname</span>
+    (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+      (<span class="builtin">display</span> <span class="selfeval">"Hello, World!"</span> <span class="variable">p</span>)))
+<span class="variable">call-with-output-file:</span> <span class="variable">file</span> <span class="selfeval">"c:/temp/test.txt"</span> <span class="variable">exists</span>
+<span class="builtin">&gt;</span> (<span class="builtin">call-with-output-file</span> <span class="variable">fname</span>
+    (<span class="keyword">lambda</span> (<span class="variable">p</span>)
+      (<span class="builtin">display</span> <span class="selfeval">"Hello, again, World!"</span> <span class="variable">p</span>))
+    <span class="keyword">'</span><span class="variable">replace</span>)
+</pre>
+</div>
+<p />
+<code>'truncate</code> works slightly different from <code>'replace</code>, <code>'replace</code> is documented to remove the old file before writing a new one, while <code>'truncate</code> is documented to set the file length to 0 before writing.  You can also use <code>'append</code> to append to the end of a file, or 'update, which raises an exception if the file does not exist.
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 13 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

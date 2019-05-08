@@ -1,0 +1,131 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Converting_DMYHMS_to_Seconds"> </a> Converting DMYHMS to Seconds </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to convert a date, a time, or both with distinct values for
+day, month, year, etc. to seconds.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+First, it is important to note that time (in PLT Scheme) is always an
+exact integer based on a platform-specific starting date, an Epoch,
+(with a platform-specific minimum and maximum value).  Having that
+into consideration, and using Mzlib, we can get the number of seconds
+of a given date, and time using <code>find-seconds</code>.  For instance, to get
+the seconds corresponding to the date, and time:
+<code>"Wed Apr 21 13:01:01-0500 2004"</code> you could simply:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let</span> ((<span class="variable">seconds</span> <span class="selfeval">1</span>)
+      (<span class="variable">minutes</span> <span class="selfeval">1</span>)
+      (<span class="variable">hour</span> <span class="selfeval">13</span>)
+      (<span class="variable">day</span> <span class="selfeval">21</span>)
+      (<span class="variable">month</span> <span class="selfeval">4</span>)
+      (<span class="variable">year</span> <span class="selfeval">2004</span>))
+  (<span class="variable">find-seconds</span> <span class="variable">seconds</span> <span class="variable">minutes</span> <span class="variable">hour</span> <span class="variable">day</span> <span class="variable">month</span> <span class="variable">year</span>))
+</pre>
+</div>
+<p />
+which will return 1082570461, and that is the number we were looking
+for.  You can use the recipe in <a href="/Cookbook/TimeToday">TimeToday</a> to get the date, time, and
+other information from that number of seconds.
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+In the previous recipe, <a href="/Cookbook/TimeToday">TimeToday</a>, we converted a number of seconds to
+an instance of the date datatype.  It would be helpful to have
+procedures that acted on date instances to get back a corresponding
+number of seconds.  The library Mzlib provides the procedure
+<code>date-&gt;julian/scalinger</code> which converts a date structure (up to 2099
+BCE Gregorian) into a Julian date number.
+<p />
+The returned value is not a strict Julian number, but rather
+Scalinger's version, which is off by one for easier calculations.  The
+Mzlib library also provides the procedure <code>julian/scalinger-&gt;string</code>
+to convert a Julian number into a string.  Here's an example:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let*</span> ((<span class="variable">seconds</span> (<span class="variable">current-seconds</span>))
+       (<span class="variable">today</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>))
+       (<span class="variable">julian</span> (<span class="variable">date-&gt;julian/scalinger</span> <span class="variable">today</span>)))
+  (<span class="builtin">values</span> <span class="variable">julian</span>
+          (<span class="variable">julian/scalinger-&gt;string</span> <span class="variable">julian</span>)))
+</pre>
+</div>
+<p />
+which would return values like these: <code>2453122</code>, and <code>"JD 2 453 122"</code>.
+<p />
+<code>SRFI 19</code>, as mentioned before, is a very complete time library, and
+it includes a comprehensive list of procedures to convert date
+structures to different time systems.  Here's a list of the procedures
+supported:
+<p />
+<dl>
+<dt> date-&gt;julian-day</dt><dd> Converts date to Julian Day.
+</dd>
+<dt> date-&gt;modified-julian-day</dt><dd> Converts date to Modified Julian Day.
+</dd>
+<dt> date-&gt;time-monotonic</dt><dd> Converts date to monotonic time.
+</dd>
+<dt> date-&gt;time-tai</dt><dd> Converts date to TAI (International Atomic Time) time.
+</dd>
+<dt> date-&gt;time-utc</dt><dd> Converts date to UTC time.
+</dd>
+</dl>
+<p />
+And here's a very simple example:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"19.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">let</span> ((<span class="variable">today</span> (<span class="variable">current-date</span>)))
+  (<span class="builtin">values</span> (<span class="variable">date-&gt;julian-day</span> <span class="variable">today</span>)
+          (<span class="variable">date-&gt;modified-julian-day</span> <span class="variable">today</span>)
+          (<span class="variable">date-&gt;time-monotonic</span> <span class="variable">today</span>)
+          (<span class="variable">date-&gt;time-tai</span> <span class="variable">today</span>)
+          (<span class="variable">date-&gt;time-utc</span> <span class="variable">today</span>)))
+</pre>
+</div>
+<p />
+note that some of these return an instance of another (internal)
+structure, <code>time</code>, which can be manipulated with other procedures in
+<code>SRFI 19</code>, as those seen in recipe <a href="/Cookbook/TimeEpochToTime">TimeEpochToTime</a>.
+<p />
+<p />
+<p />
+<h4>
+  <a name="Comments_here"> Comments here </a>
+</h4>
+<p />
+-- <a href="/Main/FranciscoSolsona">FranciscoSolsona</a> - 28 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TimeRecipes">TimeRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 020 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,356 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1>
+  <a name="Pages_with_problems"> Pages with problems </a>
+</h1>
+<p />
+Note here if you come across a page with problems,
+but don't know how to fix it.
+<p />
+<h2>
+  <a name="Current_Problems"> Current Problems </a>
+</h2>
+<p />
+<ul>
+<li> This might be more of an idea than a problem: I used the statistics page in the
+     beginning to see which recipes were most interesting to people. Now the top 10
+     only contains <a href="/Cookbook/TOC">TOC</a>, chaptes etc. Would it be possible to a Recipe Top 10?
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 20 May 2005
+<ul>
+<li> TWiki maintains a fairly straightforward statistics file, so this should be possible.  I'll check it out and report back.  -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 22 May 2005
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Links in notification  e-mails have the correct text, but has the wrong url.
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 05 Mar 2005
+<ul>
+<li> I think the problem is that the site config deliberately doesn't specify a host name, to allow for access via either schemewiki.org or schemecookbook.org.  If a host name is specified in the config, then all links will include that name.  I'll investigate further to see if we can have it both ways. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 22 May 2005
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> <a href="/Cookbook/ProcessRunningExternalProcess">ProcessRunningExternalProcess</a> isn't rendering included source code.  I'm sure it is something obvious but I can't see it.  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 25 Feb 2005
+<ul>
+<li> File this under "regexps gone wild"...  It seems that the %end% tags all had a trailing space, but the match seems to fail if the tag isn't followed immediately by a newline. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 04 Mar 2005
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<p />
+<ul>
+<li> After editing a piece of a chapter (such as <a href="/Cookbook/StructureChapterComments">StructureChapterComments</a>)
+     it would be convenient to have easy access to the chapter itself,
+     (in this case <a href="/Cookbook/StructureChapter">StructureChapter</a>).
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 02 Sep 2004
+<ul>
+<li> It's not very prominent, but the <a href="/Cookbook/ParentTopic">ParentTopic</a> field in the <a href="/Cookbook/CookbookForm">CookbookForm</a> contains a link to the chapter.  I'd like to have better links all around from the chapter to its included topics &amp; vice versa, though.
+        -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 03 Sep 2004
+</li>
+<li> Also, the topic "path" in the top right corner of the page will sometimes have a link to the parent topic, depending on how the topic was originally created.  Ideally, we should have a script to automatically set these paths, based on the <a href="/Cookbook/CookbookForm">CookbookForm</a>. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 08 Sep 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> It seems to me that the diff between two versions are broken.
+     E.g. see the recently changed <a href="/Cookbook/NumberRecipeBiasedRands">NumberRecipeBiasedRands</a> where
+     the diff shows nothing. Hm - perhaps the last change consisted only of white space?
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 25 Aug 2004
+<ul>
+<li> I think something happened in the server move, where the first change to any topic is not recognized by the diff, but subsequent changes are.  If anyone knows anything about RCS (which is what TWiki uses for revision control) and can tell me how to fix that, I'm all ears.  Otherwise, afaict it'll shake itself out, as soon as a topic is edited for the second time. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 28 Aug 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<p />
+<ul>
+<li> The <a href="/Cookbook/TOC">TOC</a> lists headers in the comments. E.g. see the <a href="/Cookbook/TOC">TOC</a> entry for <span style="background : #FFFFCE;">
+  <font color="#0000FF">PatternMatching</font>
+</span><a href="/edit/Cookbook/PatternMatching?topicparent=Cookbook.HelpNeeded">?</a>. -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 19 Aug 2004
+</li>
+</ul>
+<p />
+<p />
+<ul>
+<li> When entering a short URL that doesn't lead to a page, e.g. <a href="http://schemecookbook.org/Cookbook/FooBar" target="_top">http://schemecookbook.org/Cookbook/FooBar</a> , you get a 404 page instead of the "this topic doesn't exist, please create it" page  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 19 Aug 2004
+</li>
+</ul>
+<p />
+<p />
+<ul>
+<li> I intended to squeeze in <a href="/Cookbook/StructureRecipes">StructureRecipes</a> somewhere near lists
+     and vectors, but there isn't room between the topic numbers.
+     Is there a smart solution?  -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 04 Jun 2004
+<ul>
+<li> For now, you could just give it the same number as one of the other chapters, and it'll end up in more or less the right place.  The reason I didn't leave gaps between the chapter numbers is that I thought we might display the chapter numbers in the <a href="/Cookbook/TOC">TOC</a>.  Obviously, a more flexible solution is needed, though. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 04 Jun 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> <a href="/Cookbook/AligningStrings">AligningStrings</a> doesn't display properly in IE.
+     <em>[This is <a href="/Cookbook/BugIESourceWrapping">BugIESourceWrapping</a>, see below]</em> .
+     It's just that this time it does not seem to help wrapping
+     the lines.
+</li>
+</ul>
+<p />
+<ul>
+<li> Some pages contain links that show up with out the end ]-bracket,
+     and whose following text is colored wrongly.
+     This is caused a space between the link and name parts of the markup.
+     <verbatim>[[link]_[name]]</verbatim>. Just remove the space, when
+     you come across such pages.
+</li>
+</ul>
+<p />
+   -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 15 May 2004
+<p />
+<ul>
+<li> The "Edit Anyway"-link that shows up in an hour after the last edit in page page is missing. -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 26 Apr 2004
+<ul>
+<li> It looks to me as though this is deliberate - if we want to allow people to override other people's locks, we have to make a conscious choice and enable it in the <a href="/TWiki/TWikiTemplates">TWikiTemplates</a>.  Do we want to do that? -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 30 May 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> <a href="/Cookbook/BugIESourceWrapping">BugIESourceWrapping</a> - if source code line width is greater than IE's window, IE messes up the formatting of code.  Fixing this will either require using a different TWiki skin for IE, or fixing the current skin, <a href="/Main/VoidSkin">VoidSkin</a>, which is going to require CSS expertise and/or lots of trial and error. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 21 May 2004
+</li>
+</ul>
+<p />
+<h2>
+  <a name="Work_in_Progress"> Work in Progress </a>
+</h2>
+<p />
+<ul>
+<li> The "Entire <a href="/Cookbook/CookBook">CookBook</a>" is not shown correctly. <em>[For now, ignore <a href="/Cookbook/CookBook">CookBook</a> and use <a href="/Cookbook/RecipeIndex">RecipeIndex</a> and related pages to keep track of the cookbook structure - Anton]</em>
+</li>
+</ul>
+<p />
+      -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 02 May 2004
+<p />
+<h2>
+  <a name="Solved_Problems"> Solved Problems </a>
+</h2>
+<p />
+<ul>
+<li> The second link at <a href="/Cookbook/GettingStartedModules">GettingStartedModules</a> is not displayed correctly <em>[fixed - it was just missing a closing square bracket - Anton]</em>
+</li>
+</ul>
+<p />
+<hr>
+<ul>
+<li> The title of <a href="/Cookbook/IsAString">IsAString</a> is "Testing if an Object is a String". Shouldn't this be "Testing whether an Object is a String"?
+</li>
+</ul>
+<p />
+   -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 26 Apr 2004
+<p />
+   That's essentially copied from pycookbook 3.2 "Testing if an Object Is String-Like".  According to one of the tech writers where I work, either is correct, but "whether" is more formal.
+<p />
+   -- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 26 Apr 2004
+<p />
+   I vote for "whether" (but remember I have no idea how it sounds in the ears of a native speaker).
+<p />
+   -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 26 Apr 2004
+<p />
+[fixed]-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 26 Apr 2004
+<hr>
+<p />
+<ul>
+<li> The page <a href="/Cookbook/WebPLTWebServer">WebPLTWebServer</a> is not displayed correctly.
+</li>
+</ul>
+<p />
+   -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 27 Apr 2004
+<p />
+   <a href="/Cookbook/WebPLTWebServer">WebPLTWebServer</a> contained an HTML fragment which included the <code>&lt;html&gt;</code> element.  I wrapped that in TWiki's <code>&lt;verbatim&gt;</code> element, and it fixed the problem.
+<p />
+   -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 28 Apr 2004
+<hr>
+<ul>
+<li> The links under references in <a href="/Cookbook/EnginesUsingThreads">EnginesUsingThreads</a> is not shown correctly.
+</li>
+</ul>
+<p />
+      -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 02 May 2004
+<p />
+<ul>
+<li> The links were backwards: it's <code>[[url][description]]</code>, not the other way around.  :)
+</li>
+</ul>
+<p />
+<p />
+      -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 03 May 2004
+<hr>
+<ul>
+<li> (From <a href="/Cookbook/AligningStrings">AligningStrings</a>) Looks like the Wiki software is now interpreting the
+     vertical-bar characters  in the first example chunk of Scheme code as Wiki
+     table markup...
+</li>
+</ul>
+<p />
+      -- <a href="/Main/NeilVanDyke">NeilVanDyke</a>
+<p />
+<ul>
+<li> That was caused by a change I made to try to address <a href="/Cookbook/BugIESourceWrapping">BugIESourceWrapping</a>.  The only reason the overeager formatting wasn't happening previously seems to be because PRE elements containing Scheme source happened to be embedded in a DIV, i.e. not for any obviously valid reason.  I've reverted to the way it was.
+</li>
+</ul>
+<p />
+     -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 16 May 2004
+<hr>
+<ul>
+<li> <a href="/Cookbook/IdiomChapter">IdiomChapter</a> really ought to be split into separate pages, don't you think?  <em>[Done - Anton]</em>
+</li>
+</ul>
+<p />
+   -- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 26 Apr 2004
+<hr>
+<p />
+<ul>
+<li> On <a href="/Cookbook/IdiomMonadicProgramming">IdiomMonadicProgramming</a> I tried to add the <a href="/Cookbook/CookbookForm">CookbookForm</a> by using the "Add Form" button
+     on the edit page. After checking the <a href="/Cookbook/CookbookForm">CookbookForm</a> radiobutton, I discovered that
+     there is no way to submit the change. (This is in IE) -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a>
+<ul>
+<li> Looks like a bug in the <a href="/TWiki/TWikiTemplates">TWikiTemplates</a> for the form.  There was a definition of a template variable for a submit button but no use of that variable.  I've fixed it. -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 30 May 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<hr>
+<p />
+<ul>
+<li> The <a href="/Cookbook/DataStructureChapter">DataStructureChapter</a> doesn't show up at the <a href="/Cookbook/TOC">TOC</a>. -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 15 Aug 2004
+</li>
+</ul>
+Fixed, the <a href="/Cookbook/TopicType">TopicType</a> was set incorrectly -- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 16 Aug 2004
+<p />
+<hr>
+<p />
+<p />
+<ul>
+<li> In my infinite wisdom I restructured <a href="/Cookbook/DatabaseChapter">DatabaseChapter</a> and now it doesn't show up in the <a href="/Cookbook/TOC">TOC</a>.  Can't see the problem and I'm about to head off...    -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 19 Aug 2004
+</li>
+</ul>
+<p />
+It's showing up now, at the end.  It looks like if you specify <a href="/Cookbook/TopicOrder">TopicOrder</a>, and two topics have the same ordinal, one of them loses out.  So if you specify <a href="/Cookbook/TopicOrder">TopicOrder</a>, make sure no other topic has that ordinal. -- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 20 Aug 2004
+<p />
+Thanks for fixing this.  I've changed the <a href="/Cookbook/TopicOrder">TopicOrder</a> of <span style="background : #FFFFCE;">
+  <font color="#0000FF">RelatedProjectsChapter</font>
+</span><a href="/edit/Cookbook/RelatedProjectsChapter?topicparent=Cookbook.HelpNeeded">?</a> to 9999 so all chapters will appear before it.  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 20 Aug 2004
+<p />
+<hr>
+<p />
+<ul>
+<li> Some of the automatically generated pages on the main page are non-working. Now that the <a href="/Cookbook/TOC">TOC</a> works
+     I suggest removing the other pages, or at least move them to less prominent place. -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 19 Aug 2004
+</li>
+</ul>
+<p />
+Moved <a href="/Cookbook/SectionIndex">SectionIndex</a> to the bottom of the page.  <a href="/Cookbook/AuthorYouHavePermission">AuthorYouHavePermission</a>  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 20 Aug 2004
+<p />
+<hr>
+<p />
+  * I was unable to get the automatic creation of chapters working.
+     One possible cause is that the contents of <a href="/Cookbook/DefaultChapterTemplate">DefaultChapterTemplate</a>
+     differs from what is described at <a href="/Cookbook/ChapterStructure">ChapterStructure</a>. The error
+     message received indicates however, that the new pages aren't
+     being created in the database.
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 10 Oct 2004
+<p />
+<ul>
+<li>
+<ul>
+<li> <a href="/Cookbook/NewChapter">NewChapter</a> works for me.  Can you give more details?  -- <a href="/Main/NoelWelsh">NoelWelsh</a>
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li>
+<ul>
+<li> I use "SRFIChapter" as the wiki name and "SRFI" as the title of the chapter.
+        Clicking at "Create Chapter" gets me a 404 page.
+        -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 12 Oct 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li>
+<ul>
+<li> I bet SRFIChapter isn't a <span style="background : #FFFFCE;">
+  <font color="#0000FF">WikiWord</font>
+</span><a href="/edit/Cookbook/WikiWord?topicparent=Cookbook.HelpNeeded">?</a>, which is causing the problem.
+        I think the <a href="/Cookbook/SRFI">SRFI</a> 9 stuff would be better integrated into <a href="/Cookbook/StructureChapter">StructureChapter</a>
+        -- <a href="/Main/NoelWelsh">NoelWelsh</a>
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li>
+<ul>
+<li> That is probably it. I was planning to make a <a href="/Cookbook/SRFI">SRFI</a>-Chapter, which list the
+        various srfis. Structures and records are conceptually the same, but
+        they are not interchangable. There are more tricks to play with structures
+        than the srfi-records (such as reflection (great for code walkers btw), object
+        like-properties and callable structures - great for code walker btw). A warning in the
+        structures chapter that they aren't portable across implementation and a link to the
+        srfi-records is better in my opion. When/if Andre's record srfi is finalized,
+        we will be in the situtation that we have three different flavors of records, which
+        also is weighs in favor of putting them in separate sections.
+        -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 13 Oct 2004
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<hr>
+<p />
+<ul>
+<li> There is a small problem at <a href="/Cookbook/SchemeChapter">SchemeChapter</a>. The comments section appear twice.
+     -- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 08 Sep 2004
+<ul>
+<li> Fixed.  The comments topic needed its <a href="/Cookbook/TopicType">TopicType</a> to be set to "Comment" (not "Section").
+     -- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 08 Sep 2004
+</li>
+</ul>
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Admin </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/AdminTopics">AdminTopics</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

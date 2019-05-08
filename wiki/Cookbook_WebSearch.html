@@ -1,0 +1,155 @@
+<div id="contentbox">
+ <div class="widget">
+  <form action="/search/Cookbook/">
+<ul>
+<li> <b>Simple search</b>:
+   <table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+     <input type="radio" name="scope" value="text" checked> Topic text (body) &nbsp; &nbsp;
+   </td>
+    <td>
+     <input type="checkbox" name="web"> All webs (not only Cookbook web)
+   </td>
+  </tr>
+  <tr>
+    <td>
+     <input type="radio" name="scope" value="topic"> Topic name
+   </td>
+    <td>
+     <input type="checkbox" name="bookview"> <a href="/TWiki/BookView">BookView</a>
+   </td>
+  </tr>
+</table>
+   <input type="text" name="search" size="32">
+   <input type="submit" value="Search text">
+</li>
+</ul>
+</form>
+<p />
+<p />
+<form action="/search/Cookbook/">
+<ul>
+<li> <b>Advanced search</b>:
+   <table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+     <input type="radio" name="scope" value="text" checked> Topic text (body) &nbsp; &nbsp;
+   </td>
+    <td>
+     Search
+   </td>
+    <td>
+     <select name="web">
+     <option value="all">all public</option>
+     <option>Cookbook</option>
+     <option>Chicken</option>
+     <option>Cookbook</option>
+     <option>Erlang</option>
+     <option>Know</option>
+     <option>Main</option>
+     <option>Plugins</option>
+     <option>Sandbox</option>
+     <option>Scm</option>
+     <option>TWiki</option>
+     </select>
+     web(s)
+   </td>
+  </tr>
+  <tr>
+    <td>
+     <input type="radio" name="scope" value="topic"> Topic name
+   </td>
+    <td>
+     Sort by
+   </td>
+    <td>
+     <select name="order">
+     <option value="topic">Topic name</option>
+     <option value="modified">Last modified time</option>
+     <option value="editby">Last editor</option>
+     </select> in
+     <input type="checkbox" name="reverse"> reversed order
+   </td>
+  </tr>
+</table>
+   <input type="text" name="search" size="32">
+   <input type="submit" value="Search text"> <br>
+   <table>
+  <tr>
+    <td>
+     Make search:
+   </td>
+    <td>
+     <input type="checkbox" name="casesensitive"> Case sensitive
+   </td>
+    <td>
+     <input type="checkbox" name="regex"> <a href="/TWiki/RegularExpression">RegularExpression</a> search (semicolon ';' for <em>and</em>)
+   </td>
+  </tr>
+  <tr>
+    <td>
+     Don't show:
+   </td>
+    <td>
+     <input type="checkbox" name="nosearch"> search string
+   </td>
+    <td>
+     <input type="checkbox" name="nosummary"> summaries &nbsp; &nbsp;
+     <input type="checkbox" name="nototal"> total matches
+   </td>
+  </tr>
+  <tr>
+    <td>
+     Do show:
+   </td>
+    <td>
+     <input type="checkbox" name="bookview"> <a href="/TWiki/BookView">BookView</a>
+   </td>
+    <td>
+     <input type="checkbox" name="showlock"> locked topic &nbsp;
+     <input type="text" name="limit" size="5" value="all"> topics (result count)
+   </td>
+  </tr>
+</table>
+</li>
+</ul>
+</form>
+<p />
+<ul>
+<li> <b>
+  <a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=\.*">Topic index</a>
+</b>: List of Cookbook topics in alphabetical order. <br>
+     <b>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=\.*">All</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ea">A</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eb">B</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ec">C</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ed">D</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ee">E</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ef">F</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eg">G</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eh">H</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ei">I</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ej">J</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ek">K</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5El">L</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Em">M</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5En">N</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eo">O</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ep">P</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eq">Q</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Er">R</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Es">S</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Et">T</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Eu">U</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ev">V</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ew">W</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ex">X</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ey">Y</a>|<a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;search=%5Ez">Z</a>| <br>
+     | <a href="/search/Cookbook/?scope=topic&amp;amp;regex=on&amp;amp;bookview=on&amp;amp;search=\.*">All</a></b> topics in <a href="/TWiki/BookView">BookView</a> <b>|</b>
+</li>
+</ul>
+<p />
+<ul>
+<li> <b>Jump to topic</b>: If you already know the name of the topic, enter the name of the topic at the second line of this page.
+</li>
+</ul>
+<p />
+<ul>
+<li> <b> <a href="/Cookbook/WebChanges">WebChanges</a></b>: Find out what topics in Cookbook have changed recently.
+</li>
+</ul>
+<p />
+<ul>
+<li> <b>
+  <a href="/TWiki/GoodStyle">How to edit text</a>
+</b>:
+<ul>
+<li> Make changes to topics in <a href="/TWiki/GoodStyle">GoodStyle</a>,
+</li>
+<li> Learn the <a href="/TWiki/TextFormattingRules">TextFormattingRules</a>, and
+</li>
+<li> Have a look at the <a href="/TWiki/TextFormattingFAQ">TextFormattingFAQ</a>.
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<p />
+ </div>
+</div>

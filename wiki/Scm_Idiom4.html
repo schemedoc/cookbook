@@ -1,0 +1,12 @@
+<div id="contentbox">
+ <div class="widget">
+  (require (lib "aif.ss" "macro"))
+<p />
+(define (port-&gt;string-list port)
+  (aif line eof-object? (read-line port)
+      (list)
+      (cons line (port-&gt;string-list port))))
+<p />
+<p />
+ </div>
+</div>

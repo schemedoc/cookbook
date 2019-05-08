@@ -1,0 +1,69 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1><a name="SRFI_9_Defining_Record_Types"> </a> <a href="/Cookbook/SRFI">SRFI</a> 9  -  Defining Record Types </h1>
+<p />
+<a href="/Cookbook/SRFI">SRFI</a> 9 provides a way to define new record types. For each record type
+a predicate, a constructor, and field accessors and modifiers are defined.
+The new record types are distinct from all existing types.
+<p />
+The builtin record types in PLT is called <a href="/Cookbook/StructureChapter">structures</a>,
+which in some circumstances are more flexible than srfi9-records, but are
+less portable across implementations.
+<p />
+The srfi documentation is available both at <a href="http://srfi.schemers.org/srfi-9/srfi-9.html" target="_top">http://srfi.schemers.org/srfi-9/srfi-9.html</a>
+and in the <a href="/Cookbook/HelpDesk">HelpDesk</a>.
+<p />
+<p />
+<p />
+<h2>
+  <a name="Requiring_srfi_9"> Requiring srfi 9 </a>
+</h2>
+<p />
+To use srfi9 in PLT Scheme use the following:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"9.ss"</span> <span class="selfeval">"srfi"</span>))
+</pre>
+</div>
+<p />
+<h2>
+  <a name="Example"> Example </a>
+</h2>
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"9.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">define-record-type</span> <span class="selfeval">:user</span>
+      (<span class="variable">make-user</span> <span class="variable">name</span> <span class="variable">password</span>)
+      <span class="variable">user?</span>
+      (<span class="variable">name</span> <span class="variable">user-name</span> <span class="variable">set-user-name!</span>)
+      (<span class="variable">password</span> <span class="variable">user-password</span> <span class="variable">set-user-password!</span>))
+<span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">guest</span> (<span class="variable">make-user</span> <span class="selfeval">"Anonymous"</span> <span class="selfeval">"1234"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">user?</span> <span class="variable">guest</span>)
+<span class="selfeval">#t</span>
+<span class="builtin">&gt;</span> (<span class="variable">user-name</span> <span class="variable">guest</span>)
+<span class="selfeval">"Anonymous"</span>
+<span class="builtin">&gt;</span> (<span class="variable">set-user-name!</span> <span class="variable">guest</span> <span class="selfeval">"Guest"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">user-name</span> <span class="variable">guest</span>)
+<span class="selfeval">"Guest"</span>
+</pre>
+</div>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

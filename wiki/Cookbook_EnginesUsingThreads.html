@@ -1,0 +1,115 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Implementing_Engines_Using_Threa"> Implementing Engines Using Threads </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Implementing <span style="background : #FFFFCE;">
+  <font color="#0000FF">engines</font>
+</span><a href="/edit/Cookbook/Engines?topicparent=Cookbook.EnginesUsingThreads">?</a> often makes use of complicated
+uses of <code>
+  <span style="background : #FFFFCE;">
+    <font color="#0000FF">call/cc</font>
+  </span>
+  <a href="/edit/Cookbook/Callcc?topicparent=Cookbook.EnginesUsingThreads">?</a>
+</code>. A <span style="background : #FFFFCE;">
+  <font color="#0000FF">thread</font>
+</span><a href="/edit/Cookbook/Thread?topicparent=Cookbook.EnginesUsingThreads">?</a> implementation mirrors
+the definition of engines closer.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">make-engine</span> <span class="variable">a-thunk</span>)
+  (<span class="keyword">lambda</span> (<span class="variable">ticks</span> <span class="variable">success</span> <span class="variable">failure</span>)
+    (<span class="keyword">let</span> ([<span class="variable">result</span> <span class="selfeval">#f</span>])
+      (<span class="keyword">let</span> ([<span class="variable">work-thread</span> (<span class="variable">thread</span> (<span class="keyword">lambda</span> () (<span class="keyword">set!</span> <span class="variable">result</span> (<span class="variable">a-thunk</span>))))])
+        (<span class="keyword">if</span> (<span class="builtin">not</span> (<span class="variable">object-wait-multiple</span> <span class="variable">ticks</span> <span class="variable">work-thread</span>))
+            (<span class="keyword">begin</span>
+              (<span class="variable">thread-suspend</span> <span class="variable">work-thread</span>)
+              (<span class="keyword">letrec</span> ([<span class="variable">new-engine</span> (<span class="keyword">lambda</span> (<span class="variable">ticks</span> <span class="variable">success</span> <span class="variable">failure</span>)
+                                     (<span class="variable">thread-resume</span> <span class="variable">work-thread</span>)
+                                     (<span class="keyword">if</span> (<span class="builtin">not</span> (<span class="variable">object-wait-multiple</span> <span class="variable">ticks</span> <span class="variable">work-thread</span>))
+                                         (<span class="keyword">begin</span>
+                                           (<span class="variable">thread-suspend</span> <span class="variable">work-thread</span>)
+                                           (<span class="variable">failure</span> <span class="variable">new-engine</span>))
+                                         (<span class="variable">success</span> <span class="variable">result</span>)))])
+                (<span class="variable">failure</span> <span class="variable">new-engine</span>)))
+            (<span class="variable">success</span> <span class="variable">result</span>))))))
+</pre>
+</div>
+<div class="scheme">
+  <pre>(<span class="keyword">define-syntax</span> <span class="variable">parallel-or</span>
+  (<span class="keyword">syntax-rules</span> ()
+    ((<span class="variable">_</span> <span class="variable">x</span> ...)
+     (<span class="variable">first-true</span>
+      (<span class="builtin">list</span> (<span class="variable">make-engine</span> (<span class="keyword">lambda</span> () <span class="variable">x</span>)) ...)))))
+(<span class="keyword">define</span> (<span class="variable">first-true</span> <span class="variable">engs</span>)
+  (<span class="keyword">cond</span>
+    [(<span class="builtin">null?</span> <span class="variable">engs</span>) <span class="selfeval">#f</span>]
+    [<span class="keyword">else</span>         ((<span class="builtin">car</span> <span class="variable">engs</span>) <span class="selfeval">1</span>
+                              (<span class="keyword">lambda</span> (<span class="variable">value</span>)
+                                (<span class="keyword">or</span> <span class="variable">value</span>
+                                    (<span class="variable">first-true</span> (<span class="builtin">cdr</span> <span class="variable">engs</span>))))
+                              (<span class="keyword">lambda</span> (<span class="variable">eng</span>)
+                                (<span class="variable">first-true</span>
+                                  (<span class="builtin">append</span> (<span class="builtin">cdr</span> <span class="variable">engs</span>)
+                                          (<span class="builtin">list</span> <span class="variable">eng</span>))))]))
+(<span class="keyword">define</span> (<span class="variable">fibonacci</span> <span class="variable">n</span>)
+  (<span class="keyword">if</span> (<span class="builtin">&lt;</span> <span class="variable">n</span> <span class="selfeval">2</span>)
+      <span class="variable">n</span>
+      (<span class="builtin">+</span> (<span class="variable">fibonacci</span> (<span class="builtin">-</span> <span class="variable">n</span> <span class="selfeval">1</span>))
+         (<span class="variable">fibonacci</span> (<span class="builtin">-</span> <span class="variable">n</span> <span class="selfeval">2</span>)))))
+(<span class="keyword">define</span> (<span class="variable">infinite-loop</span>)
+  (<span class="variable">infinite-loop</span>))
+(<span class="variable">parallel-or</span> (<span class="variable">infinite-loop</span>)
+             (<span class="variable">fibonacci</span> <span class="selfeval">10</span>))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<h3>
+  <a name="References"> References </a>
+</h3>
+<p />
+<ul>
+<li> <a href="http://www.scheme.com/tspl2d/examples.html#g2433" target="_top">Engine example from Dybvig's 'The Scheme Programming</a>
+</li>
+</ul>
+<p />
+<ul>
+<li> <a href="http://download.plt-scheme.org/doc/206p1/html/t-y-scheme/t-y-scheme-Z-H-17.html#node_chap_15" target="_top">The chapter on Engines from Sitaram's 'Learn Scheme in a Fixnum of Days'</a>
+</li>
+</ul>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 02 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ThreadRecipes">ThreadRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

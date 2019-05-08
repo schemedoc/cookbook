@@ -1,0 +1,82 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Testing_Similarity_of_Two_String"> Testing Similarity of Two Strings via Levenshtein Distance </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to determine how "similar" two strings (or lists, or vectors) are, such as for spelling correction or pattern-matching.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+One metric of string similarity is the <i>Levenshtein Distance</i>, or
+ <i>edit distance</i>, which is a count of character insertions, deletions, and substitutions that will transform one string to another.  To get the Levenshtein Distance of two strings, use the <code>levenshtein.scm</code> library (available from <a href="http://www.neilvandyke.org/levenshtein-scm/" target="_top">http://www.neilvandyke.org/levenshtein-scm/</a>) and load it like:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"levenshtein.ss"</span> <span class="selfeval">"levenshtein"</span>))
+</pre>
+</div>
+<p />
+Then you can use the <code>string-levenshtein</code> procedure:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">string-levenshtein</span> <span class="selfeval">"adresse"</span> <span class="selfeval">"address"</span>)
+<span class="selfeval">2</span>
+</pre>
+</div>
+<p />
+You can also get the Levenshtein Distance of combinations of strings, lists, and vectors.  For example:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">levenshtein</span> <span class="keyword">'</span><span class="selfeval">#</span>(<span class="selfeval">#\a</span> <span class="selfeval">#\d</span> <span class="selfeval">#\r</span> <span class="selfeval">#\e</span> <span class="selfeval">#\s</span> <span class="selfeval">#\s</span> <span class="selfeval">#\e</span>) <span class="selfeval">"address"</span>)
+<span class="selfeval">2</span>
+</pre>
+</div>
+<p />
+See the <code>levenshtein.scm</code> documentation for additional procedures that can be used to improve performance in some applications.
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NeilVanDyke">NeilVanDyke</a> - 16 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 240 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

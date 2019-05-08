@@ -1,0 +1,149 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Generating_Iterators"> Generating Iterators </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Python programmers may be familiar with Python's yield keyword and generator functions.  Python has built-in language support specifically for generator functions, whereas PLT Scheme does not.  Can we invent our own then?
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Yes.  We will first need an iterator class:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"class.ss"</span>))
+(<span class="keyword">define</span> <span class="variable">iterator%</span>
+   (<span class="variable">class</span> <span class="variable">object%</span>
+     (<span class="variable">init-field</span> <span class="variable">initial-k</span>)
+     (<span class="keyword">define</span> <span class="variable">k</span> <span class="variable">initial-k</span>)
+     (<span class="keyword">define</span> <span class="variable">set-k!</span> (<span class="keyword">lambda</span> (<span class="variable">c</span>) (<span class="keyword">set!</span> <span class="variable">k</span> <span class="variable">c</span>)))
+     (<span class="variable">define/public</span> (<span class="variable">next</span>)
+       (<span class="variable">let/cc</span> <span class="variable">cc</span>
+         (<span class="variable">raise</span> (<span class="variable">let/cc</span> <span class="variable">raise-cc</span>
+           (<span class="variable">cc</span> (<span class="variable">k</span> (<span class="builtin">list</span> <span class="variable">set-k!</span> <span class="variable">cc</span> <span class="variable">raise-cc</span>)))))))
+     (<span class="variable">define/public</span> (<span class="variable">reset</span>)
+        (<span class="keyword">set!</span> <span class="variable">k</span> <span class="variable">initial-k</span>))
+     (<span class="variable">super-new</span>)))
+</pre>
+</div>
+<p />
+<p />
+Next, let's define an exception to be raised at the end of iteration:
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define-struct</span> (<span class="variable">exn:stop-iteration</span> <span class="variable">exn</span>) ())
+</pre>
+</div>
+<p />
+Now we define the <code>define-gen</code> syntax for defining generators:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define-syntax</span> (<span class="variable">define-gen</span> <span class="variable">stx</span>)
+  (<span class="keyword">syntax-case</span> <span class="variable">stx</span> ()
+    [(<span class="variable">_</span> (<span class="variable">id</span> <span class="variable">args</span> ...) <span class="variable">bodies</span> ...)
+     (<span class="keyword">with-syntax</span> ([<span class="variable">yield</span> (<span class="variable">datum-&gt;syntax-object</span> <span class="variable">stx</span> <span class="keyword">'</span><span class="variable">yield</span>)]
+                   [<span class="variable">return</span> (<span class="variable">datum-&gt;syntax-object</span> <span class="variable">stx</span> <span class="keyword">'</span><span class="variable">return</span>)])
+     <span class="selfeval">#</span><span class="keyword">`</span>(<span class="keyword">define</span> (<span class="variable">id</span> <span class="variable">args</span> ...)
+         (<span class="variable">make-object</span> <span class="variable">iterator%</span>
+           (<span class="keyword">lambda</span> (<span class="variable">set-k!&amp;ec&amp;raise</span>)
+             (<span class="variable">define-values</span> (<span class="variable">set-k!</span> <span class="variable">ec</span> <span class="variable">raise</span>) (<span class="builtin">values</span> <span class="selfeval">#f</span> <span class="selfeval">#f</span> <span class="selfeval">#f</span>))
+             (<span class="keyword">define</span> (<span class="variable">set-values</span> <span class="variable">the-set-k!</span> <span class="variable">the-ec</span> <span class="variable">the-raise</span>)
+               (<span class="keyword">set!</span> <span class="variable">set-k!</span> <span class="variable">the-set-k!</span>)
+               (<span class="keyword">set!</span> <span class="variable">ec</span> <span class="variable">the-ec</span>)
+               (<span class="keyword">set!</span> <span class="variable">raise</span> <span class="variable">the-raise</span>))
+             (<span class="keyword">define</span> (<span class="variable">return</span>)
+               (<span class="variable">raise</span> (<span class="variable">make-exn:stop-iteration</span> <span class="selfeval">"StopIteration"</span>
+                                               (<span class="variable">current-continuation-marks</span>))))
+             (<span class="keyword">define</span> (<span class="variable">yield</span> <span class="variable">x</span>)
+               (<span class="builtin">apply</span> <span class="variable">set-values</span>
+                      (<span class="variable">let/cc</span> <span class="variable">k</span>
+                        (<span class="variable">set-k!</span> <span class="variable">k</span>)
+                        (<span class="variable">ec</span> <span class="variable">x</span>))))
+             (<span class="builtin">apply</span> <span class="variable">set-values</span> <span class="variable">set-k!&amp;ec&amp;raise</span>)
+             (<span class="keyword">with-handlers</span> ([<span class="variable">void</span> <span class="variable">raise</span>])
+               (<span class="keyword">begin</span> <span class="variable">bodies</span> ...)
+               (<span class="variable">return</span>))))))]))
+</pre>
+</div>
+<p />
+Finally, we can define a generator:
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">define-gen</span> (<span class="variable">iter</span> <span class="variable">lst</span>)
+  (<span class="builtin">for-each</span> <span class="variable">yield</span>
+            <span class="variable">lst</span>))
+</pre>
+</div>
+<p />
+and use it:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">i</span> (<span class="variable">iter</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">send</span> <span class="variable">i</span> <span class="variable">next</span>)
+<span class="selfeval">1</span>
+<span class="builtin">&gt;</span> (<span class="variable">send</span> <span class="variable">i</span> <span class="variable">next</span>)
+<span class="selfeval">2</span>
+<span class="builtin">&gt;</span> (<span class="variable">send</span> <span class="variable">i</span> <span class="variable">next</span>)
+<span class="selfeval">3</span>
+<span class="builtin">&gt;</span> (<span class="variable">send</span> <span class="variable">i</span> <span class="variable">next</span>)
+<span class="variable">StopIteration</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+Ruby Garden has an entry on <a href="http://www.rubygarden.org/ruby?IterationStyles" target="_top">IterationStyles</a> that has a comparison between Ruby and Python, which makes an interesting reference.  I've classified this one under <a href="/Cookbook/DataStructureRecipes">DataStructureRecipes</a> until we can come up with a better place.  Maybe there should be a whole chapter on how to emulate idioms from other programming languages?
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 10 Sep 2004
+<p />
+The following Web page "Generators in Icon, Python, and Scheme"
+<a href="http://pobox.com/~oleg/ftp/Scheme/enumerators-callcc.html#Generators" target="_top">http://pobox.com/~oleg/ftp/Scheme/enumerators-callcc.html#Generators</a> describes a different -- and a portable -- way of emulating generators in Scheme. Syntax-case macros are not required. The other sections of that page argue that enumerators provide generally a better interface for iterating over a (virtual) collection than generators do. One should also mention delimited continuations
+(such as prompt/control or shift/reset -- which again seem superior to generators).
+<p />
+-- <a href="/Main/OlegK">OlegK</a> - 14 Sep 2004
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 10 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DataStructureRecipes">DataStructureRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

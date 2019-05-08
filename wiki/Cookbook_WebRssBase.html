@@ -1,0 +1,76 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2><a name="RSS_Feed"> </a> RSS Feed </h2>
+<p />
+This is the base for the RSS feed for the Cookbook web.
+<p />
+Each web has a <a href="/Cookbook/WebRss">WebRss</a> that should contain the following text:
+<p />
+<hr>
+<pre>
+&lt;channel rdf:about="%SCRIPTURL%/view%SCRIPTSUFFIX%/%INCLUDINGWEB%"&gt;
+  &lt;title&gt;%WIKITOOLNAME%'s %INCLUDINGWEB% web&lt;/title&gt;
+  &lt;link&gt;%SCRIPTURL%/view%SCRIPTSUFFIX%/%INCLUDINGWEB%&lt;/link&gt;
+  &lt;description&gt;(the description of the web). TWiki is a Web-Based Collaboration Platform for the Corporate World.&lt;/description&gt;
+%INCLUDE{"%TWIKIWEB%.WebRssBase"}%
+</pre>
+<p />
+Below part is included by each WebRss topic:
+<p />
+<hr>
+<pre>
+%STARTINCLUDE%  &lt;image rdf:resource="%PUBURL%/twikilogo88x31.gif" /&gt;
+  &lt;dc:language&gt;en-us&lt;/dc:language&gt;
+  &lt;dc:rights&gt;Copyright %GMTIME{"$year"}%, by the contributing authors.&lt;/dc:rights&gt;
+  &lt;dc:publisher&gt;Schematics [http://schematics.sourceforge.net/]&lt;/dc:publisher&gt;
+  &lt;dc:creator&gt;The Schematics Editors&lt;/dc:creator&gt;
+  &lt;dc:source&gt;TWiki&lt;/dc:source&gt;
+  &lt;wiki:interwiki&gt;
+    &lt;rdf:Description link="%SCRIPTURL%/view%SCRIPTSUFFIX%/%INCLUDINGWEB%/"&gt;
+      &lt;rdf:value&gt;TWiki.%INCLUDINGWEB%&lt;/rdf:value&gt;
+    &lt;/rdf:Description&gt;
+  &lt;/wiki:interwiki&gt;
+  &lt;items&gt;
+    &lt;rdf:Seq&gt;
+%SEARCH{".*" web="%INCLUDINGWEB%" regex="on" nosearch="on" order="modified" reverse="on" nototal="on" limit="16" format="      &lt;rdf:li rdf:resource=\"%SCRIPTURL%/view%SCRIPTSUFFIX%/$web/$topic\" /&gt;"}%
+    &lt;/rdf:Seq&gt;
+  &lt;/items&gt;
+&lt;/channel&gt;
+&lt;image rdf:about="%PUBURL%/twikilogo88x31.gif"&gt;
+  &lt;title&gt;TWiki.%INCLUDINGWEB%&lt;/title&gt;
+  &lt;link&gt;%SCRIPTURL%/view%SCRIPTSUFFIX%/%INCLUDINGWEB%&lt;/link&gt;
+  &lt;url&gt;%PUBURL%/%TWIKIWEB%/TWikiLogos/twikilogo88x31.gif&lt;/url&gt;
+&lt;/image&gt;
+%SEARCH{".*" web="%INCLUDINGWEB%" regex="on" nosearch="on" order="modified" reverse="on" nototal="on" limit="16" format="&lt;item rdf:about=\"%SCRIPTURL%/view%SCRIPTSUFFIX%/$web/$topic\"&gt;$n  &lt;title&gt;$topic&lt;/title&gt;$n  &lt;link&gt;%SCRIPTURL%/view%SCRIPTSUFFIX%/$web/$topic&lt;/link&gt;$n  &lt;description&gt;$summary&lt;/description&gt;$n  &lt;dc:date&gt;$isodate&lt;/dc:date&gt;$n  &lt;dc:contributor&gt;$n    &lt;rdf:Description link=\"%SCRIPTURL%/view%SCRIPTSUFFIX%?topic=$wikiusername\"&gt;$n      &lt;rdf:value&gt;$username&lt;/rdf:value&gt;$n    &lt;/rdf:Description&gt;$n  &lt;/dc:contributor&gt;$n  &lt;wiki:version&gt;$rev&lt;/wiki:version&gt;$n  &lt;wiki:status&gt;updated&lt;/wiki:status&gt;$n  &lt;wiki:importance&gt;major&lt;/wiki:importance&gt;$n  &lt;wiki:diff&gt;%SCRIPTURL%/rdiff%SCRIPTSUFFIX%/$web/$topic&lt;/wiki:diff&gt;$n  &lt;wiki:history&gt;%SCRIPTURL%/rdiff%SCRIPTSUFFIX%/$web/$topic&lt;/wiki:history&gt;$n&lt;/item&gt;"}%
+%STOPINCLUDE%
+</pre>
+<hr>
+<p />
+<strong>
+  <em>See also</em>
+</strong>: <a href="http://twiki.org/cgi-bin/view/Codev/RichSiteSummary" title="&apos;Codev/RichSiteSummary&apos; on TWiki site, we know it!">TWiki:Codev/RichSiteSummary</a>, <a href="http://twiki.org/cgi-bin/view/Codev/TWikiSyndication" title="&apos;Codev/TWikiSyndication&apos; on TWiki site, we know it!">TWiki:Codev/TWikiSyndication</a>
+<p />
+-- <a href="/Main/PeterThoeny">PeterThoeny</a> - 30 Jan 2003
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 27 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Site </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> Next Topic:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

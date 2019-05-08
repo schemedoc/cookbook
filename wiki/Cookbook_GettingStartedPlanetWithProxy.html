@@ -1,0 +1,66 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Using_PLaneT_With_a_Web_Proxy"> </a> Using <a href="/Cookbook/PLaneT">PLaneT</a> With a Web Proxy </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to use <code>PLaneT</code> but your computer is behind a web proxy, preventing direct access to the <a href="/Cookbook/PLaneT">PLaneT</a> server.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+You can easily configure <a href="/Cookbook/PltScheme">PltScheme</a> to send <a href="/Cookbook/PLaneT">PLaneT</a> requests via your proxy.  Add the following lines to the file <code>collects/planet/config.ss</code>, changing the details to match your proxy server.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; Require the URL collection so we can set the proxy
+</span>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"url.ss"</span> <span class="selfeval">"net"</span>))
+<span class="comment">;; Add the proxy server for the HTTP method.  Change to match your web proxy server
+</span>(<span class="variable">current-proxy-servers</span>
+  <span class="keyword">'</span>((<span class="selfeval">"http"</span> <span class="selfeval">"webcache.megacorp.com"</span> <span class="selfeval">3128</span>)))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+You can find the file <code>collects/planet/config.ss</code> wherever you have installed <a href="/Cookbook/PltScheme">PltScheme</a>.  Under Unix it is probably in the /lib/plt/ or /usr/local/lib/plt, under Windows probably in C:/Program Files/PLT Scheme and for OS X probably in Applications
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 22 Aug 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/GettingStartedRecipes">GettingStartedRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

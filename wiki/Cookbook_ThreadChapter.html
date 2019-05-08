@@ -1,0 +1,88 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h1>
+  <a name="Thread_Recipes"> Thread Recipes </a>
+</h1>
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+<ul>
+<li> <a href="/Cookbook/EnginesUsingThreads">Implementing Engines Using Threads</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ParallelOrUsingThreads">Implementing <code>parallel-or</code> using threads</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ProducerConsumerThreads">Consumer/Producer Threads</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ThreadSuspendingCurrentThread">Suspending the Current Thread</a> (Recipe)
+</li>
+</ul>
+<p />
+<p />
+<p />
+<p />
+<p />
+<p />
+<br>
+<hr>
+<a href="/Cookbook/ThreadChapterComments">(edit comments)</a>
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+A nice simple example of thread use is available at
+<p />
+<a href="http://www.kuro5hin.org/story/2004/3/17/93442/8657" target="_top">http://www.kuro5hin.org/story/2004/3/17/93442/8657</a>
+<p />
+It supplies a simple example;
+<p />
+<b>BeautifierPlugin Error: Unable to handle "scheme" syntax.</b><div class="fragment">
+  <pre>
+; threaded-map : (X -&gt; Y) * (listof X) -&gt; (listof Y)
+; maps the given function over the given list with each computation
+; done in parallel
+(define (threaded-map f l)
+  (let ((cs (map (lambda (x) (make-channel)) l)))
+    (for-each (lambda (x c) (thread (lambda () (channel-put c (f x))))) l cs)
+    (map channel-get cs)))
+ </pre>
+</div>
+<p />
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 12 Dec 2007
+<p />
+<p />
+<p />
+<ul>
+<li> Set ALLOWTOPICCHANGE = <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Chapter </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TOC">TOC</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 14 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

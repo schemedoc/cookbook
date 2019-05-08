@@ -1,0 +1,83 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Converting_Epoch_Seconds_to_DMYH"> </a> Converting Epoch Seconds to DMYHMS </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You have a date and time in Epoch seconds, and you want to calculate
+individual DMYHMS values from it.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+In recipe <a href="/Cookbook/TimeToday">TimeToday</a> we did exactly this but only for the current date.
+How about if we wanted to get the date, and time (DMYHMS) associated
+to a particular number of seconds?  Once more we would use <code>seconds-&gt;date</code>.
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let*</span> ((<span class="variable">seconds</span> <span class="selfeval">1083022458</span>)
+       (<span class="variable">date</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>)))
+  (<span class="variable">date-&gt;string</span> <span class="variable">date</span>))
+</pre>
+</div>
+<p />
+that returns <code>"Monday, April 26th, 2004"</code>.
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+In recipe <a href="/Cookbook/TimeToday">TimeToday</a> we discussed how to convert a date structure to a
+string.  Convert in the opposite direction is also possible, and
+useful.  Here we use <code>SRFI 19</code>:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"19.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">let</span> ((<span class="variable">some-date-string</span> <span class="selfeval">"2004-04-26T18:26:18-0500"</span>))
+  (<span class="keyword">let</span> ((<span class="variable">date</span> (<span class="variable">string-&gt;date</span> <span class="variable">some-date-string</span> <span class="selfeval">"~Y-~m-~dT~k:~M:~S~z"</span>)))
+    (<span class="builtin">values</span> (<span class="variable">date-&gt;string</span> <span class="variable">date</span>)
+            (<span class="variable">date-&gt;string</span> <span class="variable">date</span> <span class="selfeval">"~4"</span>))))
+</pre>
+</div>
+<p />
+the resulting values will be: <code>"Mon Apr 26 18:26:18-0500 2004"</code>, and
+<code>"2004-04-26T18:26:18-0500"</code>, which represent the same date, and time
+but using two different formats described in <code>ISO-8601</code>.
+<p />
+<strong>Important:</strong> Note that the second argument to <code>string-&gt;date</code> is a
+formatting string that must match the format of the actual date-hour
+string used as the first argument.
+<p />
+<p />
+<h4>
+  <a name="Comments_here"> Comments here </a>
+</h4>
+<p />
+-- <a href="/Main/FranciscoSolsona">FranciscoSolsona</a> - 28 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TimeRecipes">TimeRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 030 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

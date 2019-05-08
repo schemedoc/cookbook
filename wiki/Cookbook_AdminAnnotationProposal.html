@@ -1,0 +1,44 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1>
+  <a name="Adding_an_Annotation_Mechanism_t"> Adding an Annotation Mechanism to TWiki </a>
+</h1>
+<p />
+The following outlines a possible way of implementing an annotation-based approach to maintaining cookbook content with TWiki.  Something like this could come in handy if we decide we need to use an annotation approach on some or all cookbook topics, now or in the future.  I don't know whether something along these lines already exists for TWiki, that should be investigated before implementing anything described below.
+<p />
+Cookbook content topics would be marked as only being editable by members of <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>.  This is a standard Twiki capability (see <a href="/TWiki/TWikiAccessControl">TWikiAccessControl</a>).  Each content topic would contain a link which, when clicked, would generate a new topic to allow an annotation to be entered.  This link would need to invoke a custom script, but it needn't be complicated: it would generate a new topic with a unique name, insert an <code>%INCLUDE%</code> for the new topic at the bottom of the original content page, and invoke the TWiki edit page for the new topic.
+<p />
+The contributor would enter his annotation in this new topic, and save it, at which point the text of that annotation would appear at the bottom of the original content topic.
+<p />
+The script which generates new annotation topics should also be able to mark such topics as only editable by their creator or SchematicsEditors, so that no-one other than that would be able to change the annotation.
+<p />
+Editors would use cut and paste to integrate annotations onto the original topic page, and delete the include statements for annotations once they're integrated.
+<p />
+If necessary, after integration, deletion of the actual annotation topics could be done by a script which looks for unreferenced topics and deletes them.  A date cutoff could also be used so that unreferenced topics are kept around for some period of time.
+<p />
+The annotation topics should probably be generated and maintained in a separate TWiki "web", e.g. called Annotation, to avoid cluttering up the list of Cookbook topics, and so that scripts can more reliably identify annotation topics.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 19 Apr 2004
+<p />
+<br>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Admin </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/AdminTopics">AdminTopics</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> Next Topic:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

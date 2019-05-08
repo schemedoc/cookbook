@@ -1,0 +1,168 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+XML (Extensible Markup Language) is a <a href="http://www.w3.org/" target="_top">W3C</a> Recommendation for creating special-purpose markup languages. It is a simplified subset of SGML, capable of describing many different kinds of data. Its primary purpose is to facilitate the sharing of structured text and information across the Internet. Languages based on XML (for example, RDF, SMIL, XSIL, SVG, etc) are themselves described in a formal way, allowing programs to modify and validate documents in these languages without prior knowledge of their form.
+<p />
+<h3>
+  <a name="Syntax_rules_in_XML"> Syntax rules in XML </a>
+</h3>
+<p />
+An XML document is text, usually a particular encoding of Unicode such as UTF-8 or UTF-16, although other encodings may be used.
+<p />
+Unlike, for example, HTML, XML is highly dependent upon structure, content and integrity for its efficacy. In order for a document to be considered "well-formed", it must conform at the very least to the following:
+<p />
+<ul>
+<li> It must have one and only one root element.
+</li>
+<li> Non-empty elements must be delimited by a start-tag and an end-tag. Empty elements may be marked with an empty-element tag.
+</li>
+<li> All attribute values must be quoted (either single (') or double (") quotes, but a single quote closes a single quote and a double quote a double quote. The other pair can then be used inside values.)
+</li>
+<li> Tags may be nested but may not overlap, that is each non-root element must be completely contained in another element.
+</li>
+</ul>
+<p />
+Element names in XML are case-sensitive: for example <example> and </example> are a well-formed matching pair whereas <example> and </example> are not.
+<p />
+Also, again unlike HTML, clever choice of XML element names allows the meaning of the data to be retained as part of the markup. This makes it more easily interpreted by software programs.
+<p />
+As a concrete example, a simple recipe expressed in an XML representation might be:
+<p />
+<pre>
+&lt;?xml version="1.0" standalone="yes"?&gt;
+&lt;rhythmdb version="1.0"&gt;
+  &lt;entry type="song"&gt;
+    &lt;title&gt;Never Let Me Down Again&lt;/title&gt;
+    &lt;genre&gt;Pop/Rock&lt;/genre&gt;
+    &lt;artist&gt;Depeche Mode&lt;/artist&gt;
+    &lt;album&gt;Music For The Masses&lt;/album&gt;
+    &lt;track-number&gt;1&lt;/track-number&gt;
+    &lt;duration&gt;287&lt;/duration&gt;
+    &lt;file-size&gt;6533368&lt;/file-size&gt;
+    &lt;location&gt;file:///home/hector/ogg/depeche_mode/music_for_the_masses/never_let_me_down_again.ogg&lt;/location&gt;
+    &lt;mtime&gt;1079831032&lt;/mtime&gt;
+    &lt;play-count&gt;1&lt;/play-count&gt;
+    &lt;last-played&gt;1083552958&lt;/last-played&gt;
+    &lt;mimetype&gt;&lt;/mimetype&gt;
+  &lt;/entry&gt;
+&lt;/rhythmdb&gt;
+</pre>
+<p />
+Identifying information accurately enables programs to manipulate it easily: in this example, it is now easy to convert the quantities to other measuring systems, or to print the ingredients as icons for those with low reading skills (or different native language), or to refer to the individual ingredients or steps from elsewhere (another recipe, for example).
+<p />
+An XML document that meets certain other criteria in addition to being well-formed (such as complying with an associated DTD) is said to be "valid".
+<p />
+<h3>
+  <a name="XML_schema_languages"> XML schema languages </a>
+</h3>
+<p />
+Before the advent of generalised data description languages such as SGML and XML, software designers had to define special file formats or small languages to share data between programs. This required writing detailed specifications and special-purpose parsers and writers.
+<p />
+XML schema languages allow software designers to describe the structure of particular XML-based markup languages in a formal way. Such a description is called a schema. Well-tested tools exist to validate XML files against a schema to automatically verify whether the document conforms to the described structure. Other usages of the schema exist; XML editors for instance can use schemas to support the editing process.
+<p />
+The oldest XML schema format is the DTD, which is inherited from SGML. While DTD support is obiquitous due to its inclusion in the XML 1.0 standard, it is seen as limited for the following reasons:
+<p />
+<ul>
+<li> No support for newer features of XML, most importantly namespaces.
+</li>
+<li> Lack of expressivity. Certain formal aspects of an XML document cannot be captured in a DTD.
+</li>
+<li> Custom non-XML syntax to describe the schema, inherited from SGML.
+</li>
+</ul>
+<p />
+A newer XML schema language, described by the W3C as the successor of DTDs, is simply called XML Schema, also referred to as XML Schema Definition (XSD). XSD are far more powerful than DTDs in describing XML languages. Additionally XSD uses an XML based format, which makes it possible to use the XML toolset to help process XML schema. It also becomes possible to write a schema for the schema language itself. Criticisms of XSD are:
+<p />
+<ul>
+<li> Standard is very large, which makes it difficult to understand and implement.
+</li>
+<li> XML-based syntax leads to verbosity in schema description, which makes XSDs harder to read and write.
+</li>
+</ul>
+<p />
+An alternative XML schema language recently gaining in popularity is Relax NG. It is standardized by OASIS. Relax NG comes in two formats, an XML based syntax and a non-XML compact syntax. The compact syntax aims to increase readability and writability, but since there is a well-defined way to translate compact syntax to the XML syntax and back again the advantage of using standard XML tools is not lost. Relax NG has a more compact definition which makes it easier to implement than XSD.
+<p />
+Some schema languages not only describe the structure of a particular XML format but also offer limited facilities to influence processing of individual XML files that conform to this format. DTDs and XSDs both have this ability; they can for instance provide attribute defaults. Relax NG intentionally does not provide these facilities.
+<p />
+<h3>
+  <a name="XML_Extensions"> XML Extensions </a>
+</h3>
+<p />
+<ul>
+<li> XPath It is possible to refer to individual components of an XML document using XPath. This allows stylesheets in (for example) XSL and XSLT to dynamically "cherry-pick" pieces of a document in any sequence needed in order to compose the required output.
+</li>
+<li> XQuery is to XML what SQL is to relational databases.
+</li>
+<li> XML namespaces enable the same document to contain XML elements and attributes taken from different vocabularies, without any naming collisions occurring.
+</li>
+</ul>
+<p />
+<h3>
+  <a name="Processing_XML_files"> Processing XML files </a>
+</h3>
+<p />
+The APIs widely used in processing XML data by programming languages are SAX and DOM. SAX is used for serial processing whereas DOM is used for random-access processing.
+<p />
+An XSL processor may be used to render an XML file for displaying or printing. XSL itself is intended for creating PDF files. XSLT is for transforming to other formats, including HTML, other vocabularies of XML, and any other plain-text format.
+<p />
+<h3>
+  <a name="Versions_of_XML"> Versions of XML </a>
+</h3>
+<p />
+The current version of XML is 1.1 (as of 2004-05-04). The first version XML 1.0 currently exists in its third revision. XML 1.0 and XML 1.1 differ in the requirements of characters used for element names, attribute names etc.: XML 1.0 only allows characters which are valid Unicode 2.0, which includes most world scripts, but excludes scripts which only entered in a later Unicode version, such as Mongolian, Cambodian, Amharic, Burmese, etc.. XML 1.1 only disallows certain control characters, which means that any other character can be used, even if the Unicode standard grows exponentially.
+<p />
+It should be noted here that the restriction present in XML 1.0 only applies to element/attribute names: both XML 1.0 and XML 1.1 allow for the use of full Unicode in the content itself. Thus XML 1.1 is only needed if in addition to using a script added after Unicode 2.0 you also wish to write the elements in that script.
+<p />
+Other minor changes between XML 1.0 and XML 1.1 are that control characters are now allowed to be included but only when escaped, and two special 'form-feed' characters are included, which must be treated as whitespace.
+<p />
+All XML 1.0 documents will be valid XML 1.1 documents, with one exception: XML documents declaring themselves as being ISO-8859-1 encoded which are actually CP1252 encoded may now be invalid.
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+<ul>
+<li> <a href="http://www.w3.org/XML/" target="_top">World Wide Web Consortium XML homepage</a>
+</li>
+<li> <a href="http://www.w3.org/TR/xml11" target="_top">The XML 1.1 specification</a>
+</li>
+<li> <a href="http://www.w3.org/TR/REC-xml" target="_top">The XML 1.0 specification</a>
+</li>
+</ul>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="_Comments">  Comments </a>
+</h3>
+<p />
+<h3>
+  <a name="_Contributors">  Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/HectorEGomezMorales">HectorEGomezMorales</a> - 20 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Section </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/XmlChapter">XmlChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

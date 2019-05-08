@@ -1,0 +1,115 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Reading_and_Writing_Hash_Tables"> Reading and Writing Hash Tables </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to write a hash table to disk and at a later time
+read it back.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The functions <code>write-hash-table</code> and <code>read-hash-table</code> write
+and read a hash table to and from a port respectively.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; write-hash-table: hash-table port -&gt; void
+</span>(<span class="keyword">define</span> (<span class="variable">write-hash-table</span> <span class="variable">table</span> <span class="variable">port</span>)
+  (<span class="variable">parameterize</span> ((<span class="variable">print-hash-table</span> <span class="selfeval">#t</span>))
+    (<span class="builtin">write</span> <span class="variable">table</span> <span class="variable">port</span>)))
+<span class="comment">;; read-hash-table port -&gt; (U hash-table #f)
+</span>(<span class="keyword">define</span> (<span class="variable">read-hash-table</span> <span class="variable">port</span>)
+  (<span class="keyword">let</span> ((<span class="variable">data</span> (<span class="builtin">read</span> <span class="variable">port</span>)))
+    (<span class="keyword">if</span> (<span class="variable">hash-table?</span> <span class="variable">data</span>)
+        <span class="variable">data</span>
+        <span class="selfeval">#f</span>)))
+</pre>
+</div>
+<p />
+Note that <code>read-hash-table</code> returns <code>#f</code> if the data it
+reads from the port is not a hash-table.  As a side-effect
+the data read is thrown away.  If you don't want this data
+to be thrown away simply call <code>read</code> on the port, as
+<code>read-hash-table</code> is just a wrapper around <code>read</code>.
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Example usage:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">port</span> (<span class="variable">open-output-string</span>))
+<span class="builtin">&gt;</span> (<span class="variable">write-hash-table</span>
+    (<span class="variable">make-immutable-hash-table</span> <span class="keyword">'</span>((<span class="variable">a</span> . <span class="selfeval">1</span>) (<span class="variable">b</span> . <span class="selfeval">2</span>)))
+    <span class="variable">port</span>)
+<span class="builtin">&gt;</span> (<span class="variable">get-output-string</span> <span class="variable">port</span>)
+<span class="selfeval">"#hasheq((b . 2) (a . 1))"</span>
+<span class="builtin">&gt;</span> (<span class="variable">read-hash-table</span> (<span class="variable">open-input-string</span> (<span class="variable">get-output-string</span> <span class="variable">port</span>)))
+<span class="selfeval">#&lt;hash-table&gt;</span>
+</pre>
+</div>
+<p />
+<a href="/Cookbook/PltScheme">PltScheme</a> includes built-in support for writing and reading
+hash tables.  However there are some caveats:
+<p />
+<ul>
+<li> Hash tables are only written when the parameter
+     <code>print-hash-table</code> is true.  This parameter is false by
+     default, so all <code>write-hash-table</code> does is temporarily
+     set the parameter to true and call <code>write</code>.
+</li>
+</ul>
+<p />
+<ul>
+<li> The hash tables read by <code>read</code> and hence
+     <code>read-hash-table</code> are immutable.  That is, they cannot
+     be modified.  If you want to create a mutable hash
+     table use <a href="/Cookbook/HashCopy">HashCopy</a> to copy the immutable hash table
+     into a mutable one.
+</li>
+</ul>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 17 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/HashRecipes">HashRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

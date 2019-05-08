@@ -1,0 +1,113 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Manipulating_Gnucash_Files_in_Dr"> </a> Manipulating Gnucash Files in <a href="/Cookbook/DrScheme">DrScheme</a> using <a href="/Cookbook/SSAX">SSAX</a> </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Gnucash is nice, but its toolset is limited and I want to perform interesting computations
+on its data
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use <a href="/Cookbook/SSAX">SSAX</a>.
+<p />
+This is strictly preliminary; here's some code that may be helpful to you if you
+use gnucash (1.8.11) &amp; <a href="/Cookbook/DrScheme">DrScheme</a>.
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"ssax.ss"</span> (<span class="selfeval">"lizorkin"</span> <span class="selfeval">"ssax.plt"</span> <span class="selfeval">1</span> <span class="selfeval">3</span>))
+         (<span class="variable">only</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>) <span class="variable">quicksort</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>))
+<span class="comment">; this must go in place of the bare &lt;gnc-v2&gt; tag in the file...
+</span>(<span class="keyword">define</span> <span class="variable">insert-this-text</span>
+  <span class="selfeval">#&lt;&lt;</span>|
+<span class="variable">&lt;gnc-v2</span> <span class="variable">xmlns:gnc=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc"</span>
+<span class="variable">xmlns:book=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#book"</span>
+<span class="variable">xmlns:cd=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#cd"</span>
+<span class="variable">xmlns:act=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/account-v2.dtdt#act"</span>
+<span class="variable">xmlns:trn=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/transactions-v2.dtd#trn"</span>
+<span class="variable">xmlns:split=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/transactions-v2.dtdt#split"</span>
+<span class="variable">xmlns:cmdty=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/comodity-v2.dtd#cmdty"</span>
+<span class="variable">xmlns:ts=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/types.dtd#ts"</span>
+<span class="variable">xmlns:slots=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/types.dtd#slots"</span>
+<span class="variable">xmlns:slot=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/types.dtd#slot"</span>
+<span class="variable">xmlns:price=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/prices-v1.dtd#price"</span>
+<span class="variable">xmlns:pricedb=</span><span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/prices-v1.dtd#pricedb"</span><span class="builtin">&gt;</span>
+|
+  )
+(<span class="keyword">define</span> <span class="variable">all</span> (<span class="variable">time</span> (<span class="variable">ssax:xml-&gt;sxml</span> (<span class="builtin">open-input-file</span> <span class="selfeval">"~/clements/collects/gnucash/Mugwort-gnucash"</span>) <span class="keyword">'</span>())))
+(<span class="keyword">define</span> <span class="variable">elts</span>
+  (<span class="variable">match</span> <span class="variable">all</span>
+    [<span class="keyword">`</span>(<span class="global">*TOP*</span> (<span class="variable">@</span> . <span class="keyword">,</span><span class="variable">top-attribs</span>) (<span class="variable">gnc-v2</span> <span class="keyword">,</span><span class="variable">count-data</span> (<span class="keyword">,</span><span class="variable">book-tag</span> (<span class="variable">@</span> . <span class="keyword">,</span><span class="variable">book-attribs</span>) . <span class="keyword">,</span><span class="variable">content</span>)))
+      <span class="variable">content</span>]))
+(<span class="keyword">define</span> <span class="variable">book-id-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#book:id"</span>))
+(<span class="keyword">define</span> <span class="variable">count-data-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc:count-data"</span>))
+(<span class="keyword">define</span> <span class="variable">commodity-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc:commodity"</span>))
+(<span class="keyword">define</span> <span class="variable">pricedb-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc:pricedb"</span>))
+(<span class="keyword">define</span> <span class="variable">account-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc:account"</span>))
+(<span class="keyword">define</span> <span class="variable">transaction-tag</span> (<span class="builtin">string-&gt;symbol</span> <span class="selfeval">"http://www.gnucash.org/lxr/gnucash/source/src/doc/xml/io-gncxml-version-2.dtd#gnc:transaction"</span>))
+(<span class="keyword">define</span> (<span class="variable">tag-filter</span> <span class="variable">tag</span> <span class="variable">elts</span>)
+  (<span class="variable">filter</span> (<span class="keyword">lambda</span> (<span class="variable">elt</span>)
+            (<span class="builtin">eq?</span> (<span class="builtin">car</span> <span class="variable">elt</span>) <span class="variable">tag</span>))
+          <span class="variable">elts</span>))
+(<span class="keyword">define</span> <span class="variable">book-ids</span> (<span class="variable">tag-filter</span> <span class="variable">book-id-tag</span> <span class="variable">elts</span>))
+(<span class="keyword">define</span> <span class="variable">count-data</span> (<span class="variable">tag-filter</span> <span class="variable">count-data-tag</span> <span class="variable">elts</span>))
+(<span class="keyword">define</span> <span class="variable">commodities</span> (<span class="variable">tag-filter</span> <span class="variable">commodity-tag</span> <span class="variable">elts</span>))
+(<span class="keyword">define</span> <span class="variable">accounts</span> (<span class="variable">tag-filter</span> <span class="variable">account-tag</span> <span class="variable">elts</span>))
+(<span class="keyword">define</span> <span class="variable">transactions</span> (<span class="variable">tag-filter</span> <span class="variable">account-tag</span> <span class="variable">elts</span>))
+(<span class="keyword">define</span> (<span class="variable">transaction-date</span> <span class="variable">transaction</span>)
+  (<span class="keyword">unless</span> (<span class="builtin">eq?</span> (<span class="builtin">car</span> <span class="variable">transaction</span>) <span class="variable">transaction-tag</span>)
+    (<span class="variable">error</span> <span class="keyword">'</span><span class="variable">transaction-date</span> <span class="selfeval">"not a transaction: ~v"</span> <span class="variable">transaction</span>))
+  (<span class="keyword">let</span> ([<span class="variable">date-fields</span> (<span class="variable">tag-filter</span> <span class="keyword">,</span><span class="variable">date-entered-tag</span> (<span class="variable">sxml-elts</span> <span class="variable">transaction</span>))])
+    (<span class="keyword">unless</span> (<span class="keyword">and</span> (<span class="builtin">pair?</span> <span class="variable">date-fields</span>) (<span class="builtin">null?</span> (<span class="builtin">cdr</span> <span class="variable">date-fields</span>)))
+      (<span class="variable">error</span> <span class="keyword">'</span><span class="variable">transaction-date</span> <span class="selfeval">"no entered date found for transaction: ~v"</span> <span class="variable">transaction</span>))))
+<span class="comment">;; hmm... off to read up on sxml.
+</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JohnClements">JohnClements</a> - 29 Apr 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

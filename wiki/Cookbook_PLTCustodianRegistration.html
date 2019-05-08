@@ -1,0 +1,155 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Registering_an_object_to_a_custo"> Registering an object to a custodian </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+The foreign function interface allows us to register objects with a finalizer that calls when an object is about to be GC-ed.  However, there are certain resources that we'd like to reclaim in a controlled way, without having to wait for the GC. PLT Scheme provides custodians to do this resource management.  This module includes a nice register-custodian primitive that's similar to register-finalizer.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">custodian-util</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"foreign.ss"</span>))
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>))
+  (<span class="keyword">require</span> (<span class="variable">prefix</span> <span class="variable">lowlevel:</span> <span class="selfeval">#%foreign</span>))
+  (<span class="keyword">require</span> (<span class="variable">prefix</span> <span class="variable">c:</span> (<span class="variable">lib</span> <span class="selfeval">"contract.ss"</span>)))
+  (<span class="variable">unsafe!</span>)
+  <span class="comment">;; FIXME: add the proper contract to register-custodian.  From notes in the thread:
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; http://list.cs.brown.edu/pipermail/plt-scheme/2005-September/009746.html
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; it sounds like getting the proper polymorphic contract is
+</span>  <span class="comment">;; slightly harder than I thought, so I'll be a bit loose here.
+</span>  <span class="comment">;; I'll need to read more about contracts before I dive into this
+</span>  <span class="comment">;; further.
+</span>  (<span class="variable">c:provide/contract</span>
+   (<span class="variable">register-custodian</span> (<span class="variable">c:any/c</span> <span class="variable">c:any/c</span> <span class="builtin">string?</span> <span class="builtin">string?</span> . <span class="variable">c:-&gt;</span> . <span class="variable">void?</span>)))
+  <span class="comment">;; Get at the currently running mzscheme process.
+</span>  (<span class="keyword">define</span> <span class="variable">self-lib.so</span> (<span class="variable">ffi-lib</span> <span class="selfeval">#f</span>))
+  <span class="comment">;; Checks to see if the custodian's still alive.  Raises an error if
+</span>  <span class="comment">;; the custodian's already done for.
+</span>  (<span class="keyword">define</span> <span class="variable">custodian-check-available</span>
+    (<span class="variable">get-ffi-obj</span> <span class="selfeval">"scheme_custodian_check_available"</span> <span class="variable">self-lib.so</span>
+                 (<span class="variable">_fun</span> <span class="variable">_pointer</span> <span class="variable">_string</span> <span class="variable">_string</span> <span class="variable">-&gt;</span> <span class="variable">_void</span>)))
+  <span class="comment">;; Adds a callback function to an object that's about to be
+</span>  <span class="comment">;; terminated by a custodian.
+</span>  (<span class="keyword">define</span> <span class="variable">custodian-add-managed</span>
+    (<span class="variable">get-ffi-obj</span> <span class="selfeval">"scheme_add_managed"</span> <span class="variable">self-lib.so</span>
+                 (<span class="variable">_fun</span> <span class="variable">_pointer</span> <span class="variable">_scheme</span> <span class="variable">_fpointer</span> <span class="variable">_pointer</span> <span class="variable">_int</span> <span class="variable">-&gt;</span> <span class="variable">_pointer</span>)))
+  <span class="comment">;; Builds a low-level C-callable function ready to be passed as a
+</span>  <span class="comment">;; _fpointer to custodian-add-managed.  Don't forget to hold a
+</span>  <span class="comment">;; reference to this callback somewhere so it doesn't get GC'ed.
+</span>  (<span class="keyword">define</span> (<span class="variable">make-custodian-callback</span> <span class="variable">f</span>)
+    (<span class="variable">lowlevel:ffi-callback</span> <span class="variable">f</span> (<span class="builtin">list</span> <span class="variable">_scheme</span> <span class="variable">_pointer</span>) <span class="variable">_pointer</span>))
+  <span class="comment">;; register-custodian: A (A -&gt; void) string string -&gt; void
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; Registers an object to a shutdown procedure with the
+</span>  <span class="comment">;; current-custodian.  If an error occurs during registration,
+</span>  <span class="comment">;; raises an error with name and resname.
+</span>  (<span class="keyword">define</span> <span class="variable">register-custodian</span>
+    (<span class="keyword">let*</span> ((<span class="variable">registered-finalizers</span> <span class="keyword">'</span>())
+           (<span class="variable">add-registered-finalizer!</span>
+            (<span class="keyword">lambda</span> (<span class="variable">f</span>) (<span class="keyword">set!</span> <span class="variable">registered-finalizers</span> (<span class="builtin">cons</span> <span class="variable">f</span> <span class="variable">registered-finalizers</span>))))
+           (<span class="variable">remove-registered-finalizer!</span>
+            (<span class="keyword">lambda</span> (<span class="variable">f</span>) (<span class="keyword">set!</span> <span class="variable">registered-finalizers</span> (<span class="variable">remove</span> <span class="variable">f</span> <span class="variable">registered-finalizers</span>)))))
+      (<span class="keyword">lambda</span> (<span class="variable">object</span> <span class="variable">finalizer</span> <span class="variable">name</span> <span class="variable">resname</span>)
+        (<span class="keyword">let*</span>
+            ((<span class="variable">callback-box</span> (<span class="variable">box</span> <span class="selfeval">#f</span>))
+             (<span class="variable">wrapped-finalizer</span> (<span class="keyword">lambda</span> (<span class="variable">o</span>)
+                                  (<span class="variable">remove-registered-finalizer!</span> (<span class="variable">unbox</span> <span class="variable">callback-box</span>))
+                                  (<span class="variable">finalizer</span> <span class="variable">o</span>))))
+          <span class="comment">;; fixme: what happens if current-custodian gets killed here
+</span>          <span class="comment">;; before we get to register finalizers?  Low-level race
+</span>          <span class="comment">;; condition?
+</span>          (<span class="keyword">let</span> ((<span class="variable">callback-val</span>
+                 (<span class="variable">attach-to-current-custodian</span> <span class="variable">object</span> <span class="variable">wrapped-finalizer</span> <span class="variable">name</span> <span class="variable">resname</span>)))
+            (<span class="variable">set-box!</span> <span class="variable">callback-box</span> <span class="variable">callback-val</span>)
+            (<span class="variable">add-registered-finalizer!</span> <span class="variable">callback-val</span>))))))
+  <span class="comment">;; attach-to-current-custodian: A (A -&gt; void) string string -&gt; callback
+</span>  <span class="comment">;; Associates the object to the current-custodian.  When the custodian
+</span>  <span class="comment">;; shuts down, the shutdown-f is called.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; Returns the C callback that will be called when
+</span>  <span class="comment">;; custodian-shutdown-all is called.  Danger: there aren't any hard
+</span>  <span class="comment">;; references to this callback, so callers of this function must be
+</span>  <span class="comment">;; careful to make sure this value isn't GC-ed before the custodian
+</span>  <span class="comment">;; runs.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; name and resname are the arguments passed to
+</span>  <span class="comment">;; scheme_check_available for error checking; see
+</span>  <span class="comment">;; http://download.plt-scheme.org/doc/299.400/html/insidemz/insidemz-Z-H-16.html#node_chap_16
+</span>  (<span class="keyword">define</span> (<span class="variable">attach-to-current-custodian</span> <span class="variable">object</span> <span class="variable">shutdown-f</span> <span class="variable">name</span> <span class="variable">resname</span>)
+    (<span class="keyword">let</span> ((<span class="variable">callback</span> (<span class="variable">make-custodian-callback</span>
+                     (<span class="keyword">lambda</span> (<span class="variable">obj</span> <span class="variable">_</span>)
+                       (<span class="variable">shutdown-f</span> <span class="variable">obj</span>)
+                       <span class="selfeval">#f</span>))))
+      <span class="comment">;; Attach to the current-custodian
+</span>      (<span class="variable">custodian-check-available</span> <span class="selfeval">#f</span> <span class="variable">name</span> <span class="variable">resname</span>)
+      (<span class="variable">custodian-add-managed</span> <span class="selfeval">#f</span> <span class="variable">object</span> <span class="variable">callback</span> <span class="selfeval">#f</span> <span class="selfeval">0</span>)
+      <span class="variable">callback</span>)))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Example test usage:
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> <span class="selfeval">"custodian-util.ss"</span>)
+(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"foreign.ss"</span>))
+(<span class="variable">unsafe!</span>)
+(<span class="keyword">define</span> <span class="variable">self-lib.so</span> (<span class="variable">ffi-lib</span> <span class="selfeval">#f</span>))
+(<span class="keyword">define</span> <span class="variable">fopen</span> (<span class="variable">get-ffi-obj</span> <span class="selfeval">"fopen"</span> <span class="variable">self-lib.so</span> (<span class="variable">_fun</span> <span class="variable">_string</span> <span class="variable">_string</span> <span class="variable">-&gt;</span> <span class="variable">_pointer</span>)))
+(<span class="keyword">define</span> <span class="variable">fclose</span> (<span class="variable">get-ffi-obj</span> <span class="selfeval">"fclose"</span> <span class="variable">self-lib.so</span> (<span class="variable">_fun</span> <span class="variable">_pointer</span> <span class="variable">-&gt;</span> <span class="variable">_int</span>)))
+(<span class="keyword">let</span> <span class="variable">loop</span> ()
+  (<span class="variable">parameterize</span> ((<span class="variable">current-custodian</span> (<span class="variable">make-custodian</span>)))
+    (<span class="keyword">let</span> ((<span class="variable">file</span> (<span class="variable">fopen</span> <span class="selfeval">"/etc/passwd"</span> <span class="selfeval">"r"</span>)))
+      (<span class="variable">register-custodian</span> <span class="variable">file</span> <span class="variable">fclose</span> <span class="selfeval">"fopen"</span> <span class="selfeval">"io"</span>)
+      (<span class="variable">custodian-shutdown-all</span> (<span class="variable">current-custodian</span>))))
+  (<span class="variable">loop</span>))
+</pre>
+</div>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 03 Oct 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ForeignInterfaceRecipes">ForeignInterfaceRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

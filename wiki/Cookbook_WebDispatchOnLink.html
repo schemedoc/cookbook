@@ -1,0 +1,101 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Dispatch_On_a_Link_Being_Clicked"> Dispatch On a Link Being Clicked </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You are writing a servlet in the PLT web server and want to choose an action based on which link was clicked.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+If you want to embed the callbacks in an Xexpr, you can use <code>send/suspend/callback</code>,  Simply insert your callbacks (functions of single argument, a request) in the Xexpr, and <code>send/suspend/callback</code> will replace them with appropriate URLs.  For example:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">callback</span> <span class="variable">request</span>)
+   <span class="keyword">`</span>(<span class="variable">html</span> (<span class="variable">head</span> (<span class="variable">title</span> <span class="selfeval">"page two"</span>))
+          (<span class="variable">body</span> (<span class="variable">h1</span> <span class="selfeval">"page two"</span>))))
+(<span class="variable">send/suspend/callback</span>
+   <span class="keyword">`</span>(<span class="variable">html</span> (<span class="variable">head</span> (<span class="variable">title</span> <span class="selfeval">"page one"</span>))
+          (<span class="variable">body</span> (<span class="variable">h1</span> <span class="selfeval">"page one"</span>)
+                (<span class="variable">p</span> (<span class="variable">a</span> ((<span class="variable">href</span> <span class="keyword">,</span><span class="variable">callback</span>)) <span class="selfeval">"page two"</span>)))))
+</pre>
+</div>
+<p />
+If you want access to the generated URLs, for example to use in Javascript, use <code>send/suspend/dispatch</code>.  <code>send/suspend/dispatch</code> takes a function of a single argument.  The argument, which by convention is named <code>embed/url</code>, is a function that consumes a callaback and returns a URL.  For example:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">callback</span> <span class="variable">request</span>)
+   <span class="keyword">`</span>(<span class="variable">html</span> (<span class="variable">head</span> (<span class="variable">title</span> <span class="selfeval">"page two"</span>))
+          (<span class="variable">body</span> (<span class="variable">h1</span> <span class="selfeval">"page two"</span>))))
+(<span class="variable">send/suspend/dispatch</span>
+  (<span class="keyword">lambda</span> (<span class="variable">embed/url</span>)
+   <span class="keyword">`</span>(<span class="variable">html</span> (<span class="variable">head</span> (<span class="variable">title</span> <span class="selfeval">"page one"</span>))
+          (<span class="variable">body</span> (<span class="variable">h1</span> <span class="selfeval">"page one"</span>)
+                (<span class="variable">p</span> (<span class="variable">a</span> ((<span class="variable">href</span> <span class="keyword">,</span>(<span class="variable">embed/url</span> <span class="variable">callback</span>))) <span class="selfeval">"page two"</span>))))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+It is not commonly realised that there can be more than one continuation per page.  <code>send/suspend/dispatch</code> and <code>send/suspend/callback</code> show that this is possible.  Both are provided by the <code>servlet.ss</code> module in the <code>web-server</code> collection.
+<p />
+A clumsy way to handle this situation is to append a parameter to the URL:
+<p />
+<div class="scheme">
+  <pre><span class="keyword">`</span>(<span class="variable">a</span> ((<span class="variable">href</span> <span class="keyword">,</span>(<span class="builtin">string-append</span> <span class="variable">url</span> <span class="selfeval">"?arg=suchandsuch"</span>))) <span class="selfeval">"click here"</span>)
+</pre>
+</div>
+<p />
+This is not recommended: the web server will add this parameter to all the next 'continuation' URL it gives you and you will have to manually strip it out.
+<p />
+The paper detailing <code>send/suspend/dispatch</code> (on which <code>send/suspend/callback</code> is built) is available from:
+<p />
+<a href="http://continue.cs.brown.edu/research/" target="_top">http://continue.cs.brown.edu/research/</a>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 31 Aug 2004
+<p />
+-- <a href="/Main/PeteHopkins">PeteHopkins</a> - 23 Nov 2004
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 11 Jan 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/WebRecipes">WebRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

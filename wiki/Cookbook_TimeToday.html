@@ -1,0 +1,132 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Finding_Today_s_Date"> Finding Today's Date </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+ You need to find the year, month, and day values for today's date.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use <code>current-seconds</code>, and <code>seconds-&gt;date</code> to get a date structure
+type representing today.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">let*</span> ((<span class="variable">seconds</span> (<span class="variable">current-seconds</span>))
+       (<span class="variable">today</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>)))
+  (<span class="builtin">values</span>
+   (<span class="variable">date-day</span> <span class="variable">today</span>)
+   (<span class="variable">date-month</span> <span class="variable">today</span>)
+   (<span class="variable">date-year</span> <span class="variable">today</span>)))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Using the <code>date</code> library from Mzlib, you can easily convert a date
+structure to a string.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let*</span> ((<span class="variable">seconds</span> (<span class="variable">current-seconds</span>))
+       (<span class="variable">today</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>)))
+  (<span class="variable">date-&gt;string</span> <span class="variable">today</span>))
+</pre>
+</div>
+<p />
+which will return something like <code>"Wednesday, April 21st, 2004"</code>.  The
+returned string contains the time of day only if the second, optional,
+argument to <code>date-&gt;string</code> is <code>#t</code>, so, using =(date-&gt;string today
+#t)= above would return: <code>"Wednesday, April 21st, 2004 12:54:20pm"</code>.
+<p />
+<a href="/Cookbook/SRFI">SRFI</a> 19 provides equivalent funciontallity, and much more.  Thus if
+you would want to use the <code>time.ss</code> library from the <code>srfi</code>
+collection, to get today's date you could do:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let*</span> ((<span class="variable">seconds</span> (<span class="variable">current-seconds</span>))
+       (<span class="variable">today</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>)))
+  (<span class="variable">date-&gt;string</span> <span class="variable">today</span>))
+</pre>
+</div>
+<p />
+which will return <code>"Wed Apr 21 13:01:01-0500 2004"</code>.
+<p />
+Note that the format returned by these <strong>different</strong> <code>date-&gt;string</code>
+procedures, the former from the Mzlib collection, the later from
+<a href="/Cookbook/SRFI">SRFI</a>-19, differs.  The number of arguments these procedures receive
+also differs, the one form <a href="/Cookbook/SRFI">SRFI</a>-19 supports localization, the other
+one not, etc.
+<p />
+To change the format of the returning string using Mzlib, you need to
+use <code>(date-display-format [format-symbol])</code>, with one of the supported
+format symbols: ='american, 'chinese, 'german, 'indian, 'irish,
+'iso-8601, 'rfc2822=, or <code>'julian</code>. The initial format is <code>'american</code>.
+For instance,
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+(<span class="keyword">let*</span> ((<span class="variable">seconds</span> (<span class="variable">current-seconds</span>))
+       (<span class="variable">today</span> (<span class="variable">seconds-&gt;date</span> <span class="variable">seconds</span>)))
+  (<span class="variable">date-display-format</span> <span class="keyword">'</span><span class="variable">iso-8601</span>)
+  (<span class="variable">date-&gt;string</span> <span class="variable">today</span>))
+</pre>
+</div>
+<p />
+which would return <code>"2004-04-21"</code>.
+<p />
+To change the format using <a href="/Cookbook/SRFI">SRFI</a>-19 accordingly, you have to instruct
+<code>date-&gt;string</code> using its second, optional, argument.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"19.ss"</span> <span class="selfeval">"srfi"</span>)) <span class="comment">;; or (require (lib "19.ss" "srfi" "time"))
+</span>
+(<span class="keyword">let</span> ((<span class="variable">today</span> (<span class="variable">current-date</span>)))
+  (<span class="variable">date-&gt;string</span> <span class="variable">today</span> <span class="selfeval">"~1"</span>))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="See_Also"> See Also </a>
+</h3>
+<p />
+If you are using <code>DrScheme</code>, then use Help Desk to access the <code>MzScheme</code>
+manual, and the documentation for <a href="/Cookbook/SRFI">SRFI</a>-19.
+<p />
+<p />
+<h4>
+  <a name="Comments_here"> Comments here </a>
+</h4>
+<p />
+-- <a href="/Main/FranciscoSolsona">FranciscoSolsona</a> - 28 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TimeRecipes">TimeRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

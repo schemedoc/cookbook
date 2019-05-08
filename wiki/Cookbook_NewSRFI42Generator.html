@@ -1,0 +1,173 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Creating_a_New_SRFI_42_Generator"> </a> Creating a New <a href="/Cookbook/SRFI">SRFI</a>-42 Generator </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You have a new datatype, in this example a <code>matrix</code>, and you want users to be able to iterate over it using <a href="http://srfi.schemers.org/srfi-42" target="_top">SRFI-42</a>.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+You should define your own <strong>typed generator</strong>, just like <code>:vector</code>, <code>:list</code>, etc.  Assume that the functions <code>matrix-rows</code>, <code>matrix-cols</code>, and <code>matrix-ref</code> are defined for getting the dimensions and elements of a matrix.  You should define a new syntax transformer which expands into an instance of <code>:do</code> (or any other generator, if your needs are simple):
+<p />
+<div class="scheme">
+  <pre>  (<span class="keyword">define-syntax</span> <span class="selfeval">:matrix</span>
+    (<span class="keyword">syntax-rules</span> (<span class="variable">index</span>)
+      ((<span class="selfeval">:matrix</span> <span class="variable">cc</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">mexpr</span>)
+       (<span class="selfeval">:do</span> <span class="variable">cc</span>
+            (<span class="keyword">let</span> ((<span class="variable">m</span> <span class="variable">mexpr</span>)
+                  (<span class="variable">rows</span> <span class="selfeval">#f</span>)
+                  (<span class="variable">cols</span> <span class="selfeval">#f</span>))
+              (<span class="keyword">set!</span> <span class="variable">rows</span> (<span class="variable">matrix-rows</span> <span class="variable">m</span>))
+              (<span class="keyword">set!</span> <span class="variable">cols</span> (<span class="variable">matrix-cols</span> <span class="variable">m</span>)))
+            ((<span class="variable">i</span> <span class="selfeval">0</span>) (<span class="variable">j</span> <span class="selfeval">0</span>))
+            (<span class="builtin">&lt;</span> <span class="variable">i</span> <span class="variable">rows</span>)
+            (<span class="keyword">let</span> ((<span class="variable">x</span> (<span class="variable">matrix-ref</span> <span class="variable">m</span> <span class="variable">i</span> <span class="variable">j</span>))
+                  (<span class="variable">i+1</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>))
+                  (<span class="variable">j+1</span> (<span class="builtin">+</span> <span class="variable">j</span> <span class="selfeval">1</span>))
+                  (<span class="variable">wrap?</span> <span class="selfeval">#f</span>))
+              (<span class="keyword">set!</span> <span class="variable">wrap?</span> (<span class="builtin">&gt;=</span> <span class="variable">j+1</span> <span class="variable">cols</span>)))
+            <span class="selfeval">#t</span>
+            ((<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="variable">i+1</span> <span class="variable">i</span>)
+             (<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="selfeval">0</span> <span class="variable">j+1</span>))))
+      ((<span class="selfeval">:matrix</span> <span class="variable">cc</span> <span class="variable">x</span> <span class="variable">mexpr</span>)
+       (<span class="selfeval">:matrix</span> <span class="variable">cc</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">mexpr</span>))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The macros in <a href="/Cookbook/SRFI">SRFI</a>-42 are all written using CPS; the <code>cc</code> argument contains the "continuation" form which will continue the expansion of the loop after this generator has been handled.
+<p />
+The <code>:do</code> generator expands into
+<p />
+<div class="scheme">
+  <pre>(<span class="selfeval">:do</span> (<span class="keyword">let</span> (<span class="variable">&lt;ob&gt;*</span>) <span class="variable">&lt;oc&gt;*</span>) (<span class="variable">&lt;lb&gt;*</span>) <span class="variable">&lt;ne1?&gt;</span> (<span class="keyword">let</span> (<span class="variable">&lt;ib&gt;*</span>) <span class="variable">&lt;ic&gt;*</span>) <span class="variable">&lt;ne2?&gt;</span> (<span class="variable">&lt;ls&gt;*</span>))
+<span class="keyword">=&gt;</span>
+(<span class="keyword">let</span> (<span class="variable">&lt;ob&gt;*</span>)
+  <span class="variable">&lt;oc&gt;*</span>
+  (<span class="keyword">let</span> <span class="variable">loop</span> (<span class="variable">&lt;lb&gt;*</span>)
+    (<span class="keyword">if</span> <span class="variable">&lt;ne1?&gt;</span>
+        (<span class="keyword">let</span> (<span class="variable">&lt;ib&gt;*</span>)
+          <span class="variable">&lt;ic&gt;*</span>
+          <span class="variable">payload</span>
+          (<span class="keyword">if</span> <span class="variable">&lt;ne2?&gt;</span>
+              (<span class="variable">loop</span> <span class="variable">&lt;ls&gt;*</span>) )))))
+</pre>
+</div>
+<p />
+allowing us to write "named-let" loops with our macro.  (Note that we have to pass the <code>cc</code> argument to <code>:do</code> inside our macro, even though it doesn't appear in the expansion above.)
+<p />
+So, the <code>:matrix</code> generator expands into
+<p />
+<div class="scheme">
+  <pre>(<span class="selfeval">:matrix</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">M</span>)
+<span class="keyword">=&gt;</span>
+(<span class="keyword">let</span> ((<span class="variable">m</span> <span class="variable">matrix</span>)
+      (<span class="variable">rows</span> <span class="selfeval">#f</span>)
+      (<span class="variable">cols</span> <span class="selfeval">#f</span>))
+  (<span class="keyword">set!</span> <span class="variable">rows</span> (<span class="variable">matrix-rows</span> <span class="variable">m</span>))
+  (<span class="keyword">set!</span> <span class="variable">cols</span> (<span class="variable">matrix-cols</span> <span class="variable">m</span>))
+  (<span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">i</span> <span class="selfeval">0</span>) (<span class="variable">j</span> <span class="selfeval">0</span>))
+    (<span class="keyword">if</span> (<span class="builtin">&lt;</span> <span class="variable">i</span> <span class="variable">rows</span>)
+        (<span class="keyword">let</span> ((<span class="variable">x</span> (<span class="variable">matrix-ref</span> <span class="variable">m</span> <span class="variable">i</span> <span class="variable">j</span>))
+              (<span class="variable">i+1</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>))
+              (<span class="variable">j+1</span> (<span class="builtin">+</span> <span class="variable">j</span> <span class="selfeval">1</span>))
+              (<span class="variable">wrap?</span> <span class="selfeval">#f</span>))
+          (<span class="keyword">set!</span> <span class="variable">wrap?</span> (<span class="builtin">&gt;=</span> <span class="variable">j+1</span> <span class="variable">cols</span>))
+          (<span class="keyword">if</span> <span class="selfeval">#t</span>
+              (<span class="keyword">begin</span>
+                (<span class="variable">do-payload</span> ...)
+                (<span class="variable">loop</span> (<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="variable">i+1</span> <span class="variable">i</span>)
+                      (<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="selfeval">0</span> <span class="variable">j+1</span>))))))))
+</pre>
+</div>
+<p />
+which is exactly the "named-let" loop we would have written to iterate over the elements of <code>matrix</code> in row-major order.
+<p />
+Note that we supply both an <code>(index i j)</code> and non-indexed generator form, where <code>index</code> is a <code>syntax-rules</code> literal.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/WillFarr">WillFarr</a> - 24 Aug 2007
+<p />
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+The equivalent definition of :matrix in the reimplementation of srfi-42 is as follows:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"42.ss"</span> (<span class="selfeval">"soegaard"</span> <span class="selfeval">"srfi.plt"</span> <span class="selfeval">2</span> <span class="selfeval">1</span>)))
+(<span class="keyword">define</span> <span class="variable">matrix-rows</span> <span class="builtin">length</span>)
+(<span class="keyword">define</span> (<span class="variable">matrix-cols</span> <span class="variable">x</span>)    (<span class="builtin">length</span> (<span class="builtin">car</span> <span class="variable">x</span>)))
+(<span class="keyword">define</span> (<span class="variable">matrix-ref</span> <span class="variable">m</span> <span class="variable">i</span> <span class="variable">j</span>) (<span class="builtin">list-ref</span> (<span class="builtin">list-ref</span> <span class="variable">m</span> <span class="variable">i</span>) <span class="variable">j</span>))
+(<span class="variable">define-generator</span> <span class="selfeval">:matrix</span>
+  (<span class="keyword">lambda</span> (<span class="variable">form-stx</span>)
+    (<span class="keyword">syntax-case</span> <span class="variable">form-stx</span> (<span class="variable">index</span>)
+      [(<span class="selfeval">:matrix</span> <span class="variable">x</span> <span class="variable">mexpr</span>)
+       <span class="selfeval">#</span><span class="keyword">'</span>(<span class="selfeval">:matrix</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">mexpr</span>)]
+      [(<span class="selfeval">:matrix</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">mexpr</span>)
+       <span class="selfeval">#</span><span class="keyword">'</span>(<span class="selfeval">:do</span> (<span class="keyword">let</span> ((<span class="variable">m</span> <span class="variable">mexpr</span>)
+                    (<span class="variable">rows</span> <span class="selfeval">#f</span>)
+                    (<span class="variable">cols</span> <span class="selfeval">#f</span>))
+                (<span class="keyword">set!</span> <span class="variable">rows</span> (<span class="variable">matrix-rows</span> <span class="variable">m</span>))
+                (<span class="keyword">set!</span> <span class="variable">cols</span> (<span class="variable">matrix-cols</span> <span class="variable">m</span>)))
+              ((<span class="variable">i</span> <span class="selfeval">0</span>) (<span class="variable">j</span> <span class="selfeval">0</span>))
+              (<span class="builtin">&lt;</span> <span class="variable">i</span> <span class="variable">rows</span>)
+              (<span class="keyword">let</span> ((<span class="variable">x</span> (<span class="variable">matrix-ref</span> <span class="variable">m</span> <span class="variable">i</span> <span class="variable">j</span>))
+                    (<span class="variable">i+1</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>))
+                    (<span class="variable">j+1</span> (<span class="builtin">+</span> <span class="variable">j</span> <span class="selfeval">1</span>))
+                    (<span class="variable">wrap?</span> <span class="selfeval">#f</span>))
+                (<span class="keyword">set!</span> <span class="variable">wrap?</span> (<span class="builtin">&gt;=</span> <span class="variable">j+1</span> <span class="variable">cols</span>)))
+              <span class="selfeval">#t</span>
+              ((<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="variable">i+1</span> <span class="variable">i</span>)
+               (<span class="keyword">if</span> <span class="variable">wrap?</span> <span class="selfeval">0</span> <span class="variable">j+1</span>)))])))
+(<span class="keyword">define</span> <span class="variable">M</span> <span class="keyword">'</span>((<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span>)
+            (<span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span>)))
+(<span class="variable">list-ec</span> (<span class="selfeval">:matrix</span> <span class="variable">x</span> (<span class="variable">index</span> <span class="variable">i</span> <span class="variable">j</span>) <span class="variable">M</span>)
+          (<span class="builtin">list</span> <span class="variable">x</span> <span class="variable">i</span> <span class="variable">j</span>))
+<span class="comment">; evaluates to
+</span>((<span class="selfeval">1</span> <span class="selfeval">0</span> <span class="selfeval">0</span>) (<span class="selfeval">2</span> <span class="selfeval">0</span> <span class="selfeval">1</span>) (<span class="selfeval">3</span> <span class="selfeval">0</span> <span class="selfeval">2</span>) (<span class="selfeval">4</span> <span class="selfeval">1</span> <span class="selfeval">0</span>) (<span class="selfeval">5</span> <span class="selfeval">1</span> <span class="selfeval">1</span>) (<span class="selfeval">6</span> <span class="selfeval">1</span> <span class="selfeval">2</span>))
+</pre>
+</div>
+<p />
+Note that the "mysterious" cc disappeared.
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 24 Aug 2007
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/MacrosChapterRecipes">MacrosChapterRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

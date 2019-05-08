@@ -1,0 +1,70 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Testing_Whether_A_File_Is_A_Dire"> Testing Whether A File Is A Directory </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You have a list of file names, which includes the names of some directories.  You want to test if a name refers to a file or directory.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+There are two predicates that are useful here: <code>file-exists?</code>, which returns <code>#t</code> if a file name corresponds to a file, but not to a directory, and <code>directory-exists?</code>, which returns <code>#t</code> if a file name corresponds to a directory, but not to a file.  You can use <code>directory-exists?</code> with <code>directory-list</code> and <code>filter</code> to create a list of file names that correspond only to directories:
+<p />
+<div class="scheme">
+  <pre>(<span class="selfeval">"CVS"</span> <span class="selfeval">"index.ss"</span> <span class="selfeval">"make-site.ss"</span> <span class="selfeval">"schema.ss"</span> <span class="selfeval">"site.ss"</span> <span class="selfeval">"style.css"</span> <span class="selfeval">"write-site.ss"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">file-exists?</span> <span class="selfeval">"CVS"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="variable">directory-exists?</span> <span class="selfeval">"CVS"</span>)
+<span class="selfeval">#t</span>
+<span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">filter</span> <span class="variable">directory-exists?</span> (<span class="variable">directory-list</span>))
+(<span class="selfeval">"CVS"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 14 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

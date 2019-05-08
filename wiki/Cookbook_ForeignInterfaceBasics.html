@@ -1,0 +1,154 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Foreign_interface_basics"> Foreign interface basics </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+We want to use C libraries from Scheme without writing C code ourselves.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+We'll use PLT Scheme's <code>
+  <b>foreign</b>
+</code> module to drive <a href="http://sources.redhat.com/libffi/">libffi</a>.  <i>Note: the <code>
+  <b>foreign</b>
+</code> module is currently only available for v299.</i>
+<p />
+The <code>
+  <b>foreign</b>
+</code> module is part of the <a href="/Cookbook/MzScheme">MzScheme</a> core library, so we'll require it with:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"foreign.ss"</span>))
+</pre>
+</div>
+<p />
+We can load a C library with <code>
+  <b>ffi-lib</b>
+</code>:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">glib</span> (<span class="variable">ffi-lib</span> <span class="selfeval">"libglib-2.0.so"</span>))
+</pre>
+</div>
+<p />
+The GLib library exports a function, <code>
+  <b>g_print</b>
+</code>, that sends a formatted message to a print handler (usually a stdout printer).
+<p />
+Its signature is:
+<p />
+<i>void g_print(const gchar* format, ...);</i>
+<p />
+Let's ignore the varargs and treat the <code>
+  <b>gchar*</b>
+</code> type as a constant C character string.  The function type we care about is then:
+<p />
+<i>g_print: string -&gt; void</i>
+<p />
+We can fetch it from the loaded library with <code>
+  <b>get-ffi-obj</b>
+</code>:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">g_print</span>
+  (<span class="variable">get-ffi-obj</span> <span class="selfeval">"g_print"</span> <span class="variable">glib</span>
+     (<span class="variable">_fun</span> <span class="variable">_string</span> <span class="variable">-&gt;</span> <span class="variable">_void</span>)))
+</pre>
+</div>
+<p />
+There are three arguments to <code>
+  <b>get-ffi-obj</b>
+</code>: the name of the C object we're importing, the library object to load it from, and its ffi type.
+<p />
+The ffi type <i>(_fun _string -&gt; _void)</i> is a function that consumes a string and has no return value.  Note that ffi type names start with an underscore.
+<p />
+Now we can use <code>
+  <b>g_print</b>
+</code> as if it were a Scheme function:
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">g_print</span> <span class="selfeval">"Hello, C"</span>)
+</pre>
+</div>
+<p />
+We can also use Scheme functions as C callbacks.  We'll make use of one right now to redirect the output from <code>
+  <b>g_print</b>
+</code>.  GLib allows us to install a print handler with <code>
+  <b>g_set_print_handler</b>
+</code>:
+<p />
+<i> <code>
+  <b>GPrintFunc</b>
+</code> g_set_print_handler(<code>
+  <b>GPrintFunc</b>
+</code> handler);</i>
+<p />
+The <code>
+  <b>GPrintFunc</b>
+</code> type is that of a function that only consumes a string.  We'll define both <code>
+  <b>GPrintFunc</b>
+</code> and <code>
+  <b>g_set_print_handler</b>
+</code> in Scheme:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">_GPrintFunc</span> (<span class="variable">_fun</span> <span class="variable">_string</span> <span class="variable">-&gt;</span> <span class="variable">_void</span>))
+(<span class="keyword">define</span> <span class="variable">g_set_print_handler</span>
+  (<span class="variable">get-ffi-obj</span> <span class="selfeval">"g_set_print_handler"</span> <span class="variable">glib</span>
+    (<span class="variable">_fun</span> <span class="variable">_GPrintFunc</span> <span class="variable">-&gt;</span> <span class="variable">_pointer</span>)))
+</pre>
+</div>
+<p />
+Now let's install a print handler and test it:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"mred.ss"</span> <span class="selfeval">"mred"</span>))
+(<span class="variable">g_set_print_handler</span> (<span class="keyword">lambda</span> (<span class="variable">str</span>)
+                       (<span class="variable">message-box</span> <span class="selfeval">"GLib message"</span> <span class="variable">str</span>)))
+(<span class="variable">g_print</span> <span class="selfeval">"Hello from C!"</span>)
+</pre>
+</div>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DanielSilva">DanielSilva</a> - 24 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ForeignInterfaceRecipes">ForeignInterfaceRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

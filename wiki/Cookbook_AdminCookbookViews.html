@@ -1,0 +1,103 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1>
+  <a name="Supporting_Multiple_Views_of_the"> Supporting Multiple Views of the Cookbook </a>
+</h1>
+<p />
+At a minimum, we want to be able to support two "views" of the cookbook - one which supports online browsing well, and another which supports generation of a document format such as PDF, possibly for print publishing.  For various reasons, a single layout doesn't fully address the needs of both of these views.
+<p />
+TWiki itself is not particularly oriented to supporting such alternate views.  It is possible do something along these lines using topic inclusion and the table of contents feature, but these mechanisms have various rather arbitrary limitations, and have proved less than ideal in implementing the exact structure desired for even a single view, let alone two or more.
+<p />
+I think this situation can be addressed more to our liking without too much work.  A solution could be implemented by defining <a href="/Cookbook/AuthorGuide#Index_Pages">index pages</a>, such as <a href="/Cookbook/StringChapter">StringChapter</a>, using a metadata format of our own, which could be as simple as a list of topic names with perhaps some minimal associated structure information.
+<p />
+Given a metadata description of an index page, a script implemented either in TWiki's native Perl or in Scheme (as has been done with <a href="/Sandbox/CodeFormatting">CodeFormatting</a>), could read this list and present it in various ways that are specifically designed to support what's wanted for the Cookbook.  This would not be a 100% solution, it need only be very specifically oriented to producing the output formats we want for the cookbook.  As such, it need not be particularly complex.  It could be as simple as generating a TWiki topic with the necessary sequence of <code>%INCLUDE%</code> and <code>%TOC%</code> statements --
+this alone could simplify the process of adding new recipes, and would also eliminate the need to duplicate these commands, which would otherwise be necessary to support multiple views.
+<p />
+In addition to addressing the requirement for multiple views of the cookbook, this would have the added benefit of moving cookbook formatting further under programmatic control.  This should make it easier to impose a consistent structure on the cookbook.  It would also be easy to develop a page which asks a contributor where they want to insert a new recipe, and for the recipe topic name.  This topic name would be automatically added to the appropriate index list, and the new topic would be created for the user, with the appropriate parent topic already set.
+<p />
+<a href="/Cookbook/ToDo">ToDo</a>: needs fleshing out.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 20 Apr 2004
+<p />
+<p />
+I feel the main web view should show the structure of the Wiki.  That is, links as <span style="background : #FFFFCE;">
+  <font color="#0000FF">WikiWords</font>
+</span><a href="/edit/Cookbook/WikiWords?topicparent=Cookbook.AdminCookbookViews">?</a>, no magic <a href="/Cookbook/TOC">TOC</a> etc.  This way users can get a feel for how the site is structured just by reading the cookbook, so when they come to contribute they will already have some of the knowledge they need.  The printed view should have all the magic we've been using.  I think this is in keeping with your suggestion above.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 20 Apr 2004
+<p />
+I mostly agree with that.  The main reason I originally used a more book-like structure was because there didn't seem to be good options for supporting more than one view, and the book style seemed to be one of the major goals.
+<p />
+However, on an index page, providing links as plain WikiWords doesn't give you any kind of description of the linked topic.  You can do it explicitly, with something like <code>[[RavioliRecipe][Cooking Ravioli with Scheme]]</code>, but it's more work, and edits of topic descriptions have to be done in more than one place, so things can get out of sync.  Using <code>%TOC{"RavioliRecipe"}%</code> at least gives you the topic description automatically.
+<p />
+With my suggestion above, an index page might defined using something like this:
+<p />
+<pre>
+%CookbookIndex%
+RavioliRecipe
+BurgerRecipes
+   TofuBurgerRecipe
+   VeggieBurgerRecipe
+MudPieRecipe
+%EndIndex%
+</pre>
+<p />
+...and this could be translated to a wiki-style page which gives the WikiName along with topic descriptions, or translated to something oriented towards a book version which omits the WikiName and includes numbering or whatever.
+<p />
+Let me know if you see a simpler acceptable solution, I'm not looking to overcomplicate things.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 20 Apr 2004
+<p />
+Your way sounds good, especially if it doesn't bork on currently undefined recipes like <a href="/Cookbook/StringChapter">StringChapter</a> does.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 21 Apr 2004
+<p />
+For an initial version of this at least, an s-exp representation would be easy to deal with, e.g.:
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">chapter</span> <span class="selfeval">"String Recipes"</span>
+  (<span class="variable">section</span> <span class="variable">StringChapterIntro</span>)
+  (<span class="variable">section</span> <span class="selfeval">"Recipes"</span>
+    (<span class="variable">recipe</span> <span class="variable">StringBasics</span>)
+    (<span class="variable">recipe</span> <span class="variable">IsAString</span>)
+    ...)
+  (<span class="variable">section</span> <span class="selfeval">"Other recipes of interest"</span>
+    ...)
+  (<span class="variable">section</span> <span class="variable">StringRecipeReferences</span>))
+</pre>
+</div>
+<p />
+The idea is still that this shouldn't contain any direct content, just headings and references to other topics.  It would be translated by a Scheme servlet into the necessary HTML (or Twiki format) output.  This would be the single source from which could be generated either a pure table of contents view, a mixed view in which e.g. certain sections like the intro are directly included on the page, or a one-big-page view which shows all the content on the same page (useful for printing, skimming, etc.)  These different views would be created by including the appropriate plugin-style command on the page on which one of these views should appear, so there might be two or three pages which reference the same index structure.
+<p />
+The above is only an example.  It would mean that the format used to create indexes vs. author recipes would be different.  We could make them closer if that's considered important, but for initial development, the s-exp format keeps things simple.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 23 Apr 2004
+<p />
+I like this idea.  If we could also add "Make a Recipe" and "Make a Chapter" buttons in relevant places I think that would be a big step forward.  As there is effectively no practically-oriented Scheme literature we need to cover information that in the Perl and Python world is covered in other publications and doesn't fit the problem/solution/discussion recipe model (e.g. <a href="/Cookbook/HowToInstallPLTFile">HowToInstallPLTFile</a>).  This requires a fairly flexible system so we have to be careful we aren't too limiting in what our system can express.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 27 Apr 2004
+<p />
+As noted on the dev list, a <a href="/Cookbook/NewRecipe">NewRecipe</a> topic has been added.  I've also written a first version of a program which implements the <a href="/Cookbook/TOC">TOC</a> mechanism described above.  The current source is at <a href="/Sandbox/SchemeTOC">SchemeTOC</a>.  This is a work in progress, not yet deployed.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 14 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Admin </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/AdminTopics">AdminTopics</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> Next Topic:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,25 @@
+<div id="contentbox">
+ <div class="widget">
+  (require (lib "42.ss" "srfi"))
+<p />
+(printf "Infancy is: ")
+(foldl
+ (lambda (x y) (printf "~a " x))
+ 0
+ (list 0 1 2))
+(newline)
+<p />
+(printf "Toddling is: ")
+(for-each
+ (lambda (x)
+   (printf "~a " x))
+ (list 3 4))
+(newline)
+<p />
+(printf "Childhold is: ")
+(do-ec (:range i 5 12 1) (printf "~a " i))
+(newline)
+<p />
+<p />
+ </div>
+</div>

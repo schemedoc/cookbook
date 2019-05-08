@@ -1,0 +1,197 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Fun_and_Games"> Fun and Games </a>
+</h2>
+<p />
+These are a few little toy examples for modelling finite state machines in Scheme. There are better ways to do it. It's just really basic stuff for fun.
+<p />
+<h2>
+  <a name="Basic_Finite_State_Machine"> Basic Finite State Machine </a>
+</h2>
+<p />
+Finite state machines are useful for alot of things, and not just
+compilers. They are used heavily in video games, controls, robotics
+and for modelling any kind of task which involves a state and actions.
+There are plenty of tutorials around that discuss this much better
+than I can do in a paragraph.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;
+</span><span class="comment">; FSMP - Finite State Machine Parser in Scheme
+</span><span class="comment">; a Scheme interpreter for a finite state machine.
+</span><span class="comment">;
+</span><span class="comment">; A very simple language for developing finite state machines in Scheme.
+</span><span class="comment">; This is meant to be an example, pretty ugly, but it shows how to model these concepts
+</span><span class="comment">; in Scheme.
+</span><span class="comment">;
+</span>
+<span class="comment">; test program
+</span>(<span class="keyword">define</span> <span class="variable">prog</span> <span class="keyword">'</span>( <span class="variable">FSM</span> <span class="variable">foo</span> <span class="selfeval">2</span>
+                    (<span class="selfeval">0</span> (<span class="selfeval">1</span> (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"FOO"</span>))))
+                    (<span class="selfeval">1</span> (<span class="selfeval">0</span> (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"BAR"</span>))))
+                    <span class="comment">;; -1 is for end of list for now
+</span>                    (<span class="selfeval">-1</span>)))
+<span class="comment">;; name of program we are parsing.
+</span>(<span class="keyword">define</span> <span class="variable">prog-name</span> <span class="selfeval">""</span>)
+<span class="comment">;; fsm-vector is a vector of all states[num] = list(next,lambda);
+</span>(<span class="keyword">define</span> <span class="variable">fsm-vector</span> <span class="keyword">'</span>())
+<span class="comment">;; number of state in vector
+</span>(<span class="keyword">define</span> <span class="variable">num-states</span> <span class="selfeval">0</span>)
+<span class="comment">;; current state we are on now
+</span>(<span class="keyword">define</span> <span class="variable">state</span> <span class="selfeval">0</span>)
+<span class="comment">;; add state (number next function)
+</span>(<span class="keyword">define</span> (<span class="variable">add-state</span> <span class="variable">num</span> <span class="variable">next</span> <span class="variable">func</span>)
+  (<span class="builtin">vector-set!</span> <span class="variable">fsm-vector</span> <span class="variable">num</span> (<span class="builtin">list</span> <span class="variable">next</span> <span class="variable">func</span>)))
+<span class="comment">;; expand a vector with one more element at the end. copies old into it, return new vector.
+</span>(<span class="keyword">define</span> (<span class="variable">expand-vector</span> <span class="variable">old</span>)
+  ( <span class="keyword">let*</span> ((<span class="variable">n</span> (<span class="builtin">+</span> <span class="variable">num-states</span> <span class="selfeval">1</span>))( <span class="variable">v</span> (<span class="builtin">make-vector</span> <span class="variable">n</span>)))
+     (<span class="keyword">let</span> <span class="variable">loop</span> (( <span class="variable">i</span> <span class="selfeval">0</span> ))
+       (<span class="keyword">if</span> (<span class="builtin">=</span> <span class="variable">i</span> (<span class="builtin">-</span> <span class="variable">num-states</span> <span class="selfeval">1</span>))
+           ( <span class="keyword">begin</span>
+              (<span class="keyword">set!</span> <span class="variable">num-states</span> <span class="variable">n</span>)
+              <span class="variable">v</span>)
+           ( <span class="keyword">begin</span>
+              (<span class="builtin">vector-set!</span> <span class="variable">v</span> <span class="variable">i</span> (<span class="builtin">vector-ref</span> <span class="variable">old</span> <span class="variable">i</span>))
+              (<span class="variable">loop</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))))))
+<span class="comment">;; execute state  n
+</span>(<span class="keyword">define</span> (<span class="variable">exec-state</span> <span class="variable">n</span>)
+  (<span class="keyword">set!</span> <span class="variable">state</span> (<span class="builtin">car</span> <span class="variable">n</span>))
+  (<span class="builtin">eval</span> (<span class="builtin">car</span>(<span class="builtin">cdr</span> <span class="variable">n</span>))))
+<span class="comment">;; send message to the FSM
+</span><span class="comment">;; if message is recognized, it advances to the new state and evaluates it's action.
+</span>(<span class="keyword">define</span> (<span class="variable">fsm-message</span> <span class="variable">n</span>)
+  ( <span class="keyword">let</span> (( <span class="variable">c</span> (<span class="builtin">vector-ref</span> <span class="variable">fsm-vector</span> <span class="variable">state</span>)))
+     (<span class="keyword">if</span>(<span class="builtin">=</span> <span class="variable">n</span> (<span class="builtin">car</span> <span class="variable">c</span>))
+        ( (<span class="variable">exec-state</span> <span class="variable">c</span>)))))
+<span class="comment">;; parse the list and setup the vector
+</span>(<span class="keyword">define</span> (<span class="variable">parser</span> <span class="variable">p</span>)
+  (<span class="keyword">if</span> (<span class="builtin">=</span> (<span class="builtin">caar</span> <span class="variable">p</span>) <span class="selfeval">-1</span>)
+      <span class="selfeval">#t</span>
+      ( <span class="keyword">let</span> ((<span class="variable">c</span> (<span class="builtin">car</span> <span class="variable">p</span>)))
+         (<span class="variable">add-state</span> ( <span class="builtin">car</span> <span class="variable">c</span> )( <span class="builtin">car</span> (<span class="builtin">cadr</span> <span class="variable">c</span>))( <span class="builtin">cadr</span> (<span class="builtin">cadr</span> <span class="variable">c</span>)))
+       (<span class="variable">parser</span> (<span class="builtin">cdr</span> <span class="variable">p</span>)))))
+<span class="comment">;; parse-fsm driver
+</span>(<span class="keyword">define</span> (<span class="variable">fsm-parse</span> <span class="variable">program</span> )
+  (<span class="keyword">let</span> ((<span class="variable">c</span> (<span class="builtin">car</span> <span class="variable">program</span>)))
+    (<span class="keyword">if</span>(<span class="builtin">null?</span> <span class="variable">c</span>)
+       (<span class="builtin">display</span> <span class="selfeval">"error"</span>))
+    (<span class="keyword">if</span>(<span class="builtin">eqv?</span> <span class="variable">c</span> <span class="keyword">'</span><span class="variable">FSM</span>)
+       ( <span class="keyword">begin</span>
+          (<span class="keyword">set!</span> <span class="variable">prog-name</span>  (<span class="builtin">cadr</span> <span class="variable">program</span>))
+          (<span class="keyword">set!</span> <span class="variable">num-states</span> (<span class="builtin">caddr</span> <span class="variable">program</span> ))
+          (<span class="keyword">set!</span> <span class="variable">fsm-vector</span> (<span class="builtin">make-vector</span> <span class="variable">num-states</span>))
+          (<span class="variable">parser</span> (<span class="builtin">cdddr</span> <span class="variable">program</span>)))
+    (<span class="builtin">display</span> <span class="selfeval">"Bad program"</span>))))
+<span class="comment">;; test
+</span>(<span class="variable">fsm-parse</span> <span class="variable">prog</span>)
+(<span class="variable">fsm-message</span> <span class="selfeval">1</span>)
+(<span class="variable">fsm-message</span> <span class="selfeval">0</span>)
+(<span class="variable">fsm-message</span> <span class="selfeval">1</span>)
+(<span class="variable">fsm-message</span> <span class="selfeval">0</span>)
+</pre>
+</div>
+<p />
+<h2>
+  <a name="Probabilistic_State_Machine"> Probabilistic State Machine </a>
+</h2>
+<p />
+The probabilistic state machine is similar to the FSM. But it uses a probability to choose the next state, instead of being determined. This can be simulated by rolling a virtual 'die' generating a random number.
+<p />
+<div class="scheme">
+  <pre>
+<span class="comment">; PFSMP - Probabilistic Finite State Machine Parser
+</span><span class="comment">;
+</span><span class="comment">; Similar to FSMP, except it makes a random path from choices given to it.
+</span><span class="comment">; This is simulated by rolling a virtual percentile die.
+</span>
+<span class="comment">; STATE RANGE(min,max) ACTION(...)
+</span>
+(<span class="keyword">define</span> <span class="variable">program</span> <span class="keyword">'</span>( <span class="variable">PFSM</span> <span class="variable">pfsm</span> <span class="selfeval">4</span>
+                     ( <span class="selfeval">0</span> <span class="selfeval">0</span>  <span class="selfeval">25</span>   (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"1"</span>)(<span class="builtin">newline</span>)))
+                     ( <span class="selfeval">1</span> <span class="selfeval">26</span> <span class="selfeval">75</span>   (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"2"</span>)(<span class="builtin">newline</span>)))
+                     ( <span class="selfeval">2</span> <span class="selfeval">76</span> <span class="selfeval">90</span>   (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"3"</span>)(<span class="builtin">newline</span>)))
+                     ( <span class="selfeval">3</span> <span class="selfeval">91</span> <span class="selfeval">100</span>  (<span class="keyword">lambda</span>()(<span class="builtin">display</span> <span class="selfeval">"4"</span>)(<span class="builtin">newline</span>)))))
+<span class="comment">;; roll a percentile dice
+</span>(<span class="keyword">define</span> (<span class="variable">roll-dice</span>)
+  (<span class="variable">random</span> <span class="selfeval">100</span>))
+<span class="comment">;; name of program we are parsing.
+</span>(<span class="keyword">define</span> <span class="variable">prog-name</span> <span class="selfeval">""</span>)
+<span class="comment">;; fsm-vector is a vector of all states[num] = list(next,lambda);
+</span>(<span class="keyword">define</span> <span class="variable">pfsm-vector</span> <span class="keyword">'</span>())
+<span class="comment">;; number of state in vector
+</span>(<span class="keyword">define</span> <span class="variable">num-states</span> <span class="selfeval">0</span>)
+<span class="comment">;; current state we are on now
+</span>(<span class="keyword">define</span> <span class="variable">state</span> <span class="selfeval">0</span>)
+<span class="comment">;; add state (number next function)
+</span>(<span class="keyword">define</span> (<span class="variable">add-state</span> <span class="variable">num</span> <span class="builtin">min</span> <span class="builtin">max</span> <span class="variable">func</span>)
+  (<span class="builtin">vector-set!</span> <span class="variable">pfsm-vector</span> <span class="variable">num</span> (<span class="builtin">list</span> <span class="builtin">min</span> <span class="builtin">max</span> <span class="variable">func</span>)))
+(<span class="keyword">define</span> (<span class="variable">pfsm-message</span>)
+  ( <span class="keyword">let</span> (( <span class="variable">d</span> (<span class="variable">roll-dice</span>))(<span class="builtin">min</span> <span class="selfeval">0</span>)(<span class="builtin">max</span> <span class="selfeval">0</span>)(<span class="variable">v</span> (<span class="builtin">vector-ref</span> <span class="variable">pfsm-vector</span> <span class="selfeval">0</span>)))
+     ( <span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">i</span> <span class="selfeval">0</span>))
+        (<span class="keyword">if</span>(<span class="builtin">=</span> <span class="variable">i</span> (<span class="builtin">-</span> <span class="variable">num-states</span> <span class="selfeval">1</span>))
+           <span class="selfeval">#t</span>
+           (<span class="keyword">begin</span>
+             (<span class="keyword">set!</span> <span class="builtin">min</span> (<span class="builtin">car</span> <span class="variable">v</span>))
+             (<span class="keyword">set!</span> <span class="builtin">max</span> (<span class="builtin">cadr</span> <span class="variable">v</span>))
+             (<span class="keyword">if</span>( <span class="keyword">and</span> (<span class="builtin">&gt;=</span> <span class="variable">d</span> <span class="builtin">min</span>)(<span class="builtin">&lt;=</span> <span class="variable">d</span> <span class="builtin">max</span>))
+                ((<span class="builtin">eval</span>(<span class="builtin">caddr</span> <span class="variable">v</span>)))
+                (<span class="keyword">begin</span>
+                  (<span class="keyword">set!</span> <span class="variable">v</span> (<span class="builtin">vector-ref</span> <span class="variable">pfsm-vector</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))
+                  (<span class="variable">loop</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))))))))
+<span class="comment">;; parse the list and setup the vector
+</span>(<span class="keyword">define</span> (<span class="variable">parser</span> <span class="variable">p</span>)
+  (<span class="keyword">if</span>(<span class="builtin">null?</span> <span class="variable">p</span>)
+     <span class="selfeval">#t</span>
+     (<span class="keyword">begin</span>
+       (<span class="keyword">let</span> ((<span class="variable">c</span> (<span class="builtin">car</span> <span class="variable">p</span>)))
+         <span class="comment">;            num     min     max     action
+</span>         (<span class="variable">add-state</span> (<span class="builtin">car</span> <span class="variable">c</span>)(<span class="builtin">cadr</span> <span class="variable">c</span>)(<span class="builtin">caddr</span> <span class="variable">c</span>)(<span class="builtin">cadddr</span> <span class="variable">c</span>))
+         (<span class="variable">parser</span> (<span class="builtin">cdr</span> <span class="variable">p</span>))))))
+(<span class="keyword">define</span> (<span class="variable">pfsm-parse</span> <span class="variable">program</span> )
+  (<span class="keyword">let</span> ((<span class="variable">c</span> (<span class="builtin">car</span> <span class="variable">program</span>)))
+    (<span class="keyword">if</span>(<span class="builtin">null?</span> <span class="variable">c</span>)
+       (<span class="builtin">display</span> <span class="selfeval">"error"</span>))
+    (<span class="keyword">if</span>(<span class="builtin">eqv?</span> <span class="variable">c</span> <span class="keyword">'</span><span class="variable">PFSM</span>)
+       ( <span class="keyword">begin</span>
+          (<span class="keyword">set!</span> <span class="variable">prog-name</span>  (<span class="builtin">cadr</span> <span class="variable">program</span>))
+          (<span class="keyword">set!</span> <span class="variable">num-states</span> (<span class="builtin">caddr</span> <span class="variable">program</span> ))
+          (<span class="keyword">set!</span> <span class="variable">pfsm-vector</span> (<span class="builtin">make-vector</span> <span class="variable">num-states</span>))
+          (<span class="variable">parser</span> (<span class="builtin">cdddr</span> <span class="variable">program</span>)))
+    (<span class="builtin">display</span> <span class="selfeval">"Bad program"</span>))))
+<span class="comment">;; test
+</span>(<span class="variable">pfsm-parse</span> <span class="variable">program</span>)
+(<span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">i</span> <span class="selfeval">0</span>))
+  (<span class="keyword">if</span> (<span class="builtin">=</span> <span class="variable">i</span> <span class="selfeval">10</span>)
+      <span class="selfeval">#t</span>
+      (<span class="keyword">begin</span>
+        (<span class="variable">pfsm-message</span>)
+        (<span class="variable">loop</span> (<span class="builtin">+</span> <span class="variable">i</span> <span class="selfeval">1</span>)))))
+</pre>
+</div>
+<p />
+I hope this is useful to anyone. Take these examples and make them
+better, they are very basic. I am pretty weak at scheme still, but I code in C for along while. So it probably shows ;-)
+<p />
+-- <a href="/Main/OpcodeFoo">OpcodeFoo</a> - 15 Nov 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Pearl </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/PearlsList">PearlsList</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

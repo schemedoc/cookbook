@@ -1,0 +1,80 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Displaying_an_Image_in_the_DrSch"> </a> Displaying an Image in the <a href="/Cookbook/DrScheme">DrScheme</a> Interaction Window </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Displaying an image in the <a href="/Cookbook/DrScheme">DrScheme</a> Interaction Window.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+The interaction window can display various non-text related entities called snips. Image-snips are used to display images.
+<div class="scheme">
+  <pre><span class="comment">; Entered in REPL
+</span><span class="builtin">&gt;</span>(<span class="variable">make-object</span> <span class="variable">image-snip%</span> <span class="selfeval">"pacman.gif"</span>)
+[<span class="variable">image</span> <span class="variable">of</span> <span class="variable">PacMan</span>]
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The solution loads the image "pacman.gif" from disk, instantiates an object of the class <code>image-snip%</code>. When the object is returned to the interaction window the image is automatically displayed.
+<p />
+The supported file formats are: gif gif/mask jpeg png png/mask xbm xpm bmp pict.
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 14 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> GUIRecipes </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+  <p />
+<table border="1" cellspacing="0" cellpadding="1"> <tr>
+  <th align="center" bgcolor="#99CCCC"> <strong><a href="/TWiki/FileAttachment">Attachment</a>:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Action:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Size:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Date:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Who:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Comment:</strong> </th>
+</tr>
+<tr>
+  <td>  <img src="/twiki/pub/icn/bmp.gif" width="16" height="16" align="top" alt=""> <a href="/twiki/pub/Cookbook/GUIRecipeImagesInTheInteractionWindow/PacMan.gif">PacMan.gif</a>     </td>
+  <td>  <a href="http://schemecookbook.org/attach/Cookbook/GUIRecipeImagesInTheInteractionWindow?filename=PacMan.gif&amp;amp;revInfo=1">action</a>     </td>
+  <td>  1305  </td>
+  <td>  14 May 2004 - 11:12  </td>
+  <td>  <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a>  </td>
+  <td>  <a href="/Cookbook/PacMan">PacMan</a>  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

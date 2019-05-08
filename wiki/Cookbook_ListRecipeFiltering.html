@@ -1,0 +1,103 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Filtering_Lists"> Filtering Lists </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You have a list with a bunch of items, but you want to have a copy of that list with some items removed.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<code>filter</code>, in PLT's standard library, allows you to filter a list based on a predicate.
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">filter</span> <span class="builtin">odd?</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span> <span class="selfeval">9</span> <span class="selfeval">0</span>))
+(<span class="selfeval">1</span> <span class="selfeval">3</span> <span class="selfeval">5</span> <span class="selfeval">7</span> <span class="selfeval">9</span>)
+<span class="builtin">&gt;</span> (<span class="variable">filter</span> <span class="builtin">string?</span> <span class="keyword">'</span>(<span class="selfeval">14</span> <span class="selfeval">"abc"</span> <span class="builtin">cons</span> <span class="selfeval">"xyz"</span> <span class="selfeval">23</span>))
+(<span class="selfeval">"abc"</span> <span class="selfeval">"xyz"</span>)
+</pre>
+</div>
+<p />
+You can supply your own predicate, as well.  Here we filter a list of numbers that are greater than some limit we've defined:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">let</span> ((<span class="variable">limit</span> <span class="selfeval">12</span>))
+    (<span class="variable">filter</span> (<span class="keyword">lambda</span> (<span class="variable">x</span>) (<span class="builtin">&gt;</span> <span class="variable">x</span> <span class="variable">limit</span>)) (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">n</span>) (<span class="builtin">*</span> <span class="variable">n</span> <span class="variable">n</span>)) <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span> <span class="selfeval">8</span>))))
+(<span class="selfeval">16</span> <span class="selfeval">25</span> <span class="selfeval">36</span> <span class="selfeval">49</span> <span class="selfeval">64</span>)
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+PLT ships with a version of <code>filter</code> in the <code>list.ss</code> library.  You can also use SRFI-1 for another version of the same function.
+<p />
+There are a few twists on this problem.  <nop />SRFI-1's <code>partition</code> works like filter, except that it returns 2 lists, one with items that pass the filter, and the other with the rest of the items in the original list, e.g.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"1.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">filter</span> <span class="builtin">string?</span> <span class="keyword">'</span>(<span class="selfeval">14</span> <span class="selfeval">"abc"</span> <span class="builtin">cons</span> <span class="selfeval">"xyz"</span> <span class="selfeval">23</span>))
+(<span class="selfeval">"abc"</span> <span class="selfeval">"xyz"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">partition</span> <span class="builtin">string?</span> <span class="keyword">'</span>(<span class="selfeval">14</span> <span class="selfeval">"abc"</span> <span class="builtin">cons</span> <span class="selfeval">"xyz"</span> <span class="selfeval">23</span>))
+(<span class="selfeval">"abc"</span> <span class="selfeval">"xyz"</span>)
+(<span class="selfeval">14</span> <span class="builtin">cons</span> <span class="selfeval">23</span>)
+</pre>
+</div>
+<p />
+Also in <a href="/Cookbook/SRFI">SRFI</a>-1, <code>remove</code> is the reverse of <code>filter</code>, returning a new list without the items satisfying the predicate supplied.  In addition, there are ! versions of all these functions to modify a list in-place.
+<p />
+Also, <a href="/Cookbook/SRFI">SRFI</a>-1's <code>filter-map</code> is another twist on <code>filter</code>, combining it with <code>map</code>.  It's like a <code>map</code> that returns only the true values.  Here we return the products of two lists, but only if both members of the lists are numbers:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">filter-map</span> (<span class="keyword">lambda</span> (<span class="variable">x</span> <span class="variable">y</span>) (<span class="keyword">and</span> (<span class="builtin">number?</span> <span class="variable">x</span>) (<span class="builtin">number?</span> <span class="variable">y</span>) (<span class="builtin">*</span> <span class="variable">x</span> <span class="variable">y</span>))) <span class="keyword">'</span>(<span class="variable">a</span> <span class="selfeval">1</span> <span class="variable">b</span> <span class="selfeval">3</span> <span class="variable">c</span> <span class="selfeval">7</span>) <span class="keyword">'</span>(<span class="builtin">cons</span> <span class="selfeval">14</span> <span class="selfeval">"abc"</span>  <span class="selfeval">"xyz"</span> <span class="selfeval">23</span> <span class="selfeval">9</span>))
+(<span class="selfeval">14</span> <span class="selfeval">63</span>)
+</pre>
+</div>
+<p />
+If you know the item you want to remove, you can avoid writing a predicate by using <a href="/Cookbook/SRFI">SRFI</a>-1's <code>delete</code> function:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">delete</span> <span class="selfeval">2</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">3</span> <span class="selfeval">5</span> <span class="selfeval">7</span> <span class="selfeval">9</span> <span class="selfeval">2</span> <span class="selfeval">4</span> <span class="selfeval">6</span> <span class="selfeval">8</span>))
+(<span class="selfeval">1</span> <span class="selfeval">3</span> <span class="selfeval">5</span> <span class="selfeval">7</span> <span class="selfeval">9</span> <span class="selfeval">4</span> <span class="selfeval">6</span> <span class="selfeval">8</span>)
+</pre>
+</div>
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 02 Jun 2004
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 06 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ListRecipes">ListRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

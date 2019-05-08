@@ -1,0 +1,89 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Copying_The_Contents_of_a_Hash_T"> Copying The Contents of a Hash Table </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to copy the contents of a hash table from one hash
+table to another, preserving both keys and values.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Using the recipe given in <a href="/Cookbook/HashRecipeTraverse">HashRecipeTraverse</a>
+<code>hash-table-copy!</code> iterates over the source hash, copying
+all keys and values to the target hash:
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; hash-table-copy! : hash-table hash-table -&gt; void
+</span>(<span class="keyword">define</span> (<span class="variable">hash-table-copy!</span> <span class="variable">source</span> <span class="variable">target</span>)
+  (<span class="variable">hash-table-for-each</span>
+    <span class="variable">source</span>
+    (<span class="keyword">lambda</span> (<span class="variable">key</span> <span class="variable">value</span>)
+      (<span class="variable">hash-table-put!</span> <span class="variable">target</span> <span class="variable">key</span> <span class="variable">value</span>))))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+An example usage, using <code>write-hash-table</code> from
+<a href="/Cookbook/HashReadAndWrite">HashReadAndWrite</a>, is:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">new-hash-table</span> (<span class="variable">make-hash-table</span>))
+<span class="builtin">&gt;</span> (<span class="variable">hash-table-copy!</span>
+    (<span class="variable">make-immutable-hash-table</span> <span class="keyword">'</span>((<span class="variable">a</span> . <span class="selfeval">1</span>) (<span class="variable">b</span> . <span class="selfeval">2</span>)))
+    <span class="variable">new-hash-table</span>)
+<span class="builtin">&gt;</span> (<span class="variable">write-hash-table</span> <span class="variable">new-hash-table</span> (<span class="builtin">current-output-port</span>))
+<span class="selfeval">#hasheq</span>((<span class="variable">b</span> . <span class="selfeval">2</span>) (<span class="variable">a</span> . <span class="selfeval">1</span>))
+</pre>
+</div>
+<p />
+Any existing values in the target hash table will be overwritten.
+<p />
+This function is useful to convert an immutable hash (for
+example, one read by <a href="/Cookbook/HashReadAndWrite">HashReadAndWrite</a>) to a mutable hash.
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 17 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/HashRecipes">HashRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

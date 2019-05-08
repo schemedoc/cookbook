@@ -1,0 +1,135 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Capturing_the_Output_of_a_Proces"> Capturing the Output of a Process </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to run an external process and capture its output.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The function <code>system/output</code> below uses the <code>process</code> function in <span style="background : #FFFFCE;">
+  <font color="#0000FF">MzLib</font>
+</span><a href="/edit/Cookbook/MzLib?topicparent=Cookbook.ProcessCaptureOutput">?</a>'s <code>process.ss</code> to capture the  output of the program.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"process.ss"</span>))
+<span class="comment">;; system/output : string -&gt; (U string #f)
+</span><span class="comment">;;
+</span><span class="comment">;; Synchronously run the given command through the shell and
+</span><span class="comment">;; capture standard output.
+</span><span class="comment">;;
+</span><span class="comment">;; Returns the standard output or #f if the command failed
+</span><span class="comment">;;
+</span><span class="comment">;; If the command blocks for any reason (e.g. waiting for
+</span><span class="comment">;; input) this function will as well.
+</span>(<span class="keyword">define</span> (<span class="variable">system/output</span> <span class="variable">command-string</span>)
+  (<span class="keyword">let</span> ([<span class="variable">p</span> (<span class="variable">open-output-string</span>)])
+    (<span class="variable">parameterize</span> ([<span class="builtin">current-output-port</span> <span class="variable">p</span>])
+      (<span class="keyword">if</span> (<span class="variable">system</span> <span class="variable">command-string</span>)
+          (<span class="variable">get-output-string</span> <span class="variable">p</span>)
+          <span class="selfeval">#f</span>))))
+</pre>
+</div>
+<p />
+<code>system/output</code> is used as follows:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">display</span> (<span class="variable">system/output</span> <span class="selfeval">"ls"</span>))
+<span class="variable">fsm-1.eps</span>
+<span class="variable">fsm-1.fig</span>
+<span class="variable">fsm-1.fig.bak</span>
+<span class="variable">fsm-2.fig</span>
+<span class="variable">fsm-2.fig.bak</span>
+...
+</pre>
+</div>
+<p />
+<p />
+Here is an alternative implementation based directly on the <code>subprocess</code> primitives:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"port.ss"</span>))
+<span class="comment">;; lookup-exe: path -&gt; path
+</span><span class="comment">;; Resolves relative exe lookups using PATH.
+</span>(<span class="keyword">define</span> (<span class="variable">lookup-exe</span> <span class="variable">a-path</span>)
+  (<span class="keyword">cond</span>
+    [(<span class="variable">complete-path?</span> <span class="variable">a-path</span>)
+     <span class="variable">a-path</span>]
+    [(<span class="variable">find-executable-path</span> <span class="variable">a-path</span> <span class="selfeval">#f</span>)
+     <span class="keyword">=&gt;</span> (<span class="keyword">lambda</span> (<span class="variable">path</span>) <span class="variable">path</span>)]
+    [<span class="keyword">else</span>
+     (<span class="variable">error</span> <span class="keyword">'</span><span class="variable">lookup-exe</span> <span class="selfeval">"Can't find executable ~s"</span> <span class="variable">a-path</span>)]))
+<span class="comment">;; system/output: path [string]* -&gt; string
+</span><span class="comment">;; Executes command with the given arguments.  If stderr has anything
+</span><span class="comment">;; written to it, its output will be interleaved in the string in some
+</span><span class="comment">;; unpredictable way.
+</span><span class="comment">;; If th executable can't be found, returns an error.
+</span>(<span class="keyword">define</span> (<span class="variable">system/output</span> <span class="variable">command</span> . <span class="variable">args</span>)
+  (<span class="variable">let*-values</span> ([(<span class="variable">cmd-path</span>) (<span class="variable">lookup-exe</span> <span class="variable">command</span>)]
+                [(<span class="variable">subp</span> <span class="variable">stdout</span> <span class="variable">stdin</span> <span class="variable">stderr</span>)
+                 (<span class="builtin">apply</span> <span class="variable">subprocess</span> <span class="selfeval">#f</span> <span class="selfeval">#f</span> <span class="selfeval">#f</span> <span class="variable">cmd-path</span> <span class="variable">args</span>)]
+                [(<span class="variable">outp</span>) (<span class="variable">open-output-string</span>)]
+                [(<span class="variable">threads</span>)
+                 (<span class="builtin">list</span> (<span class="variable">thread</span> (<span class="keyword">lambda</span> () (<span class="variable">copy-port</span> <span class="variable">stdout</span> <span class="variable">outp</span>)))
+                       (<span class="variable">thread</span> (<span class="keyword">lambda</span> () (<span class="variable">copy-port</span> <span class="variable">stderr</span> <span class="variable">outp</span>))))])
+    (<span class="builtin">close-output-port</span> <span class="variable">stdin</span>)
+    (<span class="variable">subprocess-wait</span> <span class="variable">subp</span>)
+    (<span class="builtin">for-each</span> <span class="variable">sync</span> <span class="variable">threads</span>)
+    (<span class="variable">get-output-string</span> <span class="variable">outp</span>)))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<code>system/output</code> runs its command via the shell, so programs are resolved using the PATH, and shell functions such as wildcards can be used in commands.
+<p />
+Note there was a subtle bug in the previous version of <code>system/output</code>, which built on the <code>process</code> function (which in turn builds on the built-in <code>subprocess</code> function).  The ports returned by <code>process</code> have a limited buffer for output, and once that buffer is full execution will halt.  This leads to strange behaviour -- processes that produce small output will succeed, but when the output gets larger they will suddenly hang.  It is much simpler to build on <code>system</code> which takes care of asynchronously copying the output to the <code>current-output-port</code>.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 25 Feb 2005
+<p />
+-- <a href="/Main/JamesStewart">JamesStewart</a> - 29 Mar 2005
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 20 Feb 2008: added second implementation based on subprocess.
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ProcessRecipes">ProcessRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

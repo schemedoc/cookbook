@@ -1,0 +1,153 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Animation"> Animation </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+Displaying a window and animating its contents.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<div class="scheme">
+  <pre><span class="comment">;;; Jumping PacMan
+</span>
+(<span class="keyword">define</span> <span class="variable">PAUSE</span> <span class="selfeval">0.002</span>)   <span class="comment">; determines the speed
+</span>
+<span class="comment">;;;
+</span><span class="comment">;;; MODEL
+</span><span class="comment">;;;
+</span>
+<span class="comment">;; Coordinate system
+</span>
+<span class="comment">; (xmin,ymax) ... (xmax,ymax)
+</span><span class="comment">;    .                 .
+</span><span class="comment">;    .                 .
+</span><span class="comment">; (xmin,ymin) ... (xmax,ymin)
+</span>
+(<span class="variable">define-values</span> (<span class="variable">xmin</span> <span class="variable">xmax</span>) (<span class="builtin">values</span> <span class="selfeval">-1</span> <span class="selfeval">1</span>))
+(<span class="variable">define-values</span> (<span class="variable">ymin</span> <span class="variable">ymax</span>) (<span class="builtin">values</span> <span class="selfeval">-1</span> <span class="selfeval">1</span>))
+<span class="comment">; At time t PacMan is at ( x(t), y(t) ).
+</span>(<span class="keyword">define</span> (<span class="variable">x</span> <span class="variable">t</span>) (<span class="builtin">cos</span> <span class="variable">t</span>))
+(<span class="keyword">define</span> (<span class="variable">y</span> <span class="variable">t</span>) (<span class="builtin">sin</span> (<span class="builtin">*</span> <span class="selfeval">3</span> <span class="variable">t</span>)))
+<span class="comment">;;;
+</span><span class="comment">;;; CONTROL
+</span><span class="comment">;;;
+</span>
+<span class="comment">; model-coord-&gt;screen-coord : real real -&gt; integer integer
+</span>(<span class="keyword">define</span> (<span class="variable">model-coord-&gt;screen-coord</span> <span class="variable">x</span> <span class="variable">y</span>)
+  <span class="comment">; convert the model coordinates to screen coordinates
+</span>  (<span class="builtin">values</span> (<span class="builtin">floor</span> (<span class="builtin">*</span> (<span class="builtin">-</span> <span class="variable">WIDTH</span> <span class="selfeval">50</span>)  (<span class="builtin">/</span> (<span class="builtin">-</span> <span class="variable">x</span> <span class="variable">xmin</span>) (<span class="builtin">-</span> <span class="variable">xmax</span> <span class="variable">xmin</span>))))
+          (<span class="builtin">floor</span> (<span class="builtin">*</span> (<span class="builtin">-</span> <span class="variable">HEIGHT</span> <span class="selfeval">50</span>) (<span class="builtin">/</span> (<span class="builtin">-</span> <span class="variable">y</span> <span class="variable">ymin</span>) (<span class="builtin">-</span> <span class="variable">ymax</span> <span class="variable">ymin</span>))))))
+(<span class="keyword">define</span> (<span class="variable">control-loop</span>)
+  (<span class="keyword">let</span> <span class="variable">loop</span> ([<span class="variable">t</span> (<span class="builtin">*</span> <span class="selfeval">-9</span> <span class="variable">pi</span>)])
+    (<span class="variable">update-view</span> <span class="variable">t</span>)
+    (<span class="variable">sleep</span> <span class="variable">PAUSE</span>)
+    (<span class="variable">loop</span> (<span class="builtin">+</span> <span class="variable">t</span> <span class="selfeval">.002</span>))))
+<span class="comment">;;;
+</span><span class="comment">;;; VIEW
+</span><span class="comment">;;;
+</span>
+<span class="comment">; The model is shown in a WIDTH x HEIGHT frame
+</span>
+<span class="comment">; Dimensions
+</span>(<span class="variable">define-values</span> (<span class="variable">WIDTH</span> <span class="variable">HEIGHT</span>) (<span class="builtin">values</span> <span class="selfeval">600</span> <span class="selfeval">600</span>))
+<span class="comment">; Instantiate frame and show it
+</span>(<span class="keyword">define</span> <span class="variable">frame</span> (<span class="variable">instantiate</span> <span class="variable">frame%</span>
+                (<span class="selfeval">"Jumping PacMan"</span>)))
+(<span class="variable">send</span> <span class="variable">frame</span> <span class="variable">show</span> <span class="selfeval">#t</span>)
+<span class="comment">; Put a canvas inside the frame
+</span>(<span class="keyword">define</span> <span class="variable">my-canvas%</span>
+  (<span class="variable">class</span> <span class="variable">canvas%</span>
+    (<span class="variable">inherit</span> <span class="variable">get-dc</span>)
+    (<span class="variable">define/override</span> (<span class="variable">on-paint</span>)
+      (<span class="variable">control-loop</span>))
+    (<span class="variable">super-instantiate</span> ())))
+(<span class="keyword">define</span> <span class="variable">canvas</span> (<span class="variable">instantiate</span> <span class="variable">my-canvas%</span> (<span class="variable">frame</span>)
+                 (<span class="variable">min-width</span>  <span class="variable">WIDTH</span>)
+                 (<span class="variable">min-height</span> <span class="variable">HEIGHT</span>)))
+<span class="comment">; Make a PacMan bitmap by loading a gif file
+</span>(<span class="keyword">define</span> <span class="variable">pacman</span>
+  (<span class="variable">make-object</span> <span class="variable">bitmap%</span> <span class="selfeval">"pacman2.gif"</span> <span class="keyword">'</span><span class="variable">gif</span>))
+<span class="comment">; Update the view by drawing PacMan on his new position.
+</span><span class="comment">; Due to the white border around PacMan, we don't need
+</span><span class="comment">; to delete the old one, before drawing him again.
+</span>(<span class="keyword">define</span> (<span class="variable">update-view</span> <span class="variable">t</span>)
+  (<span class="keyword">let</span> ([<span class="variable">drawing-context</span> (<span class="variable">send</span> <span class="variable">canvas</span> <span class="variable">get-dc</span>)])
+    (<span class="keyword">let-values</span> ([(<span class="variable">sx</span> <span class="variable">sy</span>) (<span class="variable">model-coord-&gt;screen-coord</span> (<span class="variable">x</span> <span class="variable">t</span>) (<span class="variable">y</span> <span class="variable">t</span>))])
+      (<span class="variable">send</span> <span class="variable">drawing-context</span> <span class="variable">draw-bitmap</span> <span class="variable">pacman</span> <span class="variable">sx</span> <span class="variable">sy</span> <span class="keyword">'</span><span class="variable">solid</span>))))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 14 May 2004
+<p />
+<h3>
+  <a name="Attachments"> Attachments </a>
+</h3>
+<p />
+<ul>
+<li> <a href="/Cookbook/PacMan">PacMan</a>: <br>
+    <img src="/twiki/pub/Cookbook/GUIRecipeAnimation/PacMan2.GIF" alt="PacMan2.GIF" width="85" height="83">
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> GUIRecipes </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 020 </td>
+</tr>
+</table>
+  <p />
+<table border="1" cellspacing="0" cellpadding="1"> <tr>
+  <th align="center" bgcolor="#99CCCC"> <strong><a href="/TWiki/FileAttachment">Attachment</a>:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Action:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Size:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Date:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Who:</strong> </th>
+  <th align="center" bgcolor="#99CCCC"> <strong>Comment:</strong> </th>
+</tr>
+<tr>
+  <td>  <img src="/twiki/pub/icn/bmp.gif" width="16" height="16" align="top" alt=""> <a href="/twiki/pub/Cookbook/GUIRecipeAnimation/PacMan2.GIF">PacMan2.GIF</a>     </td>
+  <td>  <a href="http://schemecookbook.org/attach/Cookbook/GUIRecipeAnimation?filename=PacMan2.GIF&amp;amp;revInfo=1">action</a>     </td>
+  <td>  1375  </td>
+  <td>  14 May 2004 - 00:47  </td>
+  <td>  <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a>  </td>
+  <td>  <a href="/Cookbook/PacMan">PacMan</a>  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

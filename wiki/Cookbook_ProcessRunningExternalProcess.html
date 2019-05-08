@@ -1,0 +1,92 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Running_An_External_Process"> Running An External Process </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to run an external program.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The library <code>process.ss</code> in <span style="background : #FFFFCE;">
+  <font color="#0000FF">MzLib</font>
+</span><a href="/edit/Cookbook/MzLib?topicparent=Cookbook.ProcessRunningExternalProcess">?</a> provides handy utilities for both synchronous and asynchronous communication with processes.  This recipe covers the simpler synchronous communication style.
+<p />
+The following example code runs the Unix <code>touch</code> command to update the timestamp on a file.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"process.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">system</span> <span class="selfeval">"touch ~/.login"</span>)
+<span class="selfeval">#t</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Note that <code>system</code> only indicates success or failure of running the specified program.  To capture the output on the program see <a href="/Cookbook/ProcessCaptureOutput">ProcessCaptureOutput</a>.
+<p />
+The <code>system</code> function runs its commands via a shell, so program names are resolved using the current setting of the PATH environment variable (or its equivalent) and other shell features such as wildcards can be used.  The following example shows the use of shell wildcards (although as the output is thrown away the example serves now purpose):
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"process.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">system</span> <span class="selfeval">"ls -l *.ss"</span>)
+<span class="selfeval">#t</span>
+</pre>
+</div>
+<p />
+There is a variant on <code>system</code> called <code>system*</code> that takes multiple arguments.  The first argument is the name of the program, and the remaining arguments are passed as arguments to the process.  However <code>system*</code> does not run its command via a shell, so you must give the full path to the program and cannot use shell features.  For example the <code>touch</code> example must be rewritten:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"process.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">system*</span> <span class="selfeval">"touch"</span> <span class="selfeval">"~/.login"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="variable">system*</span> <span class="selfeval">"/bin/touch"</span> <span class="selfeval">"~/.login"</span>)
+<span class="selfeval">#f</span>
+<span class="builtin">&gt;</span> (<span class="variable">system*</span> <span class="selfeval">"/bin/touch"</span> <span class="selfeval">"/home/pg/nhw/.login"</span>)
+<span class="selfeval">#t</span>
+</pre>
+</div>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 25 Feb 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ProcessRecipes">ProcessRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

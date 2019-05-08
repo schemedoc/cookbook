@@ -1,0 +1,57 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Sorting_a_list_of_strings"> Sorting a list of strings </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Sort a list of strings.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use the <code>sort</code> operation in the list collection <code>list.ss</code>.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"compat.ss"</span> <span class="selfeval">"mzlib"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">sort</span> <span class="builtin">string&lt;=?</span> (<span class="builtin">list</span> <span class="selfeval">"foo"</span> <span class="selfeval">"bar"</span> <span class="selfeval">"baz"</span> <span class="selfeval">"qux"</span>))
+(<span class="selfeval">"bar"</span> <span class="selfeval">"baz"</span> <span class="selfeval">"foo"</span> <span class="selfeval">"qux"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">sort</span> <span class="builtin">string&gt;=?</span> (<span class="builtin">list</span> <span class="selfeval">"foo"</span> <span class="selfeval">"bar"</span> <span class="selfeval">"baz"</span> <span class="selfeval">"qux"</span>))
+(<span class="selfeval">"qux"</span> <span class="selfeval">"foo"</span> <span class="selfeval">"baz"</span> <span class="selfeval">"bar"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The sort operation uses the merge-sort algorithm, which takes time O(n log n) where n is the length of the list.
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 17 Apr 2004
+<p />
+-- <a href="/Main/ChrisWarrington">ChrisWarrington</a> - 13 Dec 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringOther">StringOther</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 075 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

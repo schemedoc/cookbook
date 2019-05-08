@@ -1,0 +1,104 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Default_field_values_for_class_i"> Default field values for class initialization </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to provide a set of reasonable default values for some fields in a class.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+Use the <strong>init-field</strong> form, but provide a default expression value along with the field name.  For example:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">test-default-fields</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"class.ss"</span>))
+  (<span class="keyword">provide</span> (<span class="variable">all-defined</span>))
+  (<span class="keyword">define</span> <span class="variable">adder%</span>
+    (<span class="variable">class</span> <span class="variable">object%</span>
+      (<span class="variable">super-new</span>)
+      (<span class="variable">init-field</span> [<span class="variable">increment</span> <span class="selfeval">1</span>])
+      (<span class="variable">define/public</span> (<span class="variable">add</span> <span class="variable">x</span>)
+        (<span class="builtin">+</span> <span class="variable">increment</span> <span class="variable">x</span>)))))
+</pre>
+</div>
+<p />
+With this, we can instantiate this either with the default argument value:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">send</span> (<span class="variable">new</span> <span class="variable">adder%</span>) <span class="variable">add</span> <span class="selfeval">3</span>)
+<span class="selfeval">4</span>
+</pre>
+</div>
+or we can specify the default field value:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">send</span> (<span class="variable">new</span> <span class="variable">adder%</span> [<span class="variable">increment</span> <span class="selfeval">42</span>]) <span class="variable">add</span> <span class="selfeval">3</span>)
+<span class="selfeval">45</span>
+</pre>
+</div>
+<p />
+This also works with regular <strong>init</strong> forms, when we want to do some additional validation or other things before feeding into our object's fields:
+<div class="scheme">
+  <pre>  (<span class="keyword">define</span> <span class="variable">person%</span>
+    (<span class="variable">class</span> <span class="variable">object%</span>
+      (<span class="variable">super-new</span>)
+      (<span class="variable">init</span> [<span class="variable">name</span> <span class="selfeval">"John Doe"</span>])
+      (<span class="variable">field</span> [<span class="variable">-name</span> (<span class="variable">regexp-replace*</span> <span class="selfeval">"[^a-zA-Z]"</span> <span class="variable">name</span> <span class="selfeval">""</span>)])
+      (<span class="variable">define/public</span> (<span class="variable">say-hello</span>)
+        (<span class="variable">printf</span> <span class="selfeval">"hi, my name is ~a~n"</span> <span class="variable">-name</span>))))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">send</span> (<span class="variable">new</span> <span class="variable">person%</span>) <span class="variable">say-hello</span>)
+<span class="variable">hi</span><span class="keyword">,</span> <span class="variable">my</span> <span class="variable">name</span> <span class="variable">is</span> <span class="variable">JohnDoe</span>
+<span class="builtin">&gt;</span> (<span class="variable">send</span> (<span class="variable">new</span> <span class="variable">person%</span> [<span class="variable">name</span> <span class="selfeval">"f**b*r"</span>]) <span class="variable">say-hello</span>)
+<span class="variable">hi</span><span class="keyword">,</span> <span class="variable">my</span> <span class="variable">name</span> <span class="variable">is</span> <span class="variable">fbr</span>
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 05 Sep 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

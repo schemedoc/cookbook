@@ -1,0 +1,81 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Reading_Data_from_ZIP_Files"> </a> Reading Data from ZIP Files </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You have an archive in ZIP format and you want to access the files in the archive.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"unzip.ss"</span> (<span class="selfeval">"dherman"</span> <span class="selfeval">"zip.plt"</span> <span class="selfeval">2</span>)))
+(<span class="variable">parameterize</span> ([<span class="variable">current-directory</span> <span class="selfeval">"output"</span>])
+  (<span class="builtin">with-input-from-file</span> (<span class="variable">build-path</span> <span class="keyword">'</span><span class="variable">up</span> <span class="selfeval">"archive.zip"</span>) <span class="variable">unzip</span>))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The <code>zip.plt</code> library in <a href="/Cookbook/PLaneT">PLaneT</a> has functionality for both unzipping an entire ZIP file or extracting individual entries. The above example unzips the entire contents of <code>archive.zip</code> to the <code>output</code> subdirectory of the current directory.
+<p />
+Here is an example that extracts a particular entry and saves it elsewhere:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"unzip.ss"</span> (<span class="selfeval">"dherman"</span> <span class="selfeval">"zip.plt"</span> <span class="selfeval">2</span>)))
+(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"port.ss"</span>))
+(<span class="keyword">let</span> ([<span class="variable">zip-dir</span> (<span class="variable">read-zip-directory</span> <span class="selfeval">"archive.zip"</span>)])
+  (<span class="variable">unzip-entry</span> <span class="selfeval">"archive.zip"</span>
+               <span class="variable">zip-dir</span>
+               <span class="selfeval">#</span><span class="selfeval">"subdir/document.txt"</span>
+               (<span class="keyword">lambda</span> (<span class="variable">name</span> <span class="variable">dir?</span> <span class="variable">in</span>)
+                 (<span class="builtin">with-output-to-file</span> <span class="selfeval">"local-copy.txt"</span>
+                   (<span class="variable">copy-port</span> <span class="variable">in</span> (<span class="builtin">current-output-port</span>))))))
+</pre>
+</div>
+<p />
+To extract an individual entry from a ZIP file, you first read its central directory with <code>read-zip-directory</code>, and then you extract the entry with <code>unzip-entry</code>. (Notice that entry names are specified with byte strings.)
+<p />
+See the <a href="http://planet.plt-scheme.org/300" target="_top">PLaneT repository documentation</a> for more information on the <code>zip.plt</code> library.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 13 Aug 2004
+-- <a href="/Main/DaveHerman">DaveHerman</a> - 22 Feb 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> <a href="/Cookbook/RecipeStub">RecipeStub</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

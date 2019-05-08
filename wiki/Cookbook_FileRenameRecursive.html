@@ -1,0 +1,92 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Renaming_Files_Throughout_a_Dire"> Renaming Files Throughout a Directory Tree </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You need to rename files throughout an entire directory tree, for example, you want to change extension of every file with a particular extension to something else.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+A PLT-specific solution:
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"13.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">define</span> (<span class="variable">rename-tree</span> <span class="variable">basedir</span> <span class="variable">oldext</span> <span class="variable">newext</span>)
+  (<span class="keyword">let</span> ((<span class="variable">extlen</span> (<span class="builtin">string-length</span> <span class="variable">oldext</span>))
+        (<span class="variable">file-list</span> (<span class="variable">find-files</span>
+                    (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+                      (<span class="keyword">and</span> (<span class="builtin">equal?</span> (<span class="variable">filename-extension</span> <span class="variable">x</span>) <span class="selfeval">"xsd"</span>)
+                           (<span class="builtin">not</span> (<span class="variable">directory-exists?</span> <span class="variable">x</span>))))
+                    <span class="variable">basedir</span>)))
+    (<span class="builtin">for-each</span> (<span class="keyword">lambda</span> (<span class="variable">file-name</span>)
+                (<span class="keyword">let</span> ((<span class="variable">newname</span> (<span class="builtin">string-append</span> (<span class="variable">string-drop-right</span> <span class="variable">file-name</span> <span class="variable">extlen</span>) <span class="variable">newext</span>)))
+                (<span class="keyword">when</span> (<span class="variable">file-exists?</span> <span class="variable">newname</span>) (<span class="variable">delete-file</span> <span class="variable">newname</span>))
+                (<span class="variable">rename-file-or-directory</span> <span class="variable">file-name</span>
+                                          <span class="variable">newname</span>))
+              <span class="variable">file-list</span>))))
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+I wrote this solution to use <code>for-each</code> because the rename operation is a side effect.  You could also use <code>fold-files</code>, which isn't quite as good a fit because it accumulates a result, but the definition is a bit more concise.  It also doesn't explicitly build up a list of files to modify first, which can amount to a lot of memory on a big directory tree.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">rename-tree</span> <span class="variable">basedir</span> <span class="variable">oldext</span> <span class="variable">newext</span>)
+  (<span class="keyword">let</span> ((<span class="variable">extlen</span> (<span class="builtin">string-length</span> <span class="variable">oldext</span>)))
+    (<span class="variable">fold-files</span> (<span class="keyword">lambda</span> (<span class="variable">f</span> <span class="variable">t</span> <span class="variable">d</span>)
+                  (<span class="keyword">when</span> (<span class="keyword">and</span> (<span class="builtin">eq?</span> <span class="variable">t</span> <span class="keyword">'</span><span class="variable">file</span>)
+                             (<span class="builtin">equal?</span> (<span class="variable">filename-extension</span> <span class="variable">f</span>) <span class="selfeval">"xsd"</span>))
+                    (<span class="keyword">let</span> ((<span class="variable">newname</span> (<span class="builtin">string-append</span> (<span class="variable">string-drop-right</span> <span class="variable">f</span> <span class="variable">extlen</span>) <span class="variable">newext</span>)))
+                      (<span class="keyword">when</span> (<span class="variable">file-exists?</span> <span class="variable">newname</span>) (<span class="variable">delete-file</span> <span class="variable">newname</span>))
+                      (<span class="variable">rename-file-or-directory</span>
+                       <span class="variable">f</span>
+                       <span class="variable">newname</span>))))
+                (<span class="variable">void</span>) <span class="variable">basedir</span>)))
+</pre>
+</div>
+<p />
+For a really correct
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 13 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,11 @@
+<div id="contentbox">
+ <div class="widget">
+  (define (port-&gt;string-list port)
+  (let ((line (read-line port)))
+   (if (eof-object? line)
+      (list)
+      (cons line (port-&gt;string-list port)))))
+<p />
+<p />
+ </div>
+</div>

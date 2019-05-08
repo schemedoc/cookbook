@@ -1,0 +1,108 @@
+<div id="contentbox">
+ <div class="widget">
+ <h1>
+  <a name="Numbers"> Numbers </a>
+</h1>
+<p />
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+Numbers are basic to just about any computation. They're used for array indexes, temperatures, salaries, and an infinite variety of things. Yet they're not as simple as they seem. With  floating-point numbers, how accurate is accurate? With random numbers, how random is random? With strings that should contain a number, what actually constitutes a number?.
+<p />
+It is important to distinguish between the mathematical numbers, the
+Scheme numbers that attempt to model them, the machine representations
+used to implement the Scheme numbers, and notations used to write numbers. We uses the types number, complex, real, rational, and integer to refer to both mathematical numbers and Scheme numbers. Machine representations such as fixed point
+and floating point are referred to by names such as fixnum and flonum.
+<p />
+Scheme's numerical operations treat numbers as abstract data, as independent of
+their representation as possible. Although an implementation of Scheme may use fixnum, flonum, and perhaps other representations for numbers, this should not be apparent to a casual programmer writing simple programs.
+<p />
+ Scheme numbers are either exact or inexact. An operation may, however, return an exact result if it can prove that the value of the result is unaffected by the inexactness of its arguments. For example, multiplication of any number by an exact zero may produce an exact zero result, even if the other argument is inexact.
+<p />
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+<ul>
+<li> <a href="/Cookbook/NumberRecipesIsNumber">Checking Whether a String Is a Valid Number</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipesComparing">Comparing Floating-Point Numbers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipesRounding">Rounding Floating-Point Numbers</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipesConvertBinDec">Converting Between Binary and Decimal </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipesOpListInts">Operating on a Series of Integers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipesRomanNumerals">Working with Roman Numerals</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeRandomNumber">Generating Random Numbers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeBigRandomNumber">Big Random Numbers</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeDiffRandNum">Generating Different Random Numbers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeBiasedRands">Generating Biased Random Numbers</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeTakingLogs">Taking Logarithms</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeComplexNums">Using Complex Numbers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeConvOctHex">Converting Between Octal and Hexadecimal </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeCommas">Putting Commas in Numbers </a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRecipeCorrectPlurals">Printing Correct Plurals</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/GrayCodes">Gray Codes</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberIntegerPartition">Generating the Partitions of an Natural Number</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberPrinting">Printing Numbers</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/NumberRandomNumberDistributions">Generation of Random Numbers of a Given Distribution</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/SieveOfEratosthenes">Block-based "Sieve of Eratosthenes"</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/ThirtyTwoBitRandomIntegers">Generating simple 32-bit random integers in portable Scheme</a> (Recipe)
+</li>
+</ul>
+<p />
+<p />
+<p />
+<p />
+<br>
+<hr>
+<span style="background : #FFFFCE;">
+  <font color="#0000FF">(edit comments)</font>
+</span><a href="/edit/Cookbook/NumberChapterComments?topicparent=Cookbook.NumberChapter">?</a>
+<p />
+<p />
+<ul>
+<li> Set ALLOWTOPICCHANGE = <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Chapter </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TOC">TOC</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 05 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

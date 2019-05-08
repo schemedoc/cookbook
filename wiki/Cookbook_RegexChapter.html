@@ -1,0 +1,161 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h1>
+  <a name="Regular_Expressions"> Regular Expressions </a>
+</h1>
+<p />
+<p />
+<h2>
+  <a name="Introduction"> Introduction </a>
+</h2>
+<p />
+Lisps in general are sort of famous for looking down on Regular Expressions.  Other languages that lack Scheme's powerful pattern matching tend to fall back on regular expressions to provide some of that capability; one could argue that Regular Expressions have been badly overused.  For example, any sort of pattern matching that involves stack-like matching (matching parentheses, quoted strings, etc.) is usually very difficult using regular expressions.
+<p />
+<blockquote cite="http://groups.google.com/groups?selm=33F0C496.370D7C45%40netscape.com">Some people, when confronted with a problem, think "I know, I�ll use regular expressions." Now they have two problems. --  Jamie Zawinski
+</blockquote>
+<p />
+Still, Regular Expressions are unbeatable for a lot of text processing tasks. <a href="/Cookbook/MzScheme">MzScheme</a> provides built in regular expressions using the Unix <code>egrep</code> syntax. The <code>pregexp.ss</code> library also provides "Perl-like" regular expressions, which makes avalilable pretty much all of the Perl regex syntax.
+<p />
+<p />
+<p />
+<h2>
+  <a name="Recipes"> Recipes </a>
+</h2>
+<p />
+<ul>
+<li> <a href="/Cookbook/RegexCommentRegExp">Commenting Regular Expressions</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/RegexMatchingLetters">Matching Letters</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/RegexMatchingWords">Matching Words</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/RegexSplitInclusive">Splitting a String, Including Matches</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/RegexAbbreviations">Matching Abbreviations</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexAndOrAndNot">Expressing AND, OR, and NOT in a Single Pattern</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexApproximateMatching">Approximate Matching</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexDetectingDuplicates">Detecting Duplicate Words</a> (Recipe)
+</li>
+<li> <a href="/Cookbook/RegexFindNth">Finding the Nth Occurrence of a Match</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexGrabbag">Regular Expression Grabbag</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexGreedyVsNonGreedy">Greedy and Non-Greedy Matches</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexHonoringLocale">Honoring Locale Settings in Regular Expressions</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexMatchMultipleLines">Matching Multiple Lines</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexMultiByteCharacters">Matching Multiple-Byte Characters</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexPatternSeparator">Reading Records with a Pattern Separator</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexRangeOfLines">Extracting a Range of Lines</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexShellGlobs">Matching Shell Globs as Regular Expressions</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexSpeedUpInterpolation">Speeding Up Interpolated Matches</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexTcgrep">Program: tcgrep</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexTestingValidPattern">Testing for a Valid Pattern</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexUrlify">Program: urlify</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexpMatchingFromLastPattern">Matching from Where the Last Pattern Left Off</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+<li> <a href="/Cookbook/RegexpValidEmail">Matching a Valid Email Address</a> (<a href="/Cookbook/RecipeStub">RecipeStub</a>)
+</li>
+</ul>
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="References"> References </a>
+</h2>
+<p />
+Mastering Regular Expressions, written by Jeffrey Friedl and published by O'Reilly &amp; Associates.
+<p />
+<a href="http://download.plt-scheme.org/doc/206p1/html/mzscheme/mzscheme-Z-H-10.html#node_chap_10" target="_top">Regular Expressions - Chapter 10 in the MzScheme documentation</a>
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+See also <a href="/Cookbook/StringRecipeRemovingWhiteSpace">StringRecipeRemovingWhiteSpace</a>, which uses
+a regular expression to remove white space from the ends of a string.
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 24 Apr 2004
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 28 Apr 2004
+<p />
+<p />
+-- <a href="/Main/BrentAFulgham">BrentAFulgham</a> - 18 May 2004
+<p />
+<p />
+<p />
+<p />
+<p />
+<p />
+<br>
+<hr>
+<a href="/Cookbook/RegexChapterComments">(edit comments)</a>
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+See also <a href="/Cookbook/StringRecipeRemovingWhiteSpace">StringRecipeRemovingWhiteSpace</a>, which uses
+a regular expression to remove white space from the ends of a string.
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 24 Apr 2004
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 28 Apr 2004
+<p />
+<p />
+-- <a href="/Main/BrentAFulgham">BrentAFulgham</a> - 18 May 2004
+<p />
+<p />
+<p />
+<p />
+<ul>
+<li> Set ALLOWTOPICCHANGE = <a href="/Main/SchematicsEditorsGroup">SchematicsEditorsGroup</a>
+</li>
+</ul>
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Chapter </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TOC">TOC</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 07 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

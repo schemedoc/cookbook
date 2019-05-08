@@ -1,0 +1,168 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Syntax_for_explicitly_uncurrying"> </a> Syntax for explicitly uncurrying a MIT-style defined function </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+We may want to explicitly transform a function that uses MIT Scheme style curried form:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> ((<span class="variable">add</span> <span class="variable">x</span>) <span class="variable">y</span>)
+  (<span class="builtin">+</span> <span class="variable">x</span> <span class="variable">y</span>))
+</pre>
+</div>
+<p />
+into an uncurried form:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">add</span>
+  (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+    (<span class="keyword">lambda</span> (<span class="variable">y</span>)
+      (<span class="builtin">+</span> <span class="variable">x</span> <span class="variable">y</span>))))
+</pre>
+</div>
+<p />
+but we may not want to fully <strong>expand</strong> out the syntax.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The following syntax-handling function does an explicit decurrying:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">desugar-define</span> <span class="variable">mzscheme</span>
+  <span class="comment">;; This module helps transform define's defun syntax of the form
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; ((function-name arg1 arg2 ... argn) body)
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; into a stx-list of two syntaxes
+</span>  <span class="comment">;; (function-name (lambda (arg1 arg2 ... argn) body))
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; It's also supposed to handle curried-defun forms and the implicit
+</span>  <span class="comment">;; begins.
+</span>
+  <span class="comment">;; (define (f x) value) --&gt; (define f (lambda (x) value))
+</span>  <span class="comment">;; (define (f x y z) value) --&gt; (define f (lambda (x y z) value))
+</span>  <span class="comment">;; (define ((f x) y) value) --&gt; (define f (lambda (x) (lambda (y) value)))
+</span>
+  (<span class="keyword">provide</span> (<span class="variable">all-defined</span>))
+  <span class="comment">;; desugar-define: (case-&gt; (syntax syntax syntax syntax -&gt; syntax)
+</span>  <span class="comment">;;                         (syntax -&gt; syntax))
+</span>  <span class="comment">;; Converts defun forms into more primitive define forms.  Handles
+</span>  <span class="comment">;; implicit begin and curried parameters.
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; Parameterized to allow us to handle slightly different languages.  For
+</span>  <span class="comment">;; example:
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; (desugar-define #'(def ((f x) y) (printf "adding: ~a ~a~n" x y) (+ x y))
+</span>  <span class="comment">;;                 #'def #'fun #'progn)
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; returns a syntax that looks like:
+</span>  <span class="comment">;;
+</span>  <span class="comment">;; #'(def f (fun (x) (fun (y) (progn (printf "adding: ~a ~a~n" x y) (+ x y)))))
+</span>  <span class="comment">;;
+</span>  (<span class="keyword">define</span> <span class="variable">desugar-define</span>
+    (<span class="variable">case-lambda</span>
+      [(<span class="variable">stx</span>)
+       (<span class="variable">desugar-define</span> <span class="variable">stx</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">define</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">lambda</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">begin</span>)]
+      [(<span class="variable">stx</span> <span class="variable">define-kw-stx</span> <span class="variable">lambda-kw-stx</span> <span class="variable">begin-kw-stx</span>)
+       (<span class="keyword">syntax-case</span> <span class="variable">stx</span> ()
+         <span class="comment">;; Either: force all multi-expr bodies to be embedded in a begin, and recurse.
+</span>         [(<span class="keyword">define</span> <span class="variable">name-or-curried</span> <span class="variable">body-1</span> <span class="variable">body-2</span> <span class="variable">body-rest</span> ...)
+          (<span class="variable">desugar-define</span> <span class="selfeval">#</span><span class="keyword">`</span>(<span class="keyword">define</span> <span class="variable">name-or-curried</span>
+                              (<span class="selfeval">#</span><span class="keyword">,</span><span class="variable">begin-kw-stx</span> <span class="variable">body-1</span> <span class="variable">body-2</span> <span class="variable">body-rest</span> ...))
+                          <span class="variable">define-kw-stx</span> <span class="variable">lambda-kw-stx</span> <span class="variable">begin-kw-stx</span>)]
+         <span class="comment">;; or handle the expected case:
+</span>         [(<span class="keyword">define</span> <span class="variable">name-or-curried</span> <span class="variable">body</span>)
+          (<span class="variable">module-identifier=?</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">define</span> <span class="variable">define-kw-stx</span>)
+          (<span class="keyword">with-syntax</span> ([(<span class="variable">name</span> <span class="variable">value</span>)
+                         (<span class="variable">desugar-define/name-value</span>
+                          <span class="selfeval">#</span><span class="keyword">'</span>(<span class="variable">name-or-curried</span> <span class="variable">body</span>)
+                          <span class="variable">lambda-kw-stx</span>)])
+            <span class="selfeval">#</span><span class="keyword">`</span>(<span class="keyword">define</span> <span class="variable">name</span> <span class="variable">value</span>))]
+         <span class="comment">;; or check for simple syntax errors:
+</span>         [(<span class="keyword">define</span> <span class="variable">name-or-curried</span> <span class="variable">body</span>)
+          (<span class="builtin">not</span> (<span class="variable">module-identifier=?</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">define</span> <span class="variable">define-kw-stx</span>))
+          (<span class="variable">raise-syntax-error</span>
+           <span class="selfeval">#f</span> <span class="selfeval">"does not match define-kw-stx"</span> <span class="variable">stx</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="keyword">define</span>)])]))
+  (<span class="keyword">define</span> (<span class="variable">desugar-define/name-value</span> <span class="variable">stx</span> <span class="variable">lambda-kw-stx</span>)
+    (<span class="keyword">syntax-case</span> <span class="variable">stx</span> ()
+      [(<span class="variable">name</span> <span class="variable">value</span>)
+       (<span class="variable">identifier?</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="variable">name</span>)
+       <span class="variable">stx</span>]
+      [((<span class="variable">curried-form</span> ...) <span class="variable">value</span>)
+       (<span class="keyword">let-values</span> ([(<span class="variable">name</span> <span class="variable">body</span>)
+                     (<span class="variable">unravel-curried-form</span> <span class="selfeval">#</span><span class="keyword">'</span>(<span class="variable">curried-form</span> ...)
+                                           <span class="selfeval">#</span><span class="keyword">'</span><span class="variable">value</span>
+                                           <span class="variable">lambda-kw-stx</span>)])
+         <span class="selfeval">#</span><span class="keyword">`</span>(<span class="selfeval">#</span><span class="keyword">,</span><span class="variable">name</span> <span class="selfeval">#</span><span class="keyword">,</span><span class="variable">body</span>))]))
+  <span class="comment">;; unravel-curried-form: syntax stx stx -&gt; syntax
+</span>  <span class="comment">;; Digs into the defun form and returns a list of two values: the
+</span>  <span class="comment">;; name of the defun-ed function, and its corresponding value.
+</span>  (<span class="keyword">define</span> (<span class="variable">unravel-curried-form</span> <span class="variable">stx</span> <span class="variable">body-stx</span> <span class="variable">lambda-kw-stx</span>)
+    (<span class="keyword">let</span> <span class="variable">loop</span> ([<span class="variable">stx</span> <span class="variable">stx</span>]
+               [<span class="variable">body-stx</span> <span class="variable">body-stx</span>])
+      (<span class="keyword">syntax-case</span> <span class="variable">stx</span> ()
+        [(<span class="variable">name</span> <span class="variable">args</span> ...)
+         (<span class="variable">identifier?</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="variable">name</span>)
+         (<span class="builtin">values</span> <span class="selfeval">#</span><span class="keyword">'</span><span class="variable">name</span>
+                 <span class="selfeval">#</span><span class="keyword">`</span>(<span class="selfeval">#</span><span class="keyword">,</span><span class="variable">lambda-kw-stx</span> (<span class="variable">args</span> ...) <span class="selfeval">#</span><span class="keyword">,</span><span class="variable">body-stx</span>))]
+        [((<span class="variable">curried-form</span> ...) <span class="variable">args</span> ...)
+         (<span class="variable">loop</span> <span class="selfeval">#</span><span class="keyword">'</span>(<span class="variable">curried-form</span> ...)
+               <span class="selfeval">#</span><span class="keyword">`</span>(<span class="selfeval">#</span><span class="keyword">,</span><span class="variable">lambda-kw-stx</span> (<span class="variable">args</span> ...) <span class="selfeval">#</span><span class="keyword">,</span><span class="variable">body-stx</span>))])))
+  <span class="comment">;; Just playing around with eval
+</span>  <span class="selfeval">#</span><span class="comment">;(define (test-make-add)
+</span>    (<span class="keyword">define</span> <span class="variable">add</span>
+      (<span class="variable">parameterize</span> ([<span class="variable">current-namespace</span> (<span class="variable">make-namespace</span>)])
+        (<span class="variable">eval-syntax</span> <span class="selfeval">#</span><span class="keyword">`</span>(<span class="keyword">module</span> <span class="variable">a</span> <span class="variable">mzscheme</span>
+                         (<span class="keyword">provide</span> (<span class="variable">all-defined</span>))
+                         <span class="selfeval">#</span><span class="keyword">,</span>(<span class="variable">desugar-define</span> <span class="selfeval">#</span><span class="keyword">'</span>(<span class="keyword">define</span> ((<span class="variable">add</span> <span class="variable">x</span>) <span class="variable">y</span>) (<span class="builtin">+</span> <span class="variable">x</span> <span class="variable">y</span>)))))
+        (<span class="variable">eval-syntax</span> <span class="selfeval">#</span><span class="keyword">'</span>(<span class="keyword">require</span> <span class="variable">a</span>))
+        (<span class="variable">namespace-variable-value</span> <span class="keyword">'</span><span class="variable">add</span> (<span class="variable">module-&gt;namespace</span> <span class="keyword">'</span><span class="variable">a</span>))))
+    (<span class="variable">printf</span> <span class="selfeval">"~a~n"</span> ((<span class="variable">add</span> <span class="selfeval">3</span>) <span class="selfeval">4</span>)))
+  )
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 23 Jun 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,96 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Finding_All_Elements_in_a_List_M"> Finding All Elements in a List Matching Certain Criteria </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+From a list, you want only the elements that match certain criteria.
+<p />
+This notion of extracting a subset of a larger list is common. It's how you find all engineers in a list of employees, all users in the "staff" group, or all the filenames you're interested in.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The fist solution is with a plain loop. We traverse the list asking for each element in it.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; filter*: (Value -&gt; Boolean) -&gt; List
+</span><span class="comment">;; To filter al the elements in the list l that match with the predicate pred
+</span>(<span class="keyword">define</span> (<span class="variable">filter*</span> <span class="variable">predicate</span> <span class="variable">l</span>)
+  (<span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">l</span> <span class="variable">l</span>) (<span class="variable">acc</span> <span class="keyword">'</span>()))
+    (<span class="keyword">cond</span>
+      [(<span class="builtin">null?</span> <span class="variable">l</span>) <span class="variable">acc</span>]
+      [(<span class="variable">pred</span> (<span class="builtin">car</span> <span class="variable">l</span>)) (<span class="variable">loop</span> (<span class="builtin">cdr</span> <span class="variable">l</span>) (<span class="builtin">append</span> <span class="variable">acc</span> (<span class="builtin">list</span> (<span class="builtin">car</span> <span class="variable">l</span>))))]
+      [<span class="keyword">else</span> (<span class="variable">loop</span> (<span class="builtin">cdr</span> <span class="variable">l</span>) <span class="variable">acc</span>)])))
+</pre>
+</div>
+<p />
+You also can use the <code>filter</code> function that ships either in the <code>SRFI 1</code> or in <code>Mzlib</code>. The signature of this <code>filter</code> is the very same that the one for <code>filter*</code>.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;; either
+</span>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"1.ss"</span> ))<span class="comment">;; for filter in the SRFI 1
+</span><span class="comment">;; or
+</span>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span> <span class="selfeval">"mzlib"</span>)) <span class="comment">;; for the one in Mzlib
+</span><span class="comment">;; and You are ready to go
+</span></pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+You'd get more help if you didn't need to register (more spam too...)
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/IvanHernandez">IvanHernandez</a> - 20 May 2004
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">myfilt</span> <span class="variable">pred?</span> <span class="variable">lst</span>)
+ (<span class="keyword">cond</span>
+  ((<span class="builtin">null?</span> <span class="variable">lst</span>) <span class="keyword">'</span>())
+  ((<span class="variable">pred?</span> (<span class="builtin">car</span> <span class="variable">lst</span>)) (<span class="builtin">cons</span> (<span class="builtin">car</span> <span class="variable">lst</span>) (<span class="variable">myfilt</span> <span class="variable">pred?</span> (<span class="builtin">cdr</span> <span class="variable">lst</span>))))
+  (<span class="keyword">else</span> (<span class="variable">myfilt</span> <span class="variable">pred?</span> (<span class="builtin">cdr</span> <span class="variable">lst</span>)))))
+(<span class="variable">printf</span> <span class="selfeval">"(myfilt even? '(1 2 3 4 5)) -&gt; ~a\n"</span>
+         (<span class="variable">myfilt</span> <span class="builtin">even?</span> <span class="keyword">'</span>(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span>)))
+</pre>
+</div>
+<p />
+output: (myfilt even? '(1 2 3 4 5)) -&gt; (2 4)
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ListRecipes">ListRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

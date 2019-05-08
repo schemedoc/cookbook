@@ -1,0 +1,19 @@
+<div id="contentbox">
+ <div class="widget">
+  <div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">for-each-line-in-file</span> <span class="variable">filename</span> <span class="variable">proc</span> . <span class="variable">mode</span>)
+  (<span class="builtin">with-input-from-file</span>
+   <span class="variable">filename</span>
+   (<span class="keyword">lambda</span> () (<span class="builtin">apply</span> <span class="variable">for-each-line</span> <span class="variable">proc</span> (<span class="builtin">current-input-port</span>) <span class="variable">mode</span>))))
+(<span class="keyword">define</span> (<span class="variable">for-each-line</span> <span class="variable">proc</span> . <span class="variable">port+mode</span>)
+  (<span class="keyword">let</span> <span class="variable">while</span> ()
+    (<span class="keyword">let</span> ((<span class="variable">line</span> (<span class="builtin">apply</span> <span class="variable">read-line</span> <span class="variable">port+mode</span>)))
+      (<span class="keyword">unless</span> (<span class="builtin">eof-object?</span> <span class="variable">line</span>)
+        (<span class="variable">proc</span> <span class="variable">line</span>)
+        (<span class="variable">while</span>)))))
+</pre>
+</div>
+<p />
+<p />
+ </div>
+</div>

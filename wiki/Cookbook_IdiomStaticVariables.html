@@ -1,0 +1,82 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Static_Variables_for_Functions"> Static Variables for Functions </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+A single function needs to carry forward state from call to call, but you do not want to polute your environment with a global variable.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+Use the <code>let</code> form to define a lexical closure before the actual lambda expression that is the state-carrying function.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+As with global variables, the use of static variables in this function introduces mutators into the code, and so the code is no longer purely functional.  To retain purely functional code it is necessary to pass the additional state into the function.  <a href="/Cookbook/IdiomMonadicProgramming">IdiomMonadicProgramming</a> and <a href="/Cookbook/IdiomStreams">IdiomStreams</a> are two structured ways of handling this sort of state.
+<p />
+This is also a good way to remove so-called "magic numbers" from code.  By defining constants within a <code>let</code> expression or a <code>module</code> they are hidden from the global namespace.  This use of the let-before-the-lambda trick remains a pure-functional method of programming.
+<p />
+This method can also avoids unnecessary allocation in any code that uses constant values. For example the code below allocates a new string to hold the magic phrase every time it is called.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+By using the static variable idiom we can ensure only a single allocation:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+The general case of this optimisation is known as lambda-lifting.
+<p />
+The term static variables comes from C.  C does not provide closures but a limited form of closure can be imitated by declaring variables as static.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+This is my first contribution...  Hopefully it doesn't suck.
+<p />
+I like it.  -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 14 Sep 2004
+<p />
+Needs work, please.  Eg, function-with-static-var has unbalanced parens and there are numerous typos in the discussion.
+<p />
+Fixed -- <a href="/Main/NoelWelsh">NoelWelsh</a> - 10 Apr 2007
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JonathanArkell">JonathanArkell</a> - 07 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

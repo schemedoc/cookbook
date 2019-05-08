@@ -1,0 +1,85 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Monitoring_the_Handin_Server"> Monitoring the Handin Server </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You use the PLT handin server to accept submissions.  You want a cron job to run
+periodically to make sure the server is still running.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Evaluating this module tells you whether MY handin-server is still running:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">check-handin-server</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"client.ss"</span> <span class="selfeval">"cp-csc43002061"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"monitor-emailer.ss"</span> <span class="selfeval">"web-server"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"monitor-poke-web-server.ss"</span> <span class="selfeval">"web-server"</span>))
+  (<span class="keyword">define</span> <span class="variable">server</span> <span class="selfeval">"jblomconts.dyndns.org"</span>)
+  (<span class="keyword">define</span> <span class="variable">port</span> <span class="selfeval">7981</span>)
+  (<span class="keyword">define</span> <span class="variable">pem-path</span> (<span class="variable">build-path</span> (<span class="variable">collection-path</span> <span class="selfeval">"cp-csc43002061"</span>) <span class="selfeval">"server-cert.pem"</span>))
+  (<span class="keyword">with-handlers</span> ([<span class="variable">exn:fail?</span> (<span class="keyword">lambda</span> (<span class="variable">exn</span>) (<span class="variable">send-email-alert</span>  <span class="selfeval">"clorents@csc.calpoly.edu"</span> <span class="variable">server</span> <span class="variable">port</span> (<span class="variable">exn-message</span> <span class="variable">exn</span>)))])
+    (<span class="variable">handin-disconnect</span> (<span class="variable">handin-connect</span> <span class="variable">server</span> <span class="variable">port</span> <span class="variable">pem-path</span>)))
+  )
+</pre>
+</div>
+<p />
+You'll need to customize it to refer to your installation of the handin-client, your
+server-certificate, your server, your port, and your e-mail.  Ha!
+<p />
+Note: you could do lots better than this by actually handing something in; this script
+just makes the connection and then breaks it.
+<p />
+I have the following line in my crontab:
+<p />
+57 * * * * /Applications/PLT\ Scheme\ v301/bin/mzscheme -Tmv /Users/clements/bin/check-handin-server.ss
+<p />
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JohnClements">JohnClements</a> - 16 May 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/WebRecipes">WebRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,24 @@
+<div id="contentbox">
+ <div class="widget">
+  <div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">for-each-word</span>
+  (<span class="keyword">lambda</span> (<span class="variable">filename</span> <span class="variable">proc</span>)
+    (<span class="builtin">with-input-from-file</span> <span class="variable">filename</span>
+      (<span class="keyword">lambda</span> ()
+        (<span class="keyword">let</span> <span class="variable">read-word</span> ((<span class="variable">char</span> (<span class="builtin">read-char</span>))
+                        (<span class="variable">word</span> <span class="keyword">'</span>()))
+          (<span class="keyword">cond</span> ((<span class="builtin">eof-object?</span> <span class="variable">char</span>)
+                 <span class="selfeval">#t</span>)
+                ((<span class="variable">word-boundary?</span> <span class="variable">char</span>)
+                 (<span class="variable">proc</span> (<span class="builtin">list-&gt;string</span> (<span class="builtin">reverse</span> <span class="variable">word</span>)))
+                 (<span class="variable">read-word</span> (<span class="builtin">read-char</span>)
+                            <span class="keyword">'</span>()))
+                (<span class="selfeval">#t</span>
+                 (<span class="variable">read-word</span> (<span class="builtin">read-char</span>)
+                            (<span class="builtin">cons</span> <span class="variable">char</span> <span class="variable">word</span>)))))))))
+</pre>
+</div>
+<p />
+<p />
+ </div>
+</div>

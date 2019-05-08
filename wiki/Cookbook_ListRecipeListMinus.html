@@ -1,0 +1,71 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Finding_Elements_in_One_Array_bu"> Finding Elements in One Array but Not Another </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to find elements that are in one list but not another.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+You want to find elements in <code>al</code> list that aren't in <code>bl</code> list. Build a hash of the keys of <code>bl</code> to use as a lookup table. Then check each element in <code>al</code> to see whether it is in <code>bl</code>.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"1.ss"</span> <span class="selfeval">"srfi"</span>))
+<span class="comment">;; To find elements that are in the al list but not in the bl list
+</span>(<span class="keyword">define</span> (<span class="variable">list-minus</span> <span class="variable">al</span> <span class="variable">bl</span>)
+  (<span class="keyword">let</span> ((<span class="variable">h</span> (<span class="variable">make-hash-table</span> <span class="keyword">'</span><span class="variable">equal</span>)))
+    (<span class="builtin">for-each</span> (<span class="keyword">lambda</span> (<span class="variable">v</span>)
+                (<span class="variable">hash-table-put!</span> <span class="variable">h</span> <span class="variable">v</span> <span class="selfeval">#f</span>))
+              <span class="variable">bl</span>)
+    (<span class="variable">filter</span> (<span class="keyword">lambda</span> (<span class="variable">v</span>)
+              (<span class="variable">hash-table-get</span> <span class="variable">h</span> <span class="variable">v</span> (<span class="keyword">lambda</span> () <span class="selfeval">#t</span>)))
+            <span class="variable">al</span>)))
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Another way is to use the <code>lset-difference</code> function shipped in the <a href="/Cookbook/SRFI">SRFI</a> 1, but this function does not use hashes at all, and therefore it is slower.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/IvanHernandez">IvanHernandez</a> - 19 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ListRecipes">ListRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> Next Topic:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,68 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Disallow_One_Armed_If_with_a_Cus"> Disallow One-Armed If with a Custom Language </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+It's idiomatic PLT Scheme to use WHEN and UNLESS if one wants to do a side-effect conditional.  But the standard mzscheme language still allows one-armed if expressions.  This can invite bug-prone code, so we may want to restrict the language to prevent one-armed if's in our own code.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+We can write a custom language, and then use that language.  Our new language will have mostly everything from mzscheme, but leave out the one-armed if.
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+Once we have such a module language, we can then use it.  The following code will raise a syntax error:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+but normal two-armed if usage won't error out:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+See <a href="http://download.plt-scheme.org/doc/352/html/mzscheme/mzscheme-Z-H-12.html#node_sec_12.5" target="_top">http://download.plt-scheme.org/doc/352/html/mzscheme/mzscheme-Z-H-12.html#node_sec_12.5</a>
+for an extended example of this technique.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 16 Nov 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,57 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Functional_Queue"> Functional Queue </a>
+</h2>
+<p />
+A queue is a data structure supporting the following operations: <code>empty?</code>, <code>insert</code>, <code>remove</code> and <code>first</code>.
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+The problem is to get implement both <code>insert</code> and <code>remove</code> in time O(1) without mutation.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Represent the queue as two lists. The first list holds elements in
+the front of the queue, and the second elements in the back of the queue (in reverse order). <code>Insert</code> can now be implemented simply by consing the new element to the back of the queue. If the front is non-empty, <code>remove</code> simple returns the first element of the front, otherwise the elements from the back are moved to the front. This gives <code>insert</code> and <code>remove</code> amortized time O(1).
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+One advantage of a functional datastructures is that they can be used by multithreaded programs (such as web servlets) without problems.
+<p />
+<p />
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 17 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DataStructureRecipes">DataStructureRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

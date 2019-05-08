@@ -1,0 +1,192 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Expanding_and_Compressing_Tabs"> Expanding and Compressing Tabs </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to convert spaces in a string to tabs, or vice versa.
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+You can define this by searching for tabs and expanding them as they're found.
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">expand-tabs</span>
+  (<span class="variable">opt-lambda</span> (<span class="variable">str</span> (<span class="variable">tabstop</span> <span class="selfeval">8</span>))
+    (<span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">result-parts</span> <span class="keyword">'</span>()) <span class="comment">; parts of the expanded string
+</span>               (<span class="variable">len-so-far</span> <span class="selfeval">0</span>) <span class="comment">; sum of the string-length of result-parts
+</span>               (<span class="variable">start-run</span> <span class="selfeval">0</span>) <span class="comment">; start of the next run of non-tab characters
+</span>               (<span class="variable">src-index</span> (<span class="variable">string-index</span> <span class="variable">str</span> <span class="selfeval">#\tab</span>))) <span class="comment">; index of the next #\tab
+</span>      (<span class="keyword">if</span> (<span class="builtin">not</span> <span class="variable">src-index</span>)
+          (<span class="variable">foldl</span> <span class="builtin">string-append</span> <span class="selfeval">""</span> (<span class="builtin">cons</span> (<span class="builtin">substring</span> <span class="variable">str</span> <span class="variable">start-run</span>) <span class="variable">result-parts</span>))
+          (<span class="keyword">let*</span> ((<span class="variable">current-length</span> (<span class="builtin">+</span> (<span class="builtin">-</span> <span class="variable">src-index</span> <span class="variable">start-run</span>) <span class="variable">len-so-far</span>))
+                 (<span class="variable">tab-len</span> (<span class="builtin">-</span> <span class="variable">tabstop</span> (<span class="builtin">modulo</span> <span class="variable">current-length</span> <span class="variable">tabstop</span>))))
+            (<span class="variable">loop</span> (<span class="builtin">cons</span> (<span class="builtin">make-string</span> <span class="variable">tab-len</span> <span class="selfeval">#\space</span>)
+                        (<span class="builtin">cons</span> (<span class="builtin">substring</span> <span class="variable">str</span> <span class="variable">start-run</span> <span class="variable">src-index</span>) <span class="variable">result-parts</span>))
+                  (<span class="builtin">+</span> <span class="variable">tab-len</span> <span class="variable">current-length</span>)
+                  (<span class="builtin">+</span> <span class="variable">src-index</span> <span class="selfeval">1</span>)
+                  (<span class="variable">string-index</span> <span class="variable">str</span> <span class="selfeval">#\tab</span> (<span class="builtin">+</span> <span class="selfeval">1</span> <span class="variable">src-index</span>))))))))
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+Python includes an <code>expandtabs()</code> method, but Scheme doesn't.  This is probably because the tab/space distinction is very important in Python source code, but not so in Scheme.  Still, it's a useful thing to do sometimes.  The tricky thing about tab expansion is that a tab doesn't translate directly into a fixed number of spaces; you have to calculate the number of spaces for each tab to reach the next tabstop.   Tabstops divide the string into equal partitions of the length specified, and the action of a tab character is to move forward to the next tabstop.  For example, if your tabstop is 4 and you have the string "12345\t678\t", the first tab converts to 3 spaces and the 2nd converts to one space, e.g. "12345   678 ".
+This solution uses a named let to iterate over the string, building up alternate sequences of spaces and non-tab runs of characters.  On each loop, if we've reached the end of the string without finding another tab, then we append the remainder of the string to the other parts and fold them together with <code>string-append</code>.  Otherwise, we calculate the number of spaces that this tab expands to, then loop with the tab expansion and the current run of non-tab characters appended onto the result list.
+<p />
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 27 Apr 2004
+<p />
+This implementation feels too complicated, but I tried a number of approaches and this was the only <strong>correct</strong> one I could come up with.
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 27 Apr 2004
+<p />
+Here's an alternate that's a bit different.
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">expand-tabs</span>
+  (<span class="variable">opt-lambda</span> (<span class="variable">str</span> (<span class="variable">tabstop</span> <span class="selfeval">8</span>))
+    (<span class="keyword">let</span> <span class="variable">loop</span> ((<span class="variable">parts</span> (<span class="variable">regexp-split</span> <span class="selfeval">"\t"</span> <span class="variable">str</span>))
+               (<span class="variable">result-parts</span> <span class="keyword">'</span>())
+               (<span class="variable">len-so-far</span> <span class="selfeval">0</span>))
+      (<span class="keyword">if</span> (<span class="builtin">null?</span> <span class="variable">parts</span>)
+          (<span class="variable">foldr</span> <span class="builtin">string-append</span> <span class="selfeval">""</span> (<span class="builtin">reverse</span> (<span class="builtin">cdr</span> <span class="variable">result-parts</span>)))
+          (<span class="keyword">let*</span> ((<span class="variable">part</span> (<span class="builtin">car</span> <span class="variable">parts</span>))
+                 (<span class="variable">next-tabstop</span> (<span class="builtin">-</span> <span class="variable">tabstop</span> (<span class="builtin">modulo</span> <span class="variable">len-so-far</span> <span class="variable">tabstop</span>))) <span class="comment">; distance to the next tabstop
+</span>                 (<span class="variable">len-so-far</span> (<span class="builtin">+</span> <span class="variable">len-so-far</span> (<span class="builtin">string-length</span> <span class="variable">part</span>))))
+            (<span class="variable">loop</span> (<span class="builtin">cdr</span> <span class="variable">parts</span>)
+                  (<span class="builtin">cons</span> (<span class="builtin">string-append</span> <span class="variable">part</span> (<span class="builtin">make-string</span> (<span class="builtin">-</span> <span class="variable">tabstop</span> (<span class="builtin">modulo</span> <span class="variable">len-so-far</span> <span class="variable">tabstop</span>)) <span class="selfeval">#\space</span>)) <span class="variable">result-parts</span>)
+                  (<span class="builtin">+</span> <span class="variable">len-so-far</span> (<span class="builtin">string-length</span> <span class="variable">part</span>))))))))
+</pre>
+</div>
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 28 Apr 2004
+<p />
+Gordon, do you have any test cases for the above procedure.  I'd like to try implementing my own version but the output of your versions isn't what I expected, so I'm not sure of the desired functionality.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 30 Apr 2004
+<p />
+Here's the test cases.  I generated the expected values by running them through Python's <code>expandtabs()</code>, the tabstop is 8.
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">test/text-ui</span>
+ (<span class="variable">make-test-suite</span>
+  <span class="selfeval">"Expand Tabs Tests"</span>
+(<span class="variable">make-test-case</span> <span class="selfeval">"No tab"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"1234567890"</span>) <span class="selfeval">"1234567890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Leading Tab"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"\t1234567890"</span>) <span class="selfeval">"        1234567890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Trailing Tab"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"1234567890\t"</span>) <span class="selfeval">"1234567890      "</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Tabs in middle"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"1\t2\t34567890"</span>) <span class="selfeval">"1       2       34567890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Tab + Space"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"1\t2 \t34567890"</span>) <span class="selfeval">"1       2       34567890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Tabs in middle #2"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"123\t4567\t890"</span>) <span class="selfeval">"123     4567    890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Leading and inner tabs"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"\t123\t4567\t890"</span>) <span class="selfeval">"        123     4567    890"</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Trailing and inner tabs"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"123\t4567\t890\t"</span>) <span class="selfeval">"123     4567    890     "</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"Leading, trailing and inner tabs"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"\t123\t4567\t890\t"</span>) <span class="selfeval">"        123     4567    890     "</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"2 trailing tabs"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"\t123\t4567\t890\t\t"</span>) <span class="selfeval">"        123     4567    890             "</span>))
+ (<span class="variable">make-test-case</span> <span class="selfeval">"2 leading &amp; 2 trailing tabs"</span> (<span class="variable">assert-equal?</span> (<span class="variable">expand-tabs</span> <span class="selfeval">"\t\t123\t1234567890\t\t"</span>) <span class="selfeval">"                123     1234567890              "</span>))
+ ))
+</pre>
+</div>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 30 Apr 2004
+<p />
+Below is my solution.  BTW, there was a superfluous <code>make-test-suite</code> in the test suite above.  I've removed it.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"plt-match.ss"</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"etc.ss"</span>)
+         (<span class="variable">lib</span> <span class="selfeval">"13.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">define</span> <span class="variable">expand-tabs</span>
+  (<span class="variable">opt-lambda</span> (<span class="variable">str</span> (<span class="variable">tabstop</span> <span class="selfeval">8</span>))
+    (<span class="keyword">define</span> (<span class="variable">tab?</span> <span class="variable">char</span>)
+      (<span class="builtin">eq?</span> <span class="selfeval">#\tab</span> <span class="variable">char</span>))
+    (<span class="keyword">define</span> (<span class="variable">make-expanded-tab</span> <span class="variable">position</span>)
+     (<span class="builtin">make-string</span> (<span class="builtin">-</span> <span class="variable">tabstop</span> (<span class="builtin">modulo</span> <span class="variable">position</span> <span class="variable">tabstop</span>)) <span class="selfeval">#\space</span>))
+    (<span class="builtin">apply</span> <span class="builtin">string-append</span>
+           (<span class="variable">reverse!</span>
+            (<span class="builtin">vector-ref</span>
+             (<span class="variable">string-fold</span>
+              (<span class="keyword">lambda</span> (<span class="variable">char</span> <span class="variable">seed</span>)
+                (<span class="variable">match</span> <span class="variable">seed</span>
+                  [(<span class="builtin">vector</span> <span class="variable">position</span> <span class="variable">result</span>)
+                   (<span class="keyword">if</span> (<span class="variable">tab?</span> <span class="variable">char</span>)
+                       (<span class="keyword">let</span> ((<span class="variable">insert</span> (<span class="variable">make-expanded-tab</span> <span class="variable">position</span>)))
+                         (<span class="builtin">vector</span> (<span class="builtin">+</span> (<span class="builtin">string-length</span> <span class="variable">insert</span>) <span class="variable">position</span>)
+                                 (<span class="builtin">cons</span> <span class="variable">insert</span> <span class="variable">result</span>)))
+                       (<span class="builtin">vector</span> (<span class="variable">add1</span> <span class="variable">position</span>)
+                               (<span class="builtin">cons</span> (<span class="builtin">string</span> <span class="variable">char</span>) <span class="variable">result</span>)))]))
+              (<span class="builtin">vector</span> <span class="selfeval">0</span> (<span class="builtin">list</span>))
+              <span class="variable">str</span>)
+             <span class="selfeval">1</span>)))))
+</pre>
+</div>
+<p />
+To make this solution faster, an efficient growable vector would be a good replacement for the list used in result.  It would be interesting to benchmark the current solutions.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 07 May 2004
+<p />
+This particular topic looks more like a reusable library call than a code pattern to me...
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"tabexpand.ss"</span> <span class="selfeval">"tabexpand"</span>))
+</pre>
+</div>
+<p />
+<a href="http://www.neilvandyke.org/tabexpand-scm/" target="_top">http://www.neilvandyke.org/tabexpand-scm/</a>   :)
+<p />
+-- <a href="/Main/NeilVanDyke">NeilVanDyke</a> - 09 May 2004
+<p />
+I removed my versions. They were solving the wrong problem.
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 09 May 2004
+<p />
+Neil van Dyke's library version, linked above, exploits the clever idea of using string ports to accumulate the output string.  This (hopefully) provides an equivalent to the "efficient growable vector" that Noel Welsh suggested above, and allows the following simplification of Noel's version:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"13.ss"</span> <span class="selfeval">"srfi"</span>))
+(<span class="keyword">define</span> (<span class="variable">expand-tabs/stop/col</span> <span class="variable">str</span> <span class="variable">tabstop</span> <span class="variable">col</span>)
+  (<span class="keyword">let</span> ((<span class="variable">out</span> (<span class="variable">open-output-string</span>)))
+    (<span class="variable">string-fold</span>
+     (<span class="keyword">lambda</span> (<span class="variable">c</span> <span class="variable">position</span>)
+       (<span class="keyword">if</span> (<span class="builtin">eq?</span> <span class="variable">c</span> <span class="selfeval">#\tab</span>)
+           (<span class="keyword">let</span> ((<span class="variable">fill-len</span> (<span class="builtin">-</span> <span class="variable">tabstop</span> (<span class="builtin">modulo</span> <span class="variable">position</span> <span class="variable">tabstop</span>))))
+             (<span class="builtin">display</span> (<span class="builtin">make-string</span> <span class="variable">fill-len</span> <span class="selfeval">#\space</span>) <span class="variable">out</span>)
+             (<span class="builtin">+</span> <span class="variable">position</span> <span class="variable">fill-len</span>))
+           (<span class="keyword">begin</span> (<span class="builtin">display</span> <span class="variable">c</span> <span class="variable">out</span>)
+                  (<span class="variable">add1</span> <span class="variable">position</span>))))
+     <span class="variable">col</span>
+     <span class="variable">str</span>)
+    (<span class="variable">get-output-string</span> <span class="variable">out</span>)))
+</pre>
+</div>
+<p />
+I cheated and un-abstracted Noel's helper functions, because they were so small.  May the gods of abstraction forgive me.  I also opted to use the function signature defined by Neil's library, which includes a starting column parameter, and uses the following wrapper functions to support omission of the <code>tabstop</code> and <code>col</code> parameters:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">expand-tabs/stop</span> <span class="variable">str</span> <span class="variable">stop</span>) (<span class="variable">expand-tabs/stop/col</span> <span class="variable">str</span> <span class="variable">stop</span> <span class="selfeval">0</span>))
+(<span class="keyword">define</span> (<span class="variable">expand-tabs</span> <span class="variable">str</span>) (<span class="variable">expand-tabs/stop/col</span> <span class="variable">str</span> <span class="selfeval">8</span> <span class="selfeval">0</span>))
+</pre>
+</div>
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 20 Oct 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 080 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

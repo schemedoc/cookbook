@@ -1,0 +1,103 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Matching_Words"> Matching Words </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to select words from a string.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Determine the defining features of a word for your specific application, then write a regular expression that models this idea.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">words-1</span>
+  (<span class="variable">regexp</span> <span class="selfeval">"[^ ]+"</span>))        <span class="comment">; as many non-whitespace bytes as possible
+</span>(<span class="keyword">define</span> <span class="variable">words-2</span>
+  (<span class="variable">regexp</span> <span class="selfeval">"[A-Za-z'-]+"</span>))  <span class="comment">; as many letters, apostrophes, and hyphens
+</span>
+<span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="variable">words-1</span> <span class="selfeval">"'alpha-beta gamma"</span>)
+(<span class="selfeval">"'alpha-beta"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">regexp-match</span> <span class="variable">words-2</span> <span class="selfeval">"'alpha-beta&amp;or gamma"</span>)
+(<span class="selfeval">"'alpha-beta"</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Scheme does not have a built-in definition for words in strings.  On the one hand, this is inconvenient since you have to define your own meaning of "word".  On the other hand, this is the correct behavior since the concept of words varies significantly between applications, locales, encodings, and input source.
+<p />
+The meaning of "word" in a particular application's context can vary significantly.  Languages usually support pluralization of singular nouns, attach posessive modifiers, allow hyphenated word combinations, and so forth.  The regular expression used must reflect the expected range of words to be encountered.
+<p />
+The Perl-compatible regular expression module supports all of Perl's constructs (with the one proviso that escaped characters, such as <code>\b</code> must receive two escape slashes to be parsed properly, i.e., <code>\\b</code>.)  Using the <code>pregexp</code> module, we can search based on word boundaries:
+<p />
+<div class="scheme">
+  <pre><span class="comment">; Using word-boundary \b:
+</span><span class="builtin">&gt;</span> (<span class="variable">pregexp-match</span>
+    (<span class="variable">pregexp</span> <span class="selfeval">"\\b([A-za-z]+)\\b"</span>) <span class="selfeval">"The quick brown fox"</span>)
+(<span class="selfeval">"The"</span> <span class="selfeval">"The"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">pregexp-match</span>
+    (<span class="variable">pregexp</span> <span class="selfeval">"\\b([A-za-z]+)\\b"</span>) <span class="selfeval">"ended.  Then we walked"</span>)
+(<span class="selfeval">"ended"</span> <span class="selfeval">"ended"</span>)
+<span class="comment">; Using whitespace.  Fails on punctuation, so not desirable:
+</span><span class="builtin">&gt;</span> (<span class="variable">pregexp-match</span>
+    (<span class="variable">pregexp</span> <span class="selfeval">"\\s([A-za-z]+)\\s"</span>) <span class="selfeval">"The quick brown fox"</span>)
+(<span class="selfeval">" quick "</span> <span class="selfeval">"quick"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">pregexp-match</span>
+    (<span class="variable">pregexp</span> <span class="selfeval">"\\s([A-za-z]+)\\s"</span>) <span class="selfeval">"ended.  Then we walked"</span>)
+(<span class="selfeval">" Then "</span> <span class="selfeval">"Then"</span>)
+</pre>
+</div>
+<p />
+The <code>pregexp</code> provides the "word" character set <code>\w</code>, which matches a character that is part of a valid Perl identifier.  However, this just means a string of alphanumerics and underscores.  This is generally not what you want.
+<p />
+Note that <code>\\b</code> and <code>\\B</code> are still useful.  For example, "\\Bis\\B" matches the string "is" within a word, but not at the edges.  So, while "whistle" would match, "this" would not.
+<p />
+<h3>
+  <a name="References"> References </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/BrentAFulgham">BrentAFulgham</a> - 18 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/RegexRecipes">RegexRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

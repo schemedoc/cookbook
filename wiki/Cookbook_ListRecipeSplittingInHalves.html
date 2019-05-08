@@ -1,0 +1,91 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="Splitting_a_list_in_halves"> Splitting a list in halves </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Splitting a list in two lists whose lengths are half of the original.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<div class="scheme">
+  <pre><span class="comment">; split-in-halves : list -&gt; (values list list)
+</span><span class="comment">;  return two lists of lengths differing with at most one
+</span>(<span class="keyword">define</span> (<span class="variable">split-in-halves</span> <span class="variable">l</span>)
+  (<span class="keyword">let</span> <span class="variable">loop</span> ([<span class="variable">front</span> <span class="keyword">'</span>()]
+             [<span class="variable">slow</span>  <span class="variable">l</span>]
+             [<span class="variable">fast</span>  <span class="variable">l</span>])
+    (<span class="keyword">cond</span>
+      [(<span class="builtin">null?</span> <span class="variable">fast</span>)         (<span class="builtin">values</span> <span class="variable">front</span>
+                                    <span class="variable">slow</span>)]
+      [(<span class="builtin">null?</span> (<span class="builtin">cdr</span> <span class="variable">fast</span>))   (<span class="builtin">values</span> (<span class="builtin">cons</span> (<span class="builtin">car</span> <span class="variable">slow</span>) <span class="variable">front</span>)
+                                    (<span class="builtin">cdr</span> <span class="variable">slow</span>))]
+      [<span class="keyword">else</span>                 (<span class="variable">loop</span> (<span class="builtin">cons</span> (<span class="builtin">car</span> <span class="variable">slow</span>) <span class="variable">front</span>)
+                                  (<span class="builtin">cdr</span> <span class="variable">slow</span>)
+                                  (<span class="builtin">cddr</span> <span class="variable">fast</span>))])))
+<span class="comment">; split-in-halves! : list -&gt; (values list list)
+</span><span class="comment">;  return two lists of lengths differing with at most one;
+</span><span class="comment">;  modifies the argument
+</span>(<span class="keyword">define</span> (<span class="variable">split-in-halves!</span> <span class="variable">l</span>)
+  (<span class="keyword">let</span> <span class="variable">loop</span> ([<span class="variable">slow</span> (<span class="builtin">cons</span> <span class="keyword">'</span><span class="variable">foo</span> <span class="variable">l</span>)]
+             [<span class="variable">fast</span> (<span class="builtin">cons</span> <span class="keyword">'</span><span class="variable">bar</span> <span class="variable">l</span>)])
+    (<span class="keyword">cond</span>
+      [(<span class="keyword">or</span> (<span class="builtin">null?</span> <span class="variable">fast</span>)
+           (<span class="builtin">null?</span> (<span class="builtin">cdr</span> <span class="variable">fast</span>))) (<span class="keyword">let</span> ([<span class="variable">back</span> (<span class="builtin">cdr</span> <span class="variable">slow</span>)])
+                                 (<span class="builtin">set-cdr!</span> <span class="variable">slow</span> <span class="keyword">'</span>())
+                                 (<span class="builtin">values</span> <span class="variable">l</span> <span class="variable">back</span>))]
+      [<span class="keyword">else</span>                    (<span class="variable">loop</span> (<span class="builtin">cdr</span> <span class="variable">slow</span>)
+                                     (<span class="builtin">cddr</span> <span class="variable">fast</span>))])))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">split-in-halves</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span>))
+(<span class="selfeval">3</span> <span class="selfeval">2</span> <span class="selfeval">1</span>)
+(<span class="selfeval">4</span> <span class="selfeval">5</span>)
+<span class="builtin">&gt;</span> (<span class="variable">split-in-halves</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span>))
+(<span class="selfeval">3</span> <span class="selfeval">2</span> <span class="selfeval">1</span>)
+(<span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span>)
+<span class="builtin">&gt;</span> (<span class="variable">split-in-halves!</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span>))
+(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span>)
+(<span class="selfeval">4</span> <span class="selfeval">5</span>)
+<span class="builtin">&gt;</span> (<span class="variable">split-in-halves!</span> (<span class="builtin">list</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span>))
+(<span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span>)
+(<span class="selfeval">4</span> <span class="selfeval">5</span> <span class="selfeval">6</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The solutions does not use <code>length</code> and thus make only one traversal of the list.
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 18 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ListRecipes">ListRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

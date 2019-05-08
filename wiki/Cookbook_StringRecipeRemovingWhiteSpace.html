@@ -1,0 +1,86 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Removing_white_space_from_the_en"> Removing white space from the ends of a string </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Remove possible white spaces from the beginning and end of a string.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+<div class="scheme">
+  <pre><span class="comment">; strip : string -&gt; string
+</span><span class="comment">;  remove white space from the beginning and end of a string
+</span>(<span class="keyword">define</span> <span class="variable">strip</span>
+  (<span class="keyword">let</span> ([<span class="variable">r-strip</span> (<span class="variable">regexp</span> <span class="selfeval">"^[ \t\r]*(.*?)[ \t\r]*$"</span>)])
+    (<span class="keyword">lambda</span> (<span class="variable">s</span>)
+      (<span class="builtin">cadr</span> (<span class="variable">regexp-match</span> <span class="variable">r-strip</span> <span class="variable">s</span>)))))
+</pre>
+</div>
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">" foo "</span>)
+<span class="selfeval">"foo"</span>
+<span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">" foo bar "</span>)
+<span class="selfeval">"foo bar"</span>
+<span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">" foo bar"</span>)
+<span class="selfeval">"foo bar"</span>
+<span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">"foo bar"</span>)
+<span class="selfeval">"foo bar"</span>
+<span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">""</span>)
+<span class="selfeval">""</span>
+<span class="builtin">&gt;</span> (<span class="variable">strip</span> <span class="selfeval">"   "</span>)
+<span class="selfeval">""</span>
+</pre>
+</div>
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The solution uses a regular expression to pick out the middle of the string.
+The regular expression is compiled only once, namely when <code>strip</code> is defined.
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<a href="/Cookbook/TrimmingSpace">TrimmingSpace</a> has another version of this, using <a href="/Cookbook/SRFI">SRFI</a>-13.  It was classified in the wrong place, so it wasn't showing up under <a href="/Cookbook/StringRecipes">StringRecipes</a>.
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 07 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,51 @@
+<div id="contentbox">
+ <div class="widget">
+  Edit this topic to add or edit comments for the associated chapter.
+<p />
+<p />
+<h2>
+  <a name="_Comments">  Comments </a>
+</h2>
+<p />
+A nice simple example of thread use is available at
+<p />
+<a href="http://www.kuro5hin.org/story/2004/3/17/93442/8657" target="_top">http://www.kuro5hin.org/story/2004/3/17/93442/8657</a>
+<p />
+It supplies a simple example;
+<p />
+<b>BeautifierPlugin Error: Unable to handle "scheme" syntax.</b><div class="fragment">
+  <pre>
+; threaded-map : (X -&gt; Y) * (listof X) -&gt; (listof Y)
+; maps the given function over the given list with each computation
+; done in parallel
+(define (threaded-map f l)
+  (let ((cs (map (lambda (x) (make-channel)) l)))
+    (for-each (lambda (x c) (thread (lambda () (channel-put c (f x))))) l cs)
+    (map channel-get cs)))
+ </pre>
+</div>
+<p />
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 12 Dec 2007
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Comment </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/ThreadChapter">ThreadChapter</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

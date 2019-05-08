@@ -1,0 +1,111 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Drawing_and_saving_a_PLoT_graph_"> </a> Drawing and saving a <span style="background : #FFFFCE;">
+  <font color="#0000FF">PLoT</font>
+</span><a href="/edit/Cookbook/PLoT?topicparent=Cookbook.PlotExample">?</a> graph as an image </h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You may have plotted out a graph with the <span style="background : #FFFFCE;">
+  <font color="#0000FF">PLoT</font>
+</span><a href="/edit/Cookbook/PLoT?topicparent=Cookbook.PlotExample">?</a> package, and now want to save it off as an image.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+The output of <span style="background : #FFFFCE;">
+  <font color="#0000FF">PLoT</font>
+</span><a href="/edit/Cookbook/PLoT?topicparent=Cookbook.PlotExample">?</a>'s PLOT is a subclass of an <strong>image-snip%</strong>, so all we really need to do is get its bitmap, and save that off to disk.  For example:
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">performance</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">provide</span> (<span class="variable">all-defined</span>))
+  (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"plot.ss"</span> <span class="selfeval">"plot"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"pregexp.ss"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"string.ss"</span>)
+           (<span class="variable">lib</span> <span class="selfeval">"class.ss"</span>))
+  (<span class="keyword">define</span> <span class="variable">data</span> <span class="selfeval">#&lt;&lt;EOF</span>
+<span class="variable">300000:</span>   <span class="selfeval">113</span>   <span class="selfeval">184</span>
+<span class="variable">301000:</span>   <span class="selfeval">113</span>   <span class="selfeval">184</span>
+<span class="variable">302000:</span>   <span class="selfeval">112</span>   <span class="selfeval">184</span>
+<span class="variable">303000:</span>   <span class="selfeval">118</span>   <span class="selfeval">187</span>
+<span class="variable">304000:</span>   <span class="selfeval">117</span>   <span class="selfeval">185</span>
+<span class="variable">305000:</span>   <span class="selfeval">113</span>   <span class="selfeval">187</span>
+<span class="variable">306000:</span>   <span class="selfeval">113</span>   <span class="selfeval">187</span>
+<span class="variable">307000:</span>   <span class="selfeval">113</span>   <span class="selfeval">186</span>
+<span class="variable">308000:</span>   <span class="selfeval">113</span>   <span class="selfeval">208</span>
+<span class="variable">309000:</span>   <span class="selfeval">125</span>   <span class="selfeval">195</span>
+<span class="variable">310000:</span>   <span class="selfeval">114</span>   <span class="selfeval">188</span>
+<span class="variable">311000:</span>   <span class="selfeval">107</span>   <span class="selfeval">202</span>
+<span class="variable">EOF</span>
+    )
+  (<span class="keyword">define</span> <span class="variable">extracted-data</span>
+    (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">line</span>)
+           (<span class="builtin">map</span> <span class="builtin">string-&gt;number</span> (<span class="variable">rest</span> (<span class="variable">pregexp-match</span> <span class="selfeval">#px</span><span class="selfeval">"(\\d+):\\s*(\\d+)\\s*(\\d+)"</span> <span class="variable">line</span>))))
+         (<span class="variable">regexp-split</span> <span class="selfeval">"\n"</span> <span class="variable">data</span>)))
+  (<span class="keyword">define</span> <span class="variable">points1</span>
+    (<span class="variable">points</span> (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">l</span>) (<span class="builtin">vector</span> (<span class="variable">first</span> <span class="variable">l</span>) (<span class="variable">second</span> <span class="variable">l</span>))) <span class="variable">extracted-data</span>)
+            (<span class="variable">sym</span> <span class="keyword">'</span><span class="variable">circle</span>) (<span class="variable">color</span> <span class="keyword">'</span><span class="variable">red</span>)))
+  (<span class="keyword">define</span> <span class="variable">points2</span>
+    (<span class="variable">points</span> (<span class="builtin">map</span> (<span class="keyword">lambda</span> (<span class="variable">l</span>) (<span class="builtin">vector</span> (<span class="variable">first</span> <span class="variable">l</span>) (<span class="variable">third</span> <span class="variable">l</span>))) <span class="variable">extracted-data</span>)
+            (<span class="variable">sym</span> <span class="keyword">'</span><span class="variable">square</span>) (<span class="variable">color</span> <span class="keyword">'</span><span class="variable">green</span>)))
+  <span class="comment">;; this is an image-snip
+</span>  (<span class="keyword">define</span> <span class="variable">graph</span> (<span class="variable">plot</span> (<span class="variable">mix</span> <span class="variable">points1</span> <span class="variable">points2</span>)
+        (<span class="variable">x-min</span> <span class="selfeval">300000</span>)
+        (<span class="variable">x-max</span> <span class="selfeval">320000</span>)
+        (<span class="variable">y-min</span> <span class="selfeval">0</span>)
+        (<span class="variable">y-max</span> <span class="selfeval">300</span>)))
+  (<span class="keyword">define</span> <span class="variable">bitmap</span> (<span class="variable">send</span> <span class="variable">graph</span> <span class="variable">get-bitmap</span>))
+  (<span class="keyword">define</span> (<span class="variable">save</span> <span class="variable">filename</span>)
+    (<span class="variable">send</span> <span class="variable">bitmap</span> <span class="variable">save-file</span> <span class="variable">filename</span> <span class="keyword">'</span><span class="variable">png</span>)))
+</pre>
+</div>
+<p />
+<p />
+Since these things are instances of objects, we need to know a little rudimentary OOP manipulation from <strong>class.ss</strong>.
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+See <a href="http://download.plt-scheme.org/doc/360/html/mred/mred-Z-H-885.html#node_sec_9.18" target="_top">image-snip% documentation</a> for information on image-snips, and <a href="http://download.plt-scheme.org/doc/360/html/mred/mred-Z-H-402.html#node_tag_Temp_400" target="_top">bitmap% save-file documentation</a> for the <strong>SAVE-FILE</strong> documentation.
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/DannyYoo">DannyYoo</a> - 14 Dec 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left">  </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

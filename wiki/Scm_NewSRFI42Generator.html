@@ -1,0 +1,27 @@
+<div id="contentbox">
+ <div class="widget">
+    (define-syntax :matrix
+    (syntax-rules (index)
+      ((:matrix cc x (index i j) mexpr)
+       (:do cc
+            (let ((m mexpr)
+                  (rows #f)
+                  (cols #f))
+              (set! rows (matrix-rows m))
+              (set! cols (matrix-cols m)))
+            ((i 0) (j 0))
+            (&lt; i rows)
+            (let ((x (matrix-ref m i j))
+                  (i+1 (+ i 1))
+                  (j+1 (+ j 1))
+                  (wrap? #f))
+              (set! wrap? (&gt;= j+1 cols)))
+            #t
+            ((if wrap? i+1 i)
+             (if wrap? 0 j+1))))
+      ((:matrix cc x mexpr)
+       (:matrix cc x (index i j) mexpr))))
+<p />
+<p />
+ </div>
+</div>

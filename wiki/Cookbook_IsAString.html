@@ -1,0 +1,58 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Testing_Whether_an_Object_is_a_S"> Testing Whether an Object is a String </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You need to test if an object is a string.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+The <code>string?</code> predicate is what you want:
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+Notice that a character is not a string.  Also, even though we've said that a string is a list of characters, a list of characters is not a string.
+<p />
+(Hence the utility of the conversion function  <code>list-&gt;string</code>. -- <a href="/Main/MarcCharpentier">MarcCharpentier</a> - 07 Dec 2004 )
+<p />
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 05 Apr 2004
+<p />
+The Python Cookbook discusses how simply asking <code>isinstance</code> is "UnPythonic" and has a discussion on "duck typing", in that their solution just asks if you can concatenate a string to an unknown object.  I'm not sure how to address this.  You could literally ask if <code>(string-append an-object "")</code> works w/o throwing an exception, but would anyone do this?
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 05 Apr 2004
+<p />
+Scheme definitely doesn't have built-in duck typing, by design, but of course you can implement it, using e.g. generic functions.  I suspect the Python idea of not asking <code>isinstance</code> also comes in part from general OO principles, where most things should be done with polymorphic method calls, and you shouldn't have to ask what type something is, most of the time.
+<p />
+None of this applies to standard Scheme.  However, with an object system, like PLT's classes or Swindle's CLOS implementation, then things like this are possible.  For example, with Swindle, you could define <code>string-append</code> as a generic function that worked on all the basic Scheme types, which would give you duck typing in that case.  I'm not sure offhand whether Swindle has anything like this built-in.
+<p />
+-- <a href="/Main/AntonVanStraaten">AntonVanStraaten</a> - 07 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 020 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

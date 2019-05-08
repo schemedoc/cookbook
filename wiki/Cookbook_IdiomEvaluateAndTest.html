@@ -1,0 +1,140 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Evaluate_and_Test"> Evaluate and Test </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+A common Scheme idiom is to return <code>#f</code> in the case of failure and
+a useful value otherwise.  For example, the <code>member</code> function returns
+false when an element cannot be found, and the sublist from the first
+match on success.  As we may want to use the result of the call we
+must bind it to a name and then test it. The example below shows this.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">let</span> ((<span class="variable">result</span> (<span class="builtin">member</span> <span class="selfeval">3</span> <span class="keyword">'</span>(<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span>))))
+  (<span class="keyword">if</span> <span class="variable">result</span>
+     <span class="keyword">'</span><span class="variable">found</span>
+     <span class="keyword">'</span><span class="variable">not-found</span>))
+</pre>
+</div>
+<p />
+It would be nice to abstract this idiom.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The <code>aif</code> macro captures this common idiom. Using the <code>aif</code> macro,
+we can write the above example as:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"aif.ss"</span> <span class="selfeval">"macro"</span>))
+(<span class="variable">aif</span> <span class="variable">result</span> (<span class="builtin">member</span> <span class="selfeval">3</span> <span class="keyword">'</span>(<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span>))
+    <span class="keyword">'</span><span class="variable">found</span>
+    <span class="keyword">'</span><span class="variable">not-found</span>)
+</pre>
+</div>
+<p />
+The name <code>result</code> is bound to the result of <code>(member 3 '(0 1 2 3 4))</code>.
+The value of <code>result</code> is then used in a normal <code>if</code> expression to
+choose between the true and false arms.
+<p />
+A slightly more complicated case occurs when the result of the
+expression must be compared using a predicate before we can decide
+which arm to take.  This occurs, for example, when reading from a
+file.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">port-&gt;string-list</span> <span class="variable">port</span>)
+  (<span class="keyword">let</span> ((<span class="variable">line</span> (<span class="variable">read-line</span> <span class="variable">port</span>)))
+   (<span class="keyword">if</span> (<span class="builtin">eof-object?</span> <span class="variable">line</span>)
+      (<span class="builtin">list</span>)
+      (<span class="builtin">cons</span> <span class="variable">line</span> (<span class="variable">port-&gt;string-list</span> <span class="variable">port</span>)))))
+</pre>
+</div>
+<p />
+The <code>aif</code> macro handles this case as well.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"aif.ss"</span> <span class="selfeval">"macro"</span>))
+(<span class="keyword">define</span> (<span class="variable">port-&gt;string-list</span> <span class="variable">port</span>)
+  (<span class="variable">aif</span> <span class="variable">line</span> <span class="builtin">eof-object?</span> (<span class="variable">read-line</span> <span class="variable">port</span>)
+      (<span class="builtin">list</span>)
+      (<span class="builtin">cons</span> <span class="variable">line</span> (<span class="variable">port-&gt;string-list</span> <span class="variable">port</span>))))
+</pre>
+</div>
+<p />
+The definition of <code>aif</code> is
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define-syntax</span> <span class="variable">aif</span>
+  (<span class="keyword">syntax-rules</span> ()
+    ((<span class="variable">_</span> <span class="variable">name</span> <span class="variable">test</span> <span class="variable">true-arm</span> <span class="variable">false-arm</span>)
+     (<span class="keyword">let</span> ((<span class="variable">name</span> <span class="variable">test</span>))
+       (<span class="keyword">if</span> <span class="variable">name</span>
+           <span class="variable">true-arm</span>
+           <span class="variable">false-arm</span>)))
+    ((<span class="variable">_</span> <span class="variable">name</span> <span class="variable">pred</span> <span class="variable">test</span> <span class="variable">true-arm</span> <span class="variable">false-arm</span>)
+     (<span class="keyword">let</span> ((<span class="variable">name</span> <span class="variable">test</span>))
+       (<span class="keyword">if</span> (<span class="variable">pred</span> <span class="variable">name</span>)
+           <span class="variable">true-arm</span>
+           <span class="variable">false-arm</span>)))
+    ))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The <code>aif</code> macro is adapted from Paul Graham's "<a href="/Cookbook/OnLisp">On Lisp</a>".
+It is short for <em>anaphoric if</em>.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_About_This_Recipe"> Comments About This Recipe </a>
+</h3>
+<p />
+I find this a great example and motivation for syntax-rules macros.
+Whether it qualifies as an idiom I am not sure about - I don't
+think I have seen <code>aif</code> in the wild except in Noel's code ;-)
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 19 May 2004
+<p />
+Yeah, and even I don't use it that much as I haven't got around to releasing the Schematics macro library!  Anyway, I added the macro definition to maybe others will use it.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 19 May 2004
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 19 May 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left">  </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

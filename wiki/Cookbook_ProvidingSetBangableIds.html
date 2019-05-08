@@ -1,0 +1,108 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="How_to_provide_identifiers_that_"> How to provide identifiers that can be mutated with set! directly </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+In <a href="/Cookbook/MzScheme">MzScheme</a>, you can <code>
+  <b>set!</b>
+</code> identifiers that you defined within your own module, but usually attempting to <code>
+  <b>set!</b>
+</code> identifiers that you imported from other modules will fail.
+<p />
+This is a good thing in general, since it allows module writers to reason locally about whether invariants for its identifiers are maintained.  This leads to easier correctness arguments, and can also be a boon for improving execution speed for code (e.g., a compiler can detect if an identifier is never mutated, and generate better code).
+<p />
+However, sometimes you do want to be able to allow clients of your module to mutate state that you maintain.  One way to do this is to provide "setter" procedures, which the client calls to mutate state.  This is useful in some cases, but also can be a burden on the client (e.g. if they already have built up a large body of code that uses set! directly on identifiers in the top-level environment, and do not want to modify it to use a new protocol just because an identifier moved from the top-level to a module).
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The following module defines a <code>
+  <b>provide-settable</b>
+</code> special form.
+Any identifier provided with <code>
+  <b>provide-settable</b>
+</code> is then able to be used with set! in a client module.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+The solution relies on the support of <code>
+  <b>syntax-id-rules</b>
+</code>, which broadens macro invocations to identifier references and set! expressions (rather than just straightforward combinations).  PLT Scheme added support for <code>
+  <b>syntax-id-rules</b>
+</code> circa version 205.8.
+<p />
+Now I can use this as follows:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+If we have only used <code>
+  <b>provide</b>
+</code> to export <code>x</code>, then <a href="/Cookbook/MzScheme">MzScheme</a> would complain the code in module <code>B</code>, because it attempts to mutate <code>x</code>.  By using <code>
+  <b>provide-settable</b>
+</code>, <code>B</code> can mutate <code>x</code> and is unaware of the machinery under the hood (such as the call to the setter procedure).
+<p />
+(If someone knows how to write this macro without using <code>
+  <b>syntax-case</b>
+</code>, I'd like to hear about it.)
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Matthias Felleisen pointed out to me that a similar trick is documented (along with a introduction to <code>
+  <b>syntax-rules</b>
+</code> and <code>
+  <b>syntax-id-rules</b>
+</code>) in Dr. Dobb's, April 2004, "Building Little Languages with Macros."
+<p />
+Eli Barzilay pointed out to me that when threads come into the picture, you may want to use a parameter to represent the state, rather than a standard global varable.
+<p />
+Felix believes that this is a matter of adapting the first macro to develop something like the following macro definition (where <code>id-parameter</code> is an appropriately constructed parameter value).
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Note the distinction between <code>(id-parameter)</code> and <code>(id-parameter EXP)</code>; the first acts as our "getter", while the second acts as our "setter."
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/PnkFelix">PnkFelix</a> - 21 Jun 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

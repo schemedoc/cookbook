@@ -1,0 +1,10 @@
+<div id="contentbox">
+ <div class="widget">
+  (define hash-has-key?
+  (let ((symbol (gensym)))
+    (lambda (table key)
+      (not (eq? (hash-table-get table key (lambda () symbol)) symbol)))))
+<p />
+<p />
+ </div>
+</div>

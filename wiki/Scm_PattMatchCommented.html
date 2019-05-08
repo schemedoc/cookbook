@@ -1,0 +1,25 @@
+<div id="contentbox">
+ <div class="widget">
+  (require (lib "pregexp.ss" "mzlib")
+         (lib "dns.ss" "net"))
+<p />
+(define commented-regexp
+  (pregexp
+    "((?x:             ; Ignore whitespace
+       (?x:            ; Capture the inet address
+        (?! [\\-_] )   ; don't lookahead for underscore/dash
+        [\\w\\-] +     ; hostname component
+        \\.            ; dot
+       )+              ; repeat a few times
+       [A-Za-z]        ; ... followed by a letter
+       [\\w\\-] +      ; and trailing domain part
+     ))"))
+<p />
+(define (make-detailed-name name)
+  (let* ((addr (dns-get-address "ns1.granitecanyon.com" name))
+        (replace (string-append "\\1 [" addr "]")))
+    (pregexp-replace commented-regexp name replace)))
+<p />
+<p />
+ </div>
+</div>

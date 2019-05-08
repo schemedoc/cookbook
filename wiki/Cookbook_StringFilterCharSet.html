@@ -1,0 +1,77 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Filtering_a_String_for_a_Set_of_"> Filtering a String for a Set of Characters </a>
+</h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You want to remove all but a specified set of characters from a string.
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+This is really a extension of what we talked about in <a href="/Cookbook/StringCheckForChar">StringCheckForChar</a>.  <a href="/Cookbook/SRFI">SRFI</a>-13 provides <code>string-filter</code> and <code>string-delete</code> functions, which are inverse operations:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"string.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"13"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">string-filter</span> <span class="variable">char-set:letter</span> <span class="selfeval">"Hello, World!"</span>)
+<span class="selfeval">"HelloWorld"</span>
+<span class="builtin">&gt;</span> (<span class="variable">string-delete</span> <span class="variable">char-set:letter</span> <span class="selfeval">"Hello, World!"</span>)
+<span class="selfeval">", !"</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+The first thing to note is that the <a href="/Cookbook/SRFI">SRFI</a>-13 implementation that ships with PLT, as well as the one provided by Schematics, differ from the spec in that they swap the order of the 1st two arguments.  This can be a little confusing.
+Second, both functions allow you to specify the filter argument in 3 ways: as a character, a <code>char-set</code>, or a predicate.  For example, the following 3 are equivalent methods of stripping a hyphen from a string:
+<div class="scheme">
+  <pre>(<span class="variable">string-delete</span> (<span class="variable">char-set</span> <span class="selfeval">#\-</span>) <span class="selfeval">"555-1212"</span>)
+(<span class="variable">string-delete</span> <span class="selfeval">#\-</span> <span class="selfeval">"555-1212"</span>)
+(<span class="variable">string-delete</span> (<span class="keyword">lambda</span> (<span class="variable">c</span>) (<span class="builtin">eq?</span> <span class="selfeval">#\-</span> <span class="variable">c</span>)) <span class="selfeval">"555-1212"</span>)
+</pre>
+</div>
+<p />
+It's useful to be able to define a function <code>make-filter</code> which returns a function with arguments partially bound.
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">make-filter</span> <span class="variable">condition</span>)
+    (<span class="keyword">lambda</span> (<span class="variable">str</span>)
+      (<span class="variable">string-filter</span> <span class="variable">condition</span> <span class="variable">str</span>)))
+</pre>
+</div>
+Once you've defined this, you can call the result directly, or give it a better name:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> ((<span class="variable">make-filter</span> <span class="variable">char-set:digit</span>) <span class="selfeval">"555-1212"</span>)
+<span class="selfeval">"5551212"</span>
+<span class="builtin">&gt;</span> (<span class="keyword">define</span> (<span class="variable">digits-only</span> <span class="variable">str</span>)
+  ((<span class="variable">make-filter</span> <span class="variable">char-set:digit</span>) <span class="variable">str</span>))
+<span class="builtin">&gt;</span> (<span class="variable">digits-only</span> <span class="selfeval">"555-1212"</span>)
+<span class="selfeval">"5551212"</span>
+</pre>
+</div>
+<p />
+<p />
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 19 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/StringRecipes">StringRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 180 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

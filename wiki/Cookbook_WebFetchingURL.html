@@ -1,0 +1,110 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Fetching_a_URL"> </a> Fetching a URL </h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to get the web page stored at a URL (web address), such as
+<a href="http://schematics.sourceforge.net/" target="_top">http://schematics.sourceforge.net/</a>
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The <code>url.ss</code> library in the <code>net</code> collection provides
+support for opening URLs.  The following program opens a URL and
+displays the HTML that makes up the HTTP body.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"url.ss"</span> <span class="selfeval">"net"</span>))
+(<span class="variable">display-pure-port</span>
+ (<span class="variable">get-pure-port</span>
+  (<span class="variable">string-&gt;url</span> <span class="selfeval">"http://schematics.sourceforge.net/"</span>)))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+If you want to retain the HTTP headers use the <code>get-impure-port</code> function.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"url.ss"</span> <span class="selfeval">"net"</span>))
+(<span class="variable">get-impure-port</span>
+ (<span class="variable">string-&gt;url</span> <span class="selfeval">"http://schematics.sourceforge.net/"</span>))
+</pre>
+</div>
+<p />
+To get the headers from an <code>impure-port</code>, you purify it.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"url.ss"</span> <span class="selfeval">"net"</span>))
+(<span class="variable">purify-port</span>
+ (<span class="variable">get-impure-port</span>
+  (<span class="variable">string-&gt;url</span> <span class="selfeval">"http://schematics.sourceforge.net/"</span>)))
+</pre>
+</div>
+<p />
+If you're behind a proxy server, you'll need to set a proxy with <code>current-proxy-servers</code>, which also can be called without arguments to display the current settings:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">current-proxy-servers</span> <span class="keyword">'</span>((<span class="selfeval">"http"</span> <span class="selfeval">"proxy.example.com"</span> <span class="selfeval">8101</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">current-proxy-servers</span>)
+((<span class="selfeval">"http"</span> <span class="selfeval">"proxy.example.com"</span> <span class="selfeval">8101</span>))
+</pre>
+</div>
+<p />
+<p />
+To retrieve a URL using the HTTPS protocol, see <a href="/Cookbook/WebFetchingHttpsUrl">WebFetchingHttpsUrl</a>.
+<p />
+<h3>
+  <a name="Note_query_string_separator"> Note: query string separator </a>
+</h3>
+Changing the default query string separator used in string-&gt;url from the semicolon to the ampersand:
+Quoting Robby Findler
+<a href="http://www.cs.brown.edu/pipermail/plt-scheme/2006-October/014952.html" target="_top">http://www.cs.brown.edu/pipermail/plt-scheme/2006-October/014952.html</a>
+<p />
+&gt; <cite>  If you want the bits at the end to use &amp; instead of ; there you'll  </cite><br>
+&gt; <cite>  want to do this: </cite><br>
+&gt; <cite>   </cite><br>
+&gt; <cite>  (require (lib "url.ss" "net") </cite><br>
+&gt; <cite>           (lib "uri-codec.ss" "net")) </cite><br>
+&gt; <cite>  </cite><br>
+&gt; <cite>  (current-alist-separator-mode 'amp) </cite><br>
+&gt; <cite>   </cite><br>
+&gt; <cite>  (url-&gt;string </cite><br>
+&gt; <cite>   (string-&gt;url "http://uk.old.finance.yahoo.com/d/quotes.csv?s=@%5EFTMC&amp;f=sl1d1t1c1ohgv&amp;e=.csv")) </cite><br>
+&gt; <cite>   </cite><br>
+<p />
+See also <a href="http://pre.plt-scheme.org/plt/collects/net/doc.txt" target="_top">http://pre.plt-scheme.org/plt/collects/net/doc.txt</a>
+<p />
+-- <a href="/Main/StephenDeGabrielle">StephenDeGabrielle</a> - 12 Jul 2007
+<p />
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 20 Apr 2004
+<p />
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/WebRecipes">WebRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 010 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

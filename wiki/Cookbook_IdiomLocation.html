@@ -1,0 +1,125 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Capturing_Location_Information"> Capturing Location Information </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to capture location information (file and line number, for example) for code you write.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The PLT Scheme macro system attaches location information to syntax, which you can manipulate using macros.  If your macro-fu is not strong, there are some libraries that will help you out.  To simply get the source directory and file name you can use procedures in the <code>etc.ss</code> collection in <span style="background : #FFFFCE;">
+  <font color="#0000FF">MzLib</font>
+</span><a href="/edit/Cookbook/MzLib?topicparent=Cookbook.IdiomLocation">?</a>:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"etc.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="builtin">display</span> (<span class="variable">this-expression-source-directory</span>))
+<span class="variable">/home/nhw/tmp/</span>
+<span class="builtin">&gt;</span> (<span class="builtin">display</span> (<span class="variable">this-expression-file-name</span>))
+<span class="selfeval">#f</span>
+</pre>
+</div>
+<p />
+Notice that <code>this-expression-file-name</code> is <code>#f</code> in the example above.  This is because I haven't saved the code to file.  If I do so the output changes as we'd expect:
+<p />
+<div class="scheme">
+  <pre>(<span class="builtin">display</span> (<span class="variable">this-expression-file-name</span>)) <span class="comment">; display foo.ss, the file I saved the code in
+</span></pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+For more involved manipulation of location information the following module from <a href="/Cookbook/SchemeUnit">SchemeUnit</a> may help.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">module</span> <span class="variable">location</span> <span class="variable">mzscheme</span>
+  (<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"aif.ss"</span> (<span class="selfeval">"schematics"</span> <span class="selfeval">"macro.plt"</span> <span class="selfeval">1</span>))
+           (<span class="variable">lib</span> <span class="selfeval">"list.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"1"</span>))
+  (<span class="keyword">provide</span> <span class="variable">location-source</span>
+           <span class="variable">location-line</span>
+           <span class="variable">location-column</span>
+           <span class="variable">location-position</span>
+           <span class="variable">location-span</span>
+           <span class="variable">syntax-&gt;location</span>
+           <span class="variable">location-&gt;string</span>)
+  <span class="comment">;; type location = (list string string string string string)
+</span>  <span class="comment">;; location : source line column position span
+</span>
+  (<span class="keyword">define</span> <span class="variable">location-source</span> <span class="variable">first</span>)
+  (<span class="keyword">define</span> <span class="variable">location-line</span> <span class="variable">second</span>)
+  (<span class="keyword">define</span> <span class="variable">location-column</span> <span class="variable">third</span>)
+  (<span class="keyword">define</span> <span class="variable">location-position</span> <span class="variable">fourth</span>)
+  (<span class="keyword">define</span> <span class="variable">location-span</span> <span class="variable">fifth</span>)
+  <span class="comment">;; syntax-&gt;location : syntax -&gt; location
+</span>  (<span class="keyword">define</span> (<span class="variable">syntax-&gt;location</span> <span class="variable">stx</span>)
+    (<span class="keyword">define</span> (<span class="variable">source-&gt;string</span> <span class="variable">source</span>)
+      (<span class="keyword">cond</span>
+       ((<span class="builtin">string?</span> <span class="variable">source</span>) <span class="variable">source</span>)
+       ((<span class="variable">path?</span> <span class="variable">source</span>) (<span class="variable">path-&gt;string</span> <span class="variable">source</span>))
+       ((<span class="builtin">not</span> <span class="variable">source</span>) <span class="selfeval">"unknown"</span>)
+       (<span class="keyword">else</span> (<span class="variable">format</span> <span class="selfeval">"~a"</span> <span class="variable">source</span>))))
+    (<span class="keyword">define</span> (<span class="variable">maybe-number-&gt;string</span> <span class="variable">number</span>)
+      (<span class="keyword">if</span> (<span class="builtin">number?</span> <span class="variable">number</span>)
+          (<span class="builtin">number-&gt;string</span> <span class="variable">number</span>)
+          <span class="selfeval">"?"</span>))
+    (<span class="builtin">list</span> (<span class="variable">source-&gt;string</span> (<span class="variable">syntax-source</span> <span class="variable">stx</span>))
+          (<span class="variable">maybe-number-&gt;string</span> (<span class="variable">syntax-line</span> <span class="variable">stx</span>))
+          (<span class="variable">maybe-number-&gt;string</span> (<span class="variable">syntax-column</span> <span class="variable">stx</span>))
+          (<span class="variable">maybe-number-&gt;string</span> (<span class="variable">syntax-position</span> <span class="variable">stx</span>))
+          (<span class="variable">maybe-number-&gt;string</span> (<span class="variable">syntax-span</span> <span class="variable">stx</span>))))
+  <span class="comment">;; location-&gt;string : (list-of string) -&gt; string
+</span>  (<span class="keyword">define</span> (<span class="variable">location-&gt;string</span> <span class="variable">location</span>)
+    (<span class="builtin">string-append</span> (<span class="variable">location-source</span> <span class="variable">location</span>)
+                   <span class="selfeval">":"</span>
+                   (<span class="variable">location-line</span> <span class="variable">location</span>)
+                   <span class="selfeval">":"</span>
+                   (<span class="variable">location-column</span> <span class="variable">location</span>)))
+  )
+</pre>
+</div>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 18 Apr 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/IdiomRecipes">IdiomRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

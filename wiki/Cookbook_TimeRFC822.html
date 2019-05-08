@@ -1,0 +1,77 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2><a name="Writing_and_Parsing_RFC_822_Date"> </a> Writing and Parsing RFC 822 Dates and Times </h2>
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+You need to convert from <code>struct:time</code> to RFC 822 format Dates and Times.
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+mzlib provides one solution:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"date.ss"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">date-display-format</span> <span class="keyword">'</span><span class="variable">rfc2822</span>)
+<span class="builtin">&gt;</span> (<span class="variable">date-&gt;string</span> (<span class="variable">seconds-&gt;date</span> (<span class="variable">current-seconds</span>)) <span class="selfeval">#t</span>)
+<span class="selfeval">"Wed, 28 Apr 2004 10:37:20 -0600"</span>
+</pre>
+</div>
+<p />
+However, many applications that use RFC 822 require all output in GMT.  mzlib's <code>seconds-&gt;date</code> assumes the current timezone, but <a href="/Cookbook/SRFI">SRFI</a> 19 allows you to specify a time zone in the 2nd argument to <code>seconds-&gt;date-utc</code>.
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"time.ss"</span> <span class="selfeval">"srfi"</span> <span class="selfeval">"19"</span>))
+<span class="builtin">&gt;</span> (<span class="variable">date-&gt;string</span> (<span class="variable">time-utc-&gt;date</span> (<span class="variable">current-time</span>) ) <span class="selfeval">"~a, ~d ~b ~Y ~T ~z"</span> )
+<span class="selfeval">"Wed, 28 Apr 2004 11:21:53 -0600"</span>
+<span class="builtin">&gt;</span> (<span class="variable">date-&gt;string</span> (<span class="variable">time-utc-&gt;date</span> (<span class="variable">current-time</span>) <span class="selfeval">0</span>) <span class="selfeval">"~a, ~d ~b ~Y ~T ~z"</span> )
+<span class="selfeval">"Wed, 28 Apr 2004 17:22:10 Z"</span>
+</pre>
+</div>
+<p />
+If you need to parse dates as input, you can use <code>string-&gt;date</code> from <a href="/Cookbook/SRFI">SRFI</a> 19:
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">string-&gt;date</span> <span class="selfeval">"Wed, 28 Apr 2004 17:22:10 Z"</span> <span class="selfeval">"~a, ~d ~b ~Y ~H:~M:~S ~z"</span> )
+<span class="variable">#&lt;struct:date&gt;</span>
+</pre>
+</div>
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+RFC 822 is used frequently as the basis for exchanging dates and times, particularly in Internet applications.  You should also be aware that the <code>struct:date</code> provided by mzlib is not compatible with <a href="/Cookbook/SRFI">SRFI</a> 19's <code>struct:date</code>, so you should pick one and stick with it, to avoid mixing types.
+Also, it should be noted that the ~a and ~b format specifiers are locale sensitive, so if you're not running with an English locale, the output may be incorrect.
+<p />
+<h3>
+  <a name="References"> References </a>
+</h3>
+<a href="http://www.faqs.org/rfcs/rfc822.html" target="_top">RFC-822 - Standard for the format of ARPA Internet text messages</a>
+<p />
+<a href="http://www.faqs.org/rfcs/rfc1123.html" target="_top">RFC-1123 - Requirements for Internet Hosts - Application and Support</a>
+<p />
+<p />
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 28 Apr 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/TimeRecipes">TimeRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 050 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

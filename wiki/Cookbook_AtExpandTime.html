@@ -1,0 +1,108 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="A_Macro_Similar_to_CL_s_Eval_Whe"> A Macro Similar to CL's Eval-When </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Often times it is useful to preload a table of data at compile-time.  Scheme, however, has no construct similar to Lisp's eval-when which allows specific compile-time programming.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Although Scheme has no specific compile-time stage, most Scheme systems can and do perform macro-expansion during compilation.  Therefore, the following macro can easily be used to evaluate Scheme code during compile time so that the results are available at runtime.
+<p />
+<div class="scheme">
+  <pre><span class="comment">;;Define our macro
+</span>(<span class="keyword">define-syntax</span> <span class="variable">at-expand-time</span>
+  <span class="comment">;;x is the syntax object to be transformed
+</span>  (<span class="keyword">lambda</span> (<span class="variable">x</span>)
+    (<span class="keyword">syntax-case</span> <span class="variable">x</span> ()
+      (
+        <span class="comment">;;Pattern just like a syntax-rules pattern
+</span>        (<span class="variable">at-compile-time</span> <span class="variable">expression</span>)
+        <span class="comment">;;with-syntax allows us to build syntax objects
+</span>        <span class="comment">;;dynamically
+</span>        (<span class="keyword">with-syntax</span>
+          (
+            <span class="comment">;this is the syntax object we are building
+</span>            (<span class="variable">expression-value</span>
+              <span class="comment">;after computing expression, transform it into a syntax
+</span><span class="variable">object</span>
+              (<span class="variable">datum-&gt;syntax-object</span>
+                <span class="comment">;syntax domain
+</span>                (<span class="keyword">syntax</span> <span class="variable">at-compile-time</span>)
+                <span class="comment">;quote the value so that its a literal value
+</span>                (<span class="builtin">list</span> <span class="keyword">'</span><span class="keyword">quote</span>
+                  <span class="comment">;compute the value to transform
+</span>                  (<span class="builtin">eval</span>
+                    <span class="comment">;;convert the expression from the syntax
+</span>                    <span class="comment">;;representation to a list representation
+</span>                    (<span class="variable">syntax-object-&gt;datum</span> (<span class="keyword">syntax</span> <span class="variable">expression</span>)))))))
+            <span class="comment">;;Just return the generated value as the result
+</span>            (<span class="keyword">syntax</span> <span class="variable">expression-value</span>))))))
+</pre>
+</div>
+<p />
+Here is some code that generates, at compile time, a list of square roots from 0 to 25:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">sqrt-table</span>
+  (<span class="variable">at-expand-time</span>
+    (<span class="builtin">list-&gt;vector</span>
+      (<span class="keyword">let</span> <span class="variable">build</span>
+        (
+          (<span class="variable">val</span> <span class="selfeval">0</span>))
+        (<span class="keyword">if</span> (<span class="builtin">&gt;</span> <span class="variable">val</span> <span class="selfeval">25</span>)
+          <span class="keyword">'</span>()
+          (<span class="builtin">cons</span> (<span class="builtin">sqrt</span> <span class="variable">val</span>) (<span class="variable">build</span> (<span class="builtin">+</span> <span class="variable">val</span> <span class="selfeval">1</span>))))))))
+(<span class="builtin">display</span> <span class="selfeval">"the square root of 24 is "</span>)
+(<span class="builtin">display</span> (<span class="builtin">vector-ref</span> <span class="variable">sqrt-table</span> <span class="selfeval">24</span>))
+(<span class="builtin">newline</span>)
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Although there are not guarantees about when macro expansion will occur, this little tool is better than nothing.  It has been tested on Chicken Scheme.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JonathanBartlett">JonathanBartlett</a> - 31 May 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/DynamicRecipes">DynamicRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

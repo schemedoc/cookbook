@@ -1,0 +1,168 @@
+<div id="contentbox">
+ <div class="widget">
+ <h2>
+  <a name="TWiki_Scm_Web_Preferences"> TWiki.Scm Web Preferences </a>
+</h2>
+<p />
+The following settings are <strong>
+  <em>web preferences</em>
+</strong> of the TWiki.Scm web. These preferences overwrite the <strong>
+  <em>site-level preferences</em>
+</strong> in <a href="/TWiki/TWikiPreferences">TWikiPreferences</a>, and can be overwritten by <strong>
+  <em>user preferences</em>
+</strong> (your personal topic, i.e. <span style="background : #FFFFCE;">
+  <font color="#0000FF">TWikiGuest</font>
+</span><a href="/edit/Main/TWikiGuest?topicparent=Scm.WebPreferences">?</a> in the TWiki.Main web)
+<p />
+<p />
+<strong>
+  <em>Preferences:</em>
+</strong>
+<p />
+<ul>
+<li> List of topics of the TWiki.Scm web:
+<ul>
+<li> Set WEBTOPICLIST = <a href="/Scm/WebChanges">Changes</a>  |  <a href="/Scm/WebIndex">Index</a>  |  <a href="/Scm/WebSearch">Search</a>  |  Go <input type="text" name="topic" size="16">
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Web specific background color: (Pick a lighter one of the <a href="/TWiki/StandardColors">StandardColors</a>)
+<ul>
+<li> Set WEBBGCOLOR = #EED0D0
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> List this web in the <a href="/TWiki/SiteMap">SiteMap</a>:
+<ul>
+<li> If yes, set SITEMAPLIST to <code>on</code>, do not set NOSEARCHALL, and add the "what" and "use to..." description for the site map. Make sure to list only links that include the name of the web, e.g. Scm.Topic links.
+</li>
+<li> Set SITEMAPLIST = on
+</li>
+<li> Set SITEMAPWHAT = Scheme Code for Cookbook
+</li>
+<li> Set SITEMAPUSETO = Store Scheme code snippets for the cookbook
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Exclude web from a <code>web="all"</code> search: (Set to <code>on</code> for hidden webs)
+<ul>
+<li> Set NOSEARCHALL =
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Default template for new topics and form(s) for this web:
+<ul>
+<li> <span style="background : #FFFFCE;">
+  <font color="#0000FF">WebTopicEditTemplate</font>
+</span><a href="/edit/Scm/WebTopicEditTemplate?topicparent=Scm.WebPreferences">?</a>: Default template for new topics in this web. (Site-level is used if topic does not exist)
+</li>
+<li> <a href="/TWiki/WebTopicEditTemplate">TWiki.WebTopicEditTemplate</a>: Site-level default template
+</li>
+<li> <a href="/TWiki/TWikiForms">TWikiForms</a>: How to enable form(s)
+</li>
+<li> Set WEBFORMS =
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Users or groups who <strong>
+  <em>are not</em>
+</strong> / <strong>
+  <em>are</em>
+</strong> allowed to <strong>
+  <em>view</em>
+</strong> / <strong>
+  <em>change</em>
+</strong> / <strong>
+  <em>rename</em>
+</strong> topics in the Scm web: (See <a href="/TWiki/TWikiAccessControl">TWikiAccessControl</a>)
+<ul>
+<li> Set DENYWEBVIEW =
+</li>
+<li> Set ALLOWWEBVIEW =
+</li>
+<li> Set DENYWEBCHANGE =
+</li>
+<li> Set ALLOWWEBCHANGE =
+</li>
+<li> Set DENYWEBRENAME =
+</li>
+<li> Set ALLOWWEBRENAME =
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Users or groups allowed to change or rename this WebPreferences topic: (I.e. <a href="/Main/TWikiAdminGroup">TWikiAdminGroup</a>)
+<ul>
+<li> Set ALLOWTOPICCHANGE =
+</li>
+<li> Set ALLOWTOPICRENAME =
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<ul>
+<li> Web preferences that are <strong>not</strong> allowed to be overridden by user preferences:
+<ul>
+<li> Set FINALPREFERENCES = WEBTOPICLIST, DENYWEBVIEW, ALLOWWEBVIEW, DENYWEBCHANGE, ALLOWWEBCHANGE, DENYWEBRENAME, ALLOWWEBRENAME
+</li>
+</ul>
+</li>
+</ul>
+<p />
+<strong>
+  <em>Notes:</em>
+</strong>
+<ul>
+<li> A preference is defined as: <br> <code>6 spaces * Set NAME = value</code> <br> Example:
+<ul>
+<li> Set WEBBGCOLOR = #FFFFC0
+</li>
+</ul>
+</li>
+<li> Preferences are used as <a href="/TWiki/TWikiVariables">TWikiVariables</a> by enclosing the name in percent signs. Example:
+<ul>
+<li> When you write variable <code>%WEBBGCOLOR%</code> , it gets expanded to <code>#EED0D0</code> .
+</li>
+</ul>
+</li>
+<li> The sequential order of the preference settings is significant. Define preferences that use other preferences first, i.e. set <code>WEBCOPYRIGHT</code> before <code>WIKIWEBMASTER</code> since <code>%WEBCOPYRIGHT%</code> uses the <code>%WIKIWEBMASTER%</code> variable.
+</li>
+<li> You can introduce new preferences variables and use them in your topics and templates. There is no need to change the TWiki engine (Perl scripts).
+</li>
+</ul>
+<p />
+<strong>
+  <em>Related Topics:</em>
+</strong>
+<ul>
+<li> <a href="/TWiki/TWikiPreferences">TWikiPreferences</a> has site-level preferences.
+</li>
+<li> <a href="/Main/TWikiUsers">TWikiUsers</a> has a list of user topics. User topics can have optional user preferences.
+</li>
+<li> <a href="/TWiki/TWikiVariables">TWikiVariables</a> has a list of common <code>%VARIABLES%</code>.
+</li>
+<li> <a href="/TWiki/TWikiAccessControl">TWikiAccessControl</a> explains how to restrict access by users or groups.
+</li>
+</ul>
+<p />
+<p />
+ </div>
+</div>

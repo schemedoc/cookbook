@@ -1,0 +1,119 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Generation_of_Random_Numbers_of_"> Generation of Random Numbers of a Given Distribution </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+Generation of random numbers following a certain probability distribution.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+Use the <code>random</code> library from <a href="/Cookbook/PLaneT">PLaneT</a>.
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="keyword">require</span> (<span class="variable">planet</span> <span class="selfeval">"random.scm"</span> (<span class="selfeval">"schematics"</span> <span class="selfeval">"random.plt"</span> <span class="selfeval">1</span> <span class="selfeval">1</span>)))
+<span class="comment">; Let X be a stochastic variable with a normal distribution of mean 2 and variance 1.
+</span><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">X</span> (<span class="keyword">lambda</span> () (<span class="variable">random-normal</span> <span class="selfeval">2</span> <span class="selfeval">1</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">X</span>)
+<span class="selfeval">2.738691213443679</span>
+<span class="builtin">&gt;</span> (<span class="variable">X</span>)
+<span class="selfeval">1.5611005495389303</span>
+<span class="comment">; Let Y be a stochastic variable with binomal distribution the number-of-trials 10 and
+</span><span class="comment">; the probability paramter 1/2.
+</span><span class="builtin">&gt;</span> (<span class="keyword">define</span> <span class="variable">Y</span> (<span class="keyword">lambda</span> () (<span class="variable">random-binomial</span> <span class="selfeval">10</span> <span class="selfeval">1/2</span>)))
+<span class="builtin">&gt;</span> (<span class="variable">Y</span>)
+<span class="selfeval">6</span>
+</pre>
+</div>
+<p />
+The library contains among others the functions
+supporting discrete distribtions
+<p />
+<ul>
+<li> random-integer
+</li>
+<li> random-geometric
+</li>
+<li> random-binomial
+</li>
+<li> random-poisson
+</li>
+<li> random-permutation
+</li>
+</ul>
+<p />
+and the following continous distributions
+<p />
+<ul>
+<li> random-real
+</li>
+<li> random-unit-disc
+</li>
+<li> random-normal
+</li>
+<li> random-gaussian
+</li>
+<li> random-exponential
+</li>
+<li> random-gamma
+</li>
+<li> random-beta
+</li>
+<li> random-chi-square
+</li>
+<li> random-F
+</li>
+<li> random-t
+</li>
+</ul>
+<p />
+See the <a href="http://planet.plt-scheme.org/#random.plt1.1" target="_top">Documentation</a> for
+more elaborate explanations.
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JensAxelSoegaard">JensAxelSoegaard</a> - 25 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NumberRecipes">NumberRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

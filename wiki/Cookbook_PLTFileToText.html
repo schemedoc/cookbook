@@ -1,0 +1,90 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Convert_any_source_file_to_text"> Convert any source file to text </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+<a href="/Cookbook/DrScheme">DrScheme</a> saves some files in a binary format that is inconvenient upon occasion.  For example, it's difficult to compare these files using 'diff'.
+<p />
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The following script converts any <a href="/Cookbook/DrScheme">DrScheme</a> source file to text.
+<p />
+save-as-text.ss
+<p />
+<pre>
+(unless (= (vector-length argv) 2)
+  (error 'graphical-to-text "usage: &lt;executable&gt; &lt;input-filename&gt; &lt;output-filename&gt;"))
+(define in-filename (vector-ref argv 0))
+(define out-filename (vector-ref argv 1))
+(define t (new text%))
+(send t load-file in-filename)
+(define f (new frame% (label "") (width 500) (height 500)))
+(define ec (new editor-canvas% (parent f) (editor t)))
+(send t save-file out-filename 'text)
+</pre>
+<p />
+To run it, say, under UNIX:
+<p />
+<code>mred -fv save-as-text.ss <input-file> <output-file /></input-file></code>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<ul>
+<li> The script is a <a href="/Cookbook/MrEd">MrEd</a> script, not a <a href="/Cookbook/MzScheme">MzScheme</a> script.  This is because files saved in the binary format make direct reference to <a href="/Cookbook/MrEd">MrEd</a> entities (e.g. snip% and its descendants).  <a href="/Cookbook/MzScheme">MzScheme</a> can't make head or tail of these references.  This script does not open any windows, but it must be run in a graphical environment.
+</li>
+</ul>
+<p />
+<ul>
+<li> You could use <a href="/Cookbook/MzScheme">MzScheme</a> juju to make the script directly executable.  I've chosen not to, in order to simplify the presentation.
+</li>
+</ul>
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+I've added this to the <a href="/Cookbook/GettingStartedChapter">GettingStartedChapter</a>, for want of anywhere to put it.
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 24 Sep 2004
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JohnClements">JohnClements</a> - 23 Sep 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

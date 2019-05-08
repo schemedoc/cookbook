@@ -1,0 +1,128 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Creating_and_using_a_Signed_Unit"> Creating and using a Signed Unit </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to create something like a module, but incomplete, so that some functionality is defined elsewhere and imported at compile-time.  What's more, you don't want to worry about circular references, where module a refers to module b which refers to some part of module a.
+<p />
+Signed units are PLT scheme's implementation of <em>functors</em>, and are essentially composable classes for those people who rest firmly in the OO world;  classes with mixins, but a little more flexible than that.  They're not intended to replace modules, but rather complement them. To start using signed units, the first step is to require unitsig.ss.
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+To create a signed unit, the first thing you need is a <em>signature</em>, which is a single form containing all the symbols that your unit will import or all the symbols your unit will export, or some subset of either of those.  So if your unit imports the symbols:
+<p />
+<ul>
+<li> <code>graham-chapman</code>
+</li>
+<li> <code>john-cleese</code>
+</li>
+<li> <code>eric-idle</code>
+</li>
+<li> <code>michael-palin</code>
+</li>
+</ul>
+<p />
+and you want to export the symbols
+<p />
+<ul>
+<li> <code>monty-python</code>
+</li>
+<li> <code>and-the-holy-grail</code>
+</li>
+</ul>
+<p />
+Your signatures can look like this
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+The circumflex at the end means nothing to <code>unit/sig</code> -- it's just syntactic sugar that has become a kind of standard convention when working with units.  When I said that they can be subsets earlier, I meant I could have split the first signature or second signature into two separate signatures, something along the lines of:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+And it would have been logically the same.  The only thing to remember here is to not mix your export and import signatures, as that will be important later.  Now, to go about defining that unit.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+And that's it -- you have a signed unit.  It's incomplete, though, because we haven't defined our actors yet.  These are actually either defined as a separate unit or defined at the top level.  Let's take the case where they're defined as a separate unit, though, because this is effectively a <em>functor</em>, which is a very tidy way of composing programs from components.
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Not bad.  Note the differences with the <code>movie@</code> unit.  Most importantly, import is completely bare, which means that no other symbols are needed to make <code>actors@</code> complete.  Note also that every symbol specified in the <code>acting-troupe^</code> signature is defined here in the module.  So let's do the obvious thing:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Eek!  That produced an error that our symbols were undefined.  Let's look at why.  Invoking units with <code>invoke-unit</code> or <code>invoke-unit/sig</code> does not define anything at the top level.  Exports are only meant to be exported to other units.  There is a function <code>(define-values/invoke-unit/sig)</code> which when used in place of <code>invoke-unit/sig</code> will define the symbols from <code>actors@</code> -- all the symbols needed for <code>acting-troupe</code> at the top level, but that's 'messy' on the namespace.  A more proper solution to this problem is to define a <code>compound-unit/sig</code>:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+This new <em>compound unit</em> will invoke without objections:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Note that we use the define-values variant to make sure that the symbols from <code>movie@</code> are defined at the top level at the end of the invocation.  There is another way to do things and that is to realize that a unit, signed or not, is a function and should return a value.  Thus, changing our unit slightly:
+<p />
+500 Can't connect to 127.0.0.1:8778 (connect: Connection refused)
+<p />
+<p />
+Doing things this way, we can control whether or not and what the symbol for <code>and-the-holy-grail</code> is at the top level.  Now calling <code>invoke-unit/sig</code> will return a <code>&lt;#procedure&gt;</code> instead of void, which you can bind or immediately apply.
+<p />
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+Take note that this only describes the basic features of signed units, and that there is considerably more functionality embedded in unitsig.ss.  From here you can begin coding component software with an understanding of what a unit is, what a signature is, and why to bother with a compound-unit.  After having read this tutorial, you should be able to gradually add the more esoteric functionality of unit/sig to your repertoire by reading the <span style="background : #FFFFCE;">
+  <font color="#0000FF">MzLib</font>
+</span><a href="/edit/Cookbook/MzLib?topicparent=Cookbook.UnitSig">?</a> documentation and experimenting with the functions within.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/JeffHeard">JeffHeard</a> - 18 Aug 2006
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/GettingStartedRecipes">GettingStartedRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

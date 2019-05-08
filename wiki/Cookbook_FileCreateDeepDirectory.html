@@ -1,0 +1,76 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Creating_Directories_Including_P"> Creating Directories Including Parent Directories </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to be able to create a directory with something more convenient than <code>make-directory</code>
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<code>make-directory</code> will create a directory, but the parent of that directory must already exist.  If you want to be able to create a directory and not worry about whether the parent directory exists, you need to write a little code:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">make-directories</span> <span class="variable">path</span>)
+  (<span class="keyword">letrec</span> ((<span class="variable">normpath</span> (<span class="variable">simplify-path</span> <span class="variable">path</span>))
+           <span class="comment">; assumes that path does not exist.  Caller should
+</span>           <span class="comment">; verify that before calling.
+</span>           (<span class="variable">make-directory-rec</span>
+            (<span class="keyword">lambda</span> (<span class="variable">normpath</span>)
+              (<span class="keyword">let-values</span> (((<span class="variable">parent</span> <span class="variable">leaf</span> <span class="variable">ign</span>) (<span class="variable">split-path</span> <span class="variable">normpath</span>)))
+                (<span class="keyword">when</span> (<span class="builtin">not</span> (<span class="variable">directory-exists?</span> <span class="variable">parent</span>))
+                    (<span class="variable">make-directory-rec</span> <span class="variable">parent</span>))
+                (<span class="variable">make-directory</span> <span class="variable">normpath</span>)))))
+    (<span class="keyword">if</span> (<span class="keyword">or</span> (<span class="variable">directory-exists?</span> <span class="variable">normpath</span>)
+            (<span class="variable">file-exists?</span> <span class="variable">normpath</span>))
+            (<span class="variable">error</span> <span class="selfeval">"Cannot make directory:"</span> <span class="variable">path</span> <span class="selfeval">"already exists."</span>)
+       (<span class="variable">make-directory-rec</span> <span class="variable">normpath</span>))))
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+<code>make-directory-rec</code> is where all the real work is, the rest of this is error checking.  <code>make-directory-rec</code> splits the path given into a parent and leaf node.  If the parent doesn't exist, <code>make-directory-rec</code> calls itself recursively.  Then it creates the leaf directory.
+<p />
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/GordonWeakliem">GordonWeakliem</a> - 13 Aug 2004
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

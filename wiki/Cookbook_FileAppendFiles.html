@@ -1,0 +1,79 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="Appending_Files_Together"> Appending Files Together </a>
+</h2>
+<p />
+<h3>
+  <a name="Problem"> Problem </a>
+</h3>
+<p />
+You want to append the contents of several files to a single file.  For example you want the contents of the file <code>foo.txt</code> to be the contents of <code>bar.txt</code> and <code>baz.txt</code>.  In the UNIX shell you might write:
+<p />
+<div class="scheme">
+  <pre><span class="variable">cat</span> <span class="variable">bar.txt</span> <span class="variable">baz.txt</span> <span class="builtin">&gt;</span> <span class="variable">foo.txt</span>
+</pre>
+</div>
+<p />
+<h3>
+  <a name="Solution"> Solution </a>
+</h3>
+<p />
+The function <code>file-append</code> does the job:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">require</span> (<span class="variable">lib</span> <span class="selfeval">"port.ss"</span>))
+<span class="comment">;; file-append : (U path string) ... -&gt; void
+</span><span class="comment">;;
+</span><span class="comment">;; Copys the contents of the src files to dest
+</span>(<span class="keyword">define</span> (<span class="variable">file-append</span> <span class="variable">dest</span> . <span class="variable">src</span>)
+  (<span class="builtin">with-output-to-file</span> <span class="variable">dest</span>
+    (<span class="keyword">lambda</span> ()
+      (<span class="variable">copy-port</span>
+       (<span class="builtin">apply</span> <span class="variable">input-port-append</span> <span class="selfeval">#t</span> (<span class="builtin">map</span> <span class="builtin">open-input-file</span> <span class="variable">src</span>))
+       (<span class="builtin">current-output-port</span>)))))
+</pre>
+</div>
+<p />
+The key parts of this function are the calls to <code>input-port-append</code> and <code>copy-port</code>.  Using <code>input-port-append</code> we first make one input port that returns in succession the data contained in each <code>src</code> file.  We then efficiently copy the data to the output port using <code>copy-port</code>.  The <code>#t</code> parameter to <code>input-port-append</code> tells it to close the given ports when they reach the end of the file.
+<p />
+<h3>
+  <a name="Discussion"> Discussion </a>
+</h3>
+<p />
+The functions used in this example have many uses outside of copying files.  For example, to efficiently copy the contents of a port to a string you could use <code>copy-port</code> and <code>open-output-string</code>.  See <a href="/Cookbook/FileRead">FileRead</a> for more examples.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <a href="/Main/NoelWelsh">NoelWelsh</a> - 04 Jan 2007
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/FileRecipes">FileRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 999 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>

@@ -1,0 +1,487 @@
+<div id="contentbox">
+ <div class="widget">
+  <p />
+<h2>
+  <a name="The_Ping_Pong_Duet_Tutorial_"> The Ping-Pong Duet (Tutorial) </a>
+</h2>
+<p />
+This tutorial implements a client-server combination of staggering
+simplicity.  The client issues requests that consist of the symbol
+<code>'ping</code>.  The server, upon receipt of this request, responds with the
+symbol <code>'pong</code>.  One time.  The client prints the server's response.
+That's all.
+<p />
+First, the two programs must agree on a common port where the server
+will listen so the client can connect.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">SERVICE-PORT</span> <span class="selfeval">2000</span>)
+(<span class="keyword">define</span> <span class="variable">SERVER-HOST</span> <span class="selfeval">"localhost"</span>)
+</pre>
+</div>
+<p />
+To test your programs, pick a <code>"random"</code> port number between 1025 and
+65535.  The bigger numbers are more barren, so you are less likely to
+interfere with another service that already exists on your machine.
+<p />
+<p />
+<p />
+The client is easier to write.  It simply uses <code>TCP-CONNECT</code> to
+establish a connection to the server.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">client</span>)
+  (<span class="keyword">let-values</span> ([(<span class="variable">server-&gt;me</span> <span class="variable">me-&gt;server</span>)
+                (<span class="variable">tcp-connect</span> <span class="variable">SERVER-HOST</span> <span class="variable">SERVICE-PORT</span>)])
+    (<span class="builtin">write</span> <span class="keyword">'</span><span class="variable">ping</span> <span class="variable">me-&gt;server</span>)
+    (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;server</span>)
+    (<span class="keyword">let</span> ([<span class="variable">response</span> (<span class="builtin">read</span> <span class="variable">server-&gt;me</span>)])
+      (<span class="builtin">display</span> <span class="variable">response</span>) (<span class="builtin">newline</span>)
+      (<span class="variable">close-input-port</span> <span class="variable">server-&gt;me</span>))))
+</pre>
+</div>
+<p />
+This defines <code>CLIENT</code> as a procedure of no arguments (so the body
+doesn't evaluate until we invoke the procedure).  <code>TCP-CONNECT</code> returns
+two values (look up <code>"multiple return values"</code> in <a href="/Cookbook/HelpDesk">HelpDesk</a>).  The first
+is an input port, to which the server writes data, and the second an
+output port, from which the server reads data.  The naming convention
+used above helps me keep them straight.  The WRITE statement writes
+<code>'ping</code> to the port being read by the server.  Having written the
+message, the client closes its ports and exits.
+<p />
+<p />
+In the above example, we assume both client and server reside on the
+same machine (hence the use of the hostname <code>"localhost"</code>).  The client
+can reside on an entirely different machine, however.
+<p />
+<p />
+The server's definition is slightly more complex.  Here's the server:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">server</span>)
+  (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])
+    (<span class="keyword">let-values</span> ([(<span class="variable">client-&gt;me</span> <span class="variable">me-&gt;client</span>)
+                  (<span class="variable">tcp-accept</span> <span class="variable">listener</span>)])
+      (<span class="keyword">if</span> (<span class="builtin">eq?</span> (<span class="builtin">read</span> <span class="variable">client-&gt;me</span>) <span class="keyword">'</span><span class="variable">ping</span>)
+          (<span class="builtin">write</span> <span class="keyword">'</span><span class="variable">pong</span> <span class="variable">me-&gt;client</span>)
+          (<span class="builtin">write</span> <span class="keyword">'</span><span class="variable">who-are-you?</span> <span class="variable">me-&gt;client</span>))
+      (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;client</span>)
+      (<span class="variable">close-input-port</span> <span class="variable">client-&gt;me</span>))))
+</pre>
+</div>
+<p />
+<p />
+The server must first create a <code>"listener"</code>.  The listener is woken up
+when a network connection comes in on the chosen port.  <code>TCP-ACCEPT</code>
+accepts responses queued at the server.
+<p />
+<p />
+If we combine these three code fragments (constants, client and
+server) and run them in a single Scheme session, we ... can't.
+There's a problem.
+<p />
+<p />
+If we run the client first, it tries to connect with the server, which
+isn't yet running, and we get an error saying there's no response from
+the common port.
+<p />
+<p />
+If we run the server first, it creates a listener, then executes the
+<code>TCP-ACCEPT</code> expression.  This blocks on a request before it can
+continue.  But we need it to return control to the prompt so we can
+start the client.
+<p />
+<p />
+<p />
+In short, we can't run either one first.
+<p />
+<p />
+There are three ways out of this jam.
+<p />
+<p />
+First, we use two separate copies of Scheme (i.e., separate
+processes).  The first process runs the server.  The second one runs
+the client.  Note that each process must have the definition of its
+procedure and the constant definitions.  When run after starting the
+server, the client will return the value <code>pong</code>.
+<p />
+<p />
+Second, we can just run client and server on different machines.  This
+is really just a special case of the first solution, but it also lets
+you experiment with connecting to different machines.  To do this,
+you'd have to edit the value associated with <code>SERVER-HOST</code> to be the
+name of the machine running the server.
+<p />
+<p />
+<p />
+Third, we can use threads.  (Read up about <code>"threads"</code> in <a href="/Cookbook/HelpDesk">HelpDesk</a>; also see <a href="/Cookbook/ThreadChapter">ThreadChapter</a>.)
+We can thus invoke both the client and server in the same Scheme
+process by running
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="builtin">load</span> <span class="selfeval">"ping-pong.ss"</span>)
+<span class="builtin">&gt;</span> (<span class="variable">thread</span> <span class="variable">server</span>)
+<span class="builtin">&gt;</span>     [<span class="variable">back</span> <span class="variable">to</span> <span class="variable">the</span> <span class="variable">Scheme</span> <span class="variable">prompt</span><span class="comment">; server runs in separate thread]
+</span></pre>
+</div>
+<p />
+<code>THREAD</code> expects a procedure of no arguments as its first argument,
+which is exactly what <code>SERVER</code> is.
+<p />
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">client</span>)
+<span class="variable">pong</span>
+</pre>
+</div>
+<p />
+In both cases, <code>SERVER</code> exits as soon as it has serviced its request.
+If you invoke <code>SERVER</code> with <code>THREAD</code> you won't notice this.  If you run
+the client and server in two separate processes, you will.
+<p />
+<p />
+<p />
+That concludes our first example.
+<p />
+<p />
+<p />
+<h2>
+  <a name="Queueing_up_for_Tokens"> Queueing up for Tokens </a>
+</h2>
+<p />
+<p />
+The server and client in the first example ran only once.  Typical
+servers run forever, accepting and servicing requests as they arrive.
+We'll create such a server as our second example.
+<p />
+<p />
+We will once again build a client-server combination.  The server
+generates token numbers, much like the machines that issue serial
+numbers to people in queues.  The server initializes at zero, and each
+request generates the next token number.  The client is a function
+that consumes one argument, which is the number of tokens to receive.
+It contacts the server as many times as specified in its argument, and
+returns a list of the resulting tokens.
+<p />
+<p />
+If we were writing this program without networking, it would look as
+follows:
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">serve-next-token</span>
+  (<span class="keyword">let</span> ([<span class="variable">next-token</span> <span class="selfeval">-1</span>])  <span class="comment">;; so first value return is 0
+</span>    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">set!</span> <span class="variable">next-token</span> (<span class="builtin">+</span> <span class="variable">next-token</span> <span class="selfeval">1</span>))
+      <span class="variable">next-token</span>)))
+(<span class="keyword">define</span> <span class="variable">token-client</span>
+  (<span class="keyword">lambda</span> (<span class="variable">how-many-tokens</span>)
+    (<span class="keyword">if</span> (<span class="builtin">&lt;=</span> <span class="variable">how-many-tokens</span> <span class="selfeval">0</span>)
+        <span class="keyword">'</span>()
+        (<span class="builtin">cons</span> (<span class="variable">serve-next-token</span>)
+              (<span class="variable">token-client</span> (<span class="builtin">-</span> <span class="variable">how-many-tokens</span> <span class="selfeval">1</span>))))))
+</pre>
+</div>
+<p />
+<p />
+This program behaves as follows:
+<p />
+<div class="scheme">
+  <pre>(<span class="variable">token-client</span> <span class="selfeval">5</span>)  <span class="variable">==&gt;</span>  <span class="keyword">'</span>(<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span>)
+(<span class="variable">token-client</span> <span class="selfeval">3</span>)  <span class="variable">==&gt;</span>  <span class="keyword">'</span>(<span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span>)
+</pre>
+</div>
+<p />
+Make sure you understand this code before proceeding.
+<p />
+<p />
+<p />
+First, establish the server's locus:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">SERVICE-PORT</span> <span class="selfeval">2005</span>)
+(<span class="keyword">define</span> <span class="variable">SERVER-HOST</span> <span class="selfeval">"localhost"</span>)
+</pre>
+</div>
+<p />
+<p />
+The client is again pretty simple:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">token-client</span>
+  (<span class="keyword">lambda</span> (<span class="variable">how-many-tokens</span>)
+    (<span class="keyword">if</span> (<span class="builtin">&lt;=</span> <span class="variable">how-many-tokens</span> <span class="selfeval">0</span>)
+        <span class="keyword">'</span>()
+        (<span class="keyword">let-values</span> ([(<span class="variable">server-&gt;me</span> <span class="variable">me-&gt;server</span>)
+                      (<span class="variable">tcp-connect</span> <span class="variable">SERVER-HOST</span> <span class="variable">SERVICE-PORT</span>)])
+            (<span class="keyword">let</span> ([<span class="variable">token</span> (<span class="builtin">read</span> <span class="variable">server-&gt;me</span>)])
+              (<span class="variable">close-input-port</span> <span class="variable">server-&gt;me</span>)
+              (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;server</span>)
+              (<span class="builtin">cons</span> <span class="variable">token</span>
+                    (<span class="variable">token-client</span> (<span class="builtin">-</span> <span class="variable">how-many-tokens</span> <span class="selfeval">1</span>))))))))
+</pre>
+</div>
+<p />
+The server's basic structure looks the same:
+<p />
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> (<span class="variable">server</span>)
+  (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])
+    ...))
+</pre>
+</div>
+<p />
+<p />
+except it must do two things: (1) keep track of the last token number,
+and loop to handle multiple requests.  Thus:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">server</span>
+  (<span class="keyword">let</span> ([<span class="variable">next-token</span> <span class="selfeval">-1</span>])
+    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])
+        (<span class="keyword">let</span> <span class="variable">loop</span> ()
+          (<span class="keyword">let-values</span> ([(<span class="variable">client-&gt;me</span> <span class="variable">me-&gt;client</span>)
+                        (<span class="variable">tcp-accept</span> <span class="variable">listener</span>)])
+            (<span class="keyword">set!</span> <span class="variable">next-token</span> (<span class="builtin">+</span> <span class="variable">next-token</span> <span class="selfeval">1</span>))
+            (<span class="variable">close-input-port</span> <span class="variable">client-&gt;me</span>)
+            (<span class="builtin">write</span> <span class="variable">next-token</span> <span class="variable">me-&gt;client</span>)
+            (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;client</span>))
+          (<span class="variable">loop</span>))))))
+</pre>
+</div>
+<p />
+Note that the server does <strong>not</strong> need to create multiple listeners.  It
+creates the listener for that service just once.  It accepts
+connections from the listener multiple times.  Now, assuming the
+server is running (either in a separate process, on a separate
+machine, or in its own thread), running the client returns the
+expected values:
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">token-client</span> <span class="selfeval">5</span>)
+(<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">2</span> <span class="selfeval">3</span> <span class="selfeval">4</span>)
+<span class="builtin">&gt;</span> (<span class="variable">token-client</span> <span class="selfeval">3</span>)
+(<span class="selfeval">5</span> <span class="selfeval">6</span> <span class="selfeval">7</span>)
+</pre>
+</div>
+<p />
+Note the very subtle yet critical difference between the server above
+and this one:
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">server</span>
+  (<span class="keyword">let</span> ([<span class="variable">next-token</span> <span class="selfeval">-1</span>])
+    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">let</span> <span class="variable">loop</span> ()                                   <span class="comment">;; order of these
+</span>        (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])  <span class="comment">;; 2 lines swapped
+</span>          (<span class="keyword">let-values</span> ([(<span class="variable">client-&gt;me</span> <span class="variable">me-&gt;client</span>)
+                        (<span class="variable">tcp-accept</span> <span class="variable">listener</span>)])
+            (<span class="keyword">set!</span> <span class="variable">next-token</span> (<span class="builtin">+</span> <span class="variable">next-token</span> <span class="selfeval">1</span>))
+            (<span class="variable">close-input-port</span> <span class="variable">client-&gt;me</span>)
+            (<span class="builtin">write</span> <span class="variable">next-token</span> <span class="variable">me-&gt;client</span>)
+            (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;client</span>))
+          (<span class="variable">loop</span>))))))
+</pre>
+</div>
+<p />
+The above server is <strong>buggy</strong>!  Each time through the loop it tries to
+create a new listener.  The first time it succeeds; on the second
+attempt, the invocation of <code>TCP-LISTEN</code> fails because there is already a
+listener on that port -- created by this very server!
+<p />
+<p />
+<p />
+<p />
+<h2>
+  <a name="Variations_on_the_Token_Server_R"> Variations on the Token Server: Reusing a Connection and Obtaining Consecutive Numbers </a>
+</h2>
+<p />
+<p />
+There are potentially two problems with the token server above.  We
+address both these problems in this section.
+<p />
+<p />
+First, the sample interactions with the token server before this
+section suggest that the tokens will always be consecutive, as they
+are in the sequential world.  In fact, however, the server lives in a
+concurrent universe.  Each time through the loop, <code>TOKEN-CLIENT</code>
+establishes a <strong>fresh</strong> connection with the server.  Besides being
+somewhat inefficient, this also means that a different client may
+connect between two consecutive connections by your client, and may
+thus grab one or more of the intermediate numbers.  So you might see
+an interaction like
+<p />
+<div class="scheme">
+  <pre><span class="builtin">&gt;</span> (<span class="variable">token-client</span> <span class="selfeval">5</span>)
+(<span class="selfeval">0</span> <span class="selfeval">1</span> <span class="selfeval">3</span> <span class="selfeval">4</span> <span class="selfeval">6</span>)
+</pre>
+</div>
+<p />
+(You probably won't for small numbers of tokens, but if you set off
+two processes each requesting a large number of tokens -- say 1,000
+each -- from the same server, you ought to find that they aren't all
+consecutive.)
+<p />
+<p />
+A related problem is that the client connects to the server each time
+through its loop.  This wastes network resources by repeatedly
+re-establishing connections.  A better solution is for the client and
+server to have a "dialog": once connected, the server keeps providing
+the client with tokens until the client has exhausted its demand.
+<p />
+<p />
+In this rewrite, the client sends the server one of two messages:
+<code>'more</code>, as long as it needs more numbers, and <code>'enough</code>, when it no
+longer needs any more numbers.  The server responds appropriately.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">token-client</span>
+  (<span class="keyword">lambda</span> (<span class="variable">how-many-tokens</span>)
+    (<span class="keyword">let-values</span> ([(<span class="variable">server-&gt;me</span> <span class="variable">me-&gt;server</span>)
+                  (<span class="variable">tcp-connect</span> <span class="variable">SERVER-HOST</span> <span class="variable">SERVICE-PORT</span>)])
+      (<span class="keyword">let</span> <span class="variable">loop</span> ([<span class="variable">how-many-more</span> <span class="variable">how-many-tokens</span>])
+        (<span class="keyword">if</span> (<span class="builtin">&lt;=</span> <span class="variable">how-many-more</span> <span class="selfeval">0</span>)
+            (<span class="keyword">begin</span>
+              (<span class="variable">close-input-port</span> <span class="variable">server-&gt;me</span>)
+              (<span class="builtin">write</span> <span class="keyword">'</span><span class="variable">enough</span> <span class="variable">me-&gt;server</span>)
+              (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;server</span>)
+              <span class="keyword">'</span>())
+            (<span class="keyword">begin</span>
+              (<span class="builtin">write</span> <span class="keyword">'</span><span class="variable">more</span> <span class="variable">me-&gt;server</span>)
+              (<span class="builtin">newline</span> <span class="variable">me-&gt;server</span>)
+              (<span class="variable">flush-output</span> <span class="variable">me-&gt;server</span>)
+              (<span class="builtin">cons</span> (<span class="builtin">read</span> <span class="variable">server-&gt;me</span>)
+                    (<span class="variable">loop</span> (<span class="builtin">-</span> <span class="variable">how-many-more</span> <span class="selfeval">1</span>)))))))))
+(<span class="keyword">define</span> <span class="variable">server</span>
+  (<span class="keyword">let</span> ([<span class="variable">next-token</span> <span class="selfeval">-1</span>])
+    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])
+        (<span class="keyword">let</span> <span class="variable">server-loop</span> ()
+          (<span class="keyword">let-values</span> ([(<span class="variable">client-&gt;me</span> <span class="variable">me-&gt;client</span>)
+                        (<span class="variable">tcp-accept</span> <span class="variable">listener</span>)])
+            (<span class="keyword">let</span> <span class="variable">per-client-loop</span> ()
+              (<span class="keyword">let</span> ([<span class="variable">request</span> (<span class="builtin">read</span> <span class="variable">client-&gt;me</span>)])
+                (<span class="keyword">case</span> <span class="variable">request</span>
+                  [(<span class="variable">enough</span>)
+                   (<span class="variable">close-input-port</span> <span class="variable">client-&gt;me</span>)
+                   (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;client</span>)
+                   (<span class="variable">server-loop</span>)]
+                  [(<span class="variable">more</span>)
+                   (<span class="keyword">set!</span> <span class="variable">next-token</span> (<span class="builtin">+</span> <span class="variable">next-token</span> <span class="selfeval">1</span>))
+                   (<span class="builtin">write</span> <span class="variable">next-token</span> <span class="variable">me-&gt;client</span>)
+                   (<span class="builtin">newline</span> <span class="variable">me-&gt;client</span>)
+                   (<span class="variable">flush-output</span> <span class="variable">me-&gt;client</span>)
+                   (<span class="variable">per-client-loop</span>)])))))))))
+</pre>
+</div>
+<p />
+The <code>NEWLINE</code> and <code>FLUSH-OUTPUT</code> are necessary to make the buffers to be
+flushed to the network device and transmitted.
+<p />
+<p />
+This program also guarantees that the tokens will be consecutive,
+because the server does not service a new client until it is done
+responding to the current one.
+<p />
+<p />
+Another way to make more effective use of a connection and to ensure
+consecutive tokens is to have your server return several (consecutive)
+tokens at once.  How to package up the tokens?  All our examples
+thusfar have transmitted only symbols and numbers.  In fact, however,
+as with i/o operations on any other port, you may use any readable and
+writeable datum [NOTE: insert <a href="/Cookbook/HelpDesk">HelpDesk</a> reference here].  As a simple
+example, here's a rewrite of the token server and client where the
+client simply informs the server of how many tokens it needs, and the
+server returns a list of that many tokens.
+<p />
+<div class="scheme">
+  <pre>(<span class="keyword">define</span> <span class="variable">token-client</span>
+  (<span class="keyword">lambda</span> (<span class="variable">how-many-tokens</span>)
+    (<span class="keyword">let-values</span> ([(<span class="variable">server-&gt;me</span> <span class="variable">me-&gt;server</span>)
+                  (<span class="variable">tcp-connect</span> <span class="variable">SERVER-HOST</span> <span class="variable">SERVICE-PORT</span>)])
+      (<span class="builtin">write</span> <span class="variable">how-many-tokens</span> <span class="variable">me-&gt;server</span>)
+      (<span class="builtin">newline</span> <span class="variable">me-&gt;server</span>)
+      (<span class="variable">flush-output</span> <span class="variable">me-&gt;server</span>)
+      (<span class="keyword">let</span> ([<span class="variable">tokens</span> (<span class="builtin">read</span> <span class="variable">server-&gt;me</span>)])
+        (<span class="variable">close-input-port</span> <span class="variable">server-&gt;me</span>)
+        (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;server</span>)
+        <span class="variable">tokens</span>))))
+(<span class="keyword">define</span> <span class="variable">server</span>
+  (<span class="keyword">let</span> ([<span class="variable">next-token</span> <span class="selfeval">-1</span>])
+    (<span class="keyword">lambda</span> ()
+      (<span class="keyword">let</span> ([<span class="variable">listener</span> (<span class="variable">tcp-listen</span> <span class="variable">SERVICE-PORT</span>)])
+        (<span class="keyword">let</span> <span class="variable">server-loop</span> ()
+          (<span class="keyword">let-values</span> ([(<span class="variable">client-&gt;me</span> <span class="variable">me-&gt;client</span>)
+                        (<span class="variable">tcp-accept</span> <span class="variable">listener</span>)])
+            (<span class="builtin">write</span>
+             (<span class="keyword">let</span> <span class="variable">count-loop</span> ([<span class="variable">how-many-more</span> (<span class="builtin">read</span> <span class="variable">client-&gt;me</span>)])
+               (<span class="keyword">if</span> (<span class="builtin">&lt;=</span> <span class="variable">how-many-more</span> <span class="selfeval">0</span>)
+                   <span class="keyword">'</span>()
+                   (<span class="keyword">begin</span>
+                     (<span class="keyword">set!</span> <span class="variable">next-token</span> (<span class="builtin">+</span> <span class="variable">next-token</span> <span class="selfeval">1</span>))
+                     (<span class="builtin">cons</span> <span class="variable">next-token</span>
+                           (<span class="variable">count-loop</span> (<span class="builtin">-</span> <span class="variable">how-many-more</span> <span class="selfeval">1</span>))))))
+             <span class="variable">me-&gt;client</span>)
+            (<span class="builtin">close-output-port</span> <span class="variable">me-&gt;client</span>)
+            (<span class="variable">close-input-port</span> <span class="variable">client-&gt;me</span>)
+            (<span class="variable">server-loop</span>)))))))
+</pre>
+</div>
+<p />
+Notice that the first argument to <code>WRITE</code> is a loop that computes a
+sequence of tokens.
+<p />
+<p />
+Both servers in this section come at a price.  One long request can
+tie this server down and make it unable to service other requests.
+Eventually, the number of pending requests may become too large and
+new client requests may be denied.  (See the second parameter to
+<code>TCP-LISTEN</code>.)
+<p />
+<p />
+ That concludes our short tour of a ping-pong server.
+<p />
+<p />
+<p />
+<hr>
+This tutorial originally appeared in <a href="http://www.free-soft.org/" target="_top">Free Software Magazine</a> as <a href="http://www.free-soft.org/FSM/english/issue01/sk.html" target="_top">Networking in PLT Scheme</a>, and has been republished here by kind permission of the author, <a href="http://www.cs.brown.edu/~sk/" target="_top">Shriram Krishnamurthi</a>, Assistant Professor of Computer Science at Brown University.
+<p />
+<p />
+<hr>
+<p />
+<h3>
+  <a name="Comments_about_this_recipe"> Comments about this recipe </a>
+</h3>
+<p />
+<p />
+<h3>
+  <a name="Contributors"> Contributors </a>
+</h3>
+<p />
+-- <span style="background : #FFFFCE;">
+  <font color="#0000FF">ShriramKrishnamurthi</font>
+</span><a href="/edit/Main/ShriramKrishnamurthi?topicparent=Cookbook.PingPongTutorial">?</a> - 30 Dec 2005
+  <p />
+<table border="1" cellspacing="0" cellpadding="0">
+   <tr>
+  <th colspan="2" align="center" bgcolor="#99CCCC"> <a href="/Cookbook/CookbookForm">CookbookForm</a> </th>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicType">TopicType</a>:</th>
+  <td align="left"> Recipe </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/ParentTopic">ParentTopic</a>:</th>
+  <td align="left"> <a href="/Cookbook/NetRecipes">NetRecipes</a> </td>
+</tr>
+<tr>
+  <th bgcolor="#99CCCC" align="right"> <a href="/Cookbook/TopicOrder">TopicOrder</a>:</th>
+  <td align="left"> 10 </td>
+</tr>
+</table>
+<p />
+ </div>
+</div>
