@@ -1,6 +1,7 @@
 ---
 name: Recipe
 about: I want to create new Recipe or a Problem
+title: "[Recipe]"
 ---
 
 ## Problem
