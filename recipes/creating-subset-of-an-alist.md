@@ -17,7 +17,7 @@ You have Alist and you need to return the new Alist only with specified keys.
                  (iter (cdr alist) keys (cons pair result)))
               (iter (cdr alist) keys result))))))
 ```
-Credit @jcubic
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 It uses the `remove` function from Recipe #6
 

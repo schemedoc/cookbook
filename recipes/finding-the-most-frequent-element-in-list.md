@@ -45,7 +45,7 @@ You have a list and you need to find the element with duplicates and find the mo
                         x
                         best-x))))))))
 ```
-Credit @lassik
+Credit [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 ```scheme

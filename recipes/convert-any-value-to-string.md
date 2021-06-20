@@ -12,7 +12,7 @@ You need a function that will convert any value to a string
                                     (get-output-string port)))))))
     (values (repr display) (repr write))))
 ```
-Credit @jcubic
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 The functions `displayed` and `written` are also defined by SRFI 166.
 
