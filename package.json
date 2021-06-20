@@ -2,7 +2,7 @@
   "name": "cookbook",
   "version": "1.0.0",
   "description": "This project aim to create new better cookbook for Scheme programming language.",
-  "main": "generate.js",
+  "main": "index.js",
   "dependencies": {
     "@jcubic/lily": "^0.1.0",
     "ajv": "^6.12.6",

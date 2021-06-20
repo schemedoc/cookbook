@@ -9,7 +9,7 @@ You have a number with more than one digits, and you want a list with all its di
            (string->number (string char)))
          chars)))
 ```
-Credit @jcubic
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ## Usage
 ```scheme

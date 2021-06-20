@@ -12,7 +12,7 @@ You have a list and want to remove items that return true for a given predicate 
               (iter (cdr list) result)
               (iter (cdr list) (cons item result)))))))
 ```
-Credit @jcubic
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ## Usage
 ```scheme

@@ -13,7 +13,7 @@ You have a list and a function and you want to find the first index for an item 
               (iter (cdr list) (+ index 1)))))))
 ```
 
-Credit @jcubic
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ## SRFI
 
