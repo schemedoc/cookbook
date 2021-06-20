@@ -13,11 +13,11 @@ function get_user_url(username) {
     if (cache[username]) {
         return Promise.resolve(cache[username]);
     }
-    const query = {};
+    let auth;
     if (argv.t) {
-        query['access_token'] = argv.t;
+        auth = argv.t;
     }
-    return get(`https://api.github.com/users/${username}`, query).then(user => {
+    return get(`https://api.github.com/users/${username}`, { auth }).then(user => {
         const info = {
             username: username,
             url: user.blog || user.html_url,
@@ -40,7 +40,6 @@ readdir(dir).then(files => {
                 usernames = usernames.map(name => name.substring(1));
                 const users = await Promise.all(usernames.map(get_user_url));
                 users.forEach(user => {
-                    console.log(user);
                     file = file.replace('@' + user.username, function(_) {
                         return `[${user.name}](${user.url})`;
                     });

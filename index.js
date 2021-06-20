@@ -3,7 +3,7 @@ var request = require('request');
 exports.slugify = slugify;
 exports.get = get;
 
-function get(url, query) {
+function get(url, { query, auth = null } = {}) {
     var options = {
         url: url,
         qs: query,
@@ -12,6 +12,9 @@ function get(url, query) {
             'User-Agent': 'Node.js'
         }
     };
+    if (auth) {
+        options.headers['Authorization'] = auth;
+    }
     return new Promise(function(resolve, reject) {
         request(options, function(error, res, body) {
             if (res.statusCode == 200) {

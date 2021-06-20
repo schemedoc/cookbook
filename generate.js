@@ -14,16 +14,17 @@ function get_api(argv) {
     const query = {
         "per_page": 100
     };
+    let auth;
     if (argv.t) {
-        query['access_token'] = argv.t;
+        auth = argv.t;
     }
     const re = /\[Recipe\]/;
-    return get('https://api.github.com' + base_path, query).then(function(issues) {
+    return get('https://api.github.com' + base_path, { query, auth }).then(function(issues) {
         issues.forEach(function(issue) {
             const { title, url } = issue;
             if (title.match(re)) {
                 const filename = './recipes/' + slugify(title.replace(re, '')) + '.md';
-                get(url).then(function(issue) {
+                get(url, { auth }).then(function(issue) {
                     const { body } = issue;
                     fs.writeFileSync(filename, body.replace(/\r/g, ''));
                 });
