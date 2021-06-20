@@ -3,7 +3,7 @@ You have a list and a function and you want to find the first index for an item 
 
 ## Solution:
 ```scheme
-(define (index fn list)
+(define (list-index fn list)
   (let iter ((list list) (index 0))
     (if (null? list)
         -1
@@ -14,6 +14,10 @@ You have a list and a function and you want to find the first index for an item 
 ```
 
 Credit @jcubic
+
+## SRFI
+
+This function is defined in SRFI-1
 
 ## Usage
 ```scheme
