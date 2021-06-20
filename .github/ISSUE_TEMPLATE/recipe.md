@@ -22,7 +22,7 @@ with the username of the author with @ in front
 
 ```
 
-Credit: <!-- author of the solution -->
+Credit: @username <!-- author of the solution, best is GitHub username -->
 
 ## Usage
 
