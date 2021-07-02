@@ -1,1 +1,3 @@
+*.html
+/www/style.css
 node_modules
