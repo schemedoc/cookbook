@@ -10,7 +10,7 @@ const { slugify, get } = require('.');
 function get_api(argv) {
     const user = argv.u;
     const repo = argv.r;
-    const base_path = '/repos/' + user + '/' + repo + '/issues';
+    const base_path = `/repos/${user}/${repo}/issues`;
     const query = {
         "per_page": 100
     };
@@ -19,7 +19,7 @@ function get_api(argv) {
         auth = argv.t;
     }
     const re = /\[Recipe\]/;
-    return get('https://api.github.com' + base_path, { query, auth }).then(function(issues) {
+    return get(`https://api.github.com${base_path}`, { query, auth }).then(function(issues) {
         issues.forEach(function(issue) {
             const { title, url } = issue;
             if (title.match(re)) {
@@ -37,8 +37,7 @@ if (argv.u && argv.r) {
      get_api(argv);
 } else {
     var script = path.basename(process.argv[1]);
-    console.log('usage: \n' + script + '-u <user> -r <repo> ' +
-                '[-t]');
+    console.log(`usage: \n${script} -u <user> -r <repo> [-t]`);
 }
 
 
