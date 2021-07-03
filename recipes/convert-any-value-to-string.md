@@ -14,6 +14,7 @@ You need a function that will convert any value to a string
 ```
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
+### SRFI
 The functions `displayed` and `written` are also defined by SRFI 166.
 
 ## Usage
