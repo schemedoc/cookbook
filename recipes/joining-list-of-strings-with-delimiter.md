@@ -14,7 +14,26 @@ You have a list of strings and string delimiter and you want to create a single 
               (iter rest (cons item (cons delimiter result))))))))
 ```
 
-**Alternative** you can use SRFI-13 that provides `string-join` function.
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me) 
+
+### Alternative
+Alternative using string ports
+```scheme
+(define (string-join list delimiter)
+  (if (null? list) ""
+      (call-with-port (open-output-string)
+                      (lambda (out)
+                        (write-string (car list) out)
+                        (for-each (lambda (item)
+                                    (write-string delimiter out)
+                                    (write-string item out))
+                                  (cdr list))
+                        (get-output-string out)))))
+```
+Credit [Lassi Kortela](https://github.com/lassik) 
+
+### SRFI
+you can use SRFI-13 that provides `string-join` function.
 
 ## Usage
 ```scheme

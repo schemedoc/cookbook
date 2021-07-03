@@ -14,6 +14,9 @@ You have a list and want to remove items that return true for a given predicate 
 ```
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
+### SRFI
+This function is part of SRFI-1, which also has `filter` that is reverse of `remove`, where if the function returns `true` the item will be kept in the output list.
+
 ## Usage
 ```scheme
 (define >10 (lambda (x) (> x 10)))

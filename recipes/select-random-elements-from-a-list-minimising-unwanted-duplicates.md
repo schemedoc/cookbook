@@ -43,6 +43,7 @@ I want to be able to take random elements from a list without getting unwanted d
                                    how-many))))))
         (do-pick elements '() '() (random-integer list-length) how-many))))
 ```
+Credit [Tim Van den Langenbergh](http://tmtvl.info)
 
 ## Usage
 

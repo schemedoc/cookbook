@@ -25,8 +25,8 @@ You have a list and you need to find the element with duplicates and find the mo
                (begin (set-cdr! counter (+ (cdr counter) 1))
                       counters)))))))
 ```
-
-**Alternative** using hash tables (SRFI 125):
+### SRFI
+using hash tables (SRFI 125)
 
 ```scheme
 (define (most-frequent xs)

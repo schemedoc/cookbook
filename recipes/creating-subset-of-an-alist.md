@@ -21,6 +21,8 @@ Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 It uses the `remove` function from Recipe #6
 
+The code assumes that Alist has all unique keys.
+
 ## Usage
 ```scheme
 (define alist '((foo . 10) (bar . 20) (baz . 30) (quux . 40)))
