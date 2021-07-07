@@ -1,10 +1,18 @@
 # Join list of strings with delimiter
 
 ## Problem
+
 You have a list of strings and string delimiter and you want to create a single string from the list with a delimiter in between
 
 ## Solution
-```scheme
+
+### SRFI
+
+SRFI 13 provides the [`string-join` procedure](https://srfi.schemers.org/srfi-13/srfi-13.html#string-join).
+
+### Using a loop
+
+```
 (define (string-join list delimiter)
   (let iter ((list list) (result '()))
     (if (null? list)
@@ -34,8 +42,6 @@ Alternative using string ports
 ```
 Credit [Lassi Kortela](https://github.com/lassik)
 
-### SRFI
-you can use SRFI-13 that provides `string-join` function.
 
 ## Usage
 ```scheme
