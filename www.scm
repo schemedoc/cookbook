@@ -137,10 +137,13 @@
   (for-each (lambda (page)
               (let ((stem (page-stem page)))
                 (create-directory (string-append "www/" stem))
-                (write-html-file (string-append "www/" stem "/index.html")
-                                 (page-title page)
-                                 "A recipe in the Scheme Cookbook."
-                                 (code->pre (page-sxml page)))))
+                (write-html-file
+                 (string-append "www/" stem "/index.html")
+                 (page-title page)
+                 "A recipe in the Scheme Cookbook."
+                 `(,@(code->pre (page-sxml page))
+                   (hr)
+                   (p (a (@ (href "/")) "Back to the Scheme Cookbook"))))))
             (append-map page-group-pages page-groups))
   0)
 
