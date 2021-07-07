@@ -17,17 +17,20 @@ list.
 (define (group-by f lst)
   (if (null? lst) '()
       (let ((first (car lst)))
-        (let loop ((lst (cdr lst)) (key (f first)) (g (list first)) (gs '()))
+        (let loop ((lst (cdr lst))
+                   (key (f first))
+                   (group (list first))
+                   (groups '()))
           (if (null? lst)
-              (reverse (cons (reverse g) gs))
+              (reverse (cons (reverse group) groups))
               (let ((newkey (f (car lst))))
                 (if (equal? key newkey)
                     (loop (cdr lst) key
-                          (cons (car lst) g)
-                          gs)
+                          (cons (car lst) group)
+                          groups)
                     (loop (cdr lst) newkey
                           (list (car lst))
-                          (cons (reverse g) gs)))))))))
+                          (cons (reverse group) groups)))))))))
 ```
 
 Credit: [Lassi Kortela](https://github.com/lassik)
