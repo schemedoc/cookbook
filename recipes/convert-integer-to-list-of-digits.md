@@ -21,7 +21,7 @@ If the integer is negative, the list should start with a minus sign.
 
 Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
-## Using quotient and remainder
+### Using quotient and remainder
 
 The `truncate/` procedure (from R7RS) performs an integer division,
 and returns both the quotient and the remainder. In some other
