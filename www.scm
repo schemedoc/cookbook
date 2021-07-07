@@ -91,7 +91,7 @@
      "join-list-of-strings-with-delimiter"
      "split-a-string")
     ("Numbers"
-     "convert-number-to-sequence-of-number-digits")
+     "convert-integer-to-list-of-digits")
     ("Time"
      "format-unix-timestamp")
     ("File system"
