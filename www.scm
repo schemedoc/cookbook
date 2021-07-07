@@ -93,7 +93,7 @@
     ("Numbers"
      "convert-number-to-sequence-of-number-digits")
     ("Time"
-     "format-a-unix-timestamp")
+     "format-unix-timestamp")
     ("File system"
      "find-all-matching-files-in-a-directory-tree")))
 
