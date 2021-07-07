@@ -76,8 +76,26 @@
     (make-page stem title sxml)))
 
 (define page-groups-template
-  `(("Lists"
-     "split-list-into-groups-that-are-equal-judging-by-a-procedure")))
+  `(("Pairs and lists"
+     "find-the-index-of-an-element-in-a-list"
+     "finding-the-most-frequent-element-in-list"
+     "removing-duplicates-from-a-list"
+     "removing-item-from-a-list"
+     "select-random-elements-from-a-list-minimising-unwanted-duplicates"
+     "split-list-into-groups-of-n-elements"
+     "split-list-into-groups-that-are-equal-judging-by-a-procedure")
+    ("Association lists, property lists, and hash tables"
+     "creating-subset-of-an-alist")
+    ("Strings"
+     "convert-any-value-to-string"
+     "joining-list-of-strings-with-delimiter"
+     "split-a-string")
+    ("Numbers"
+     "convert-number-to-sequence-of-number-digits")
+    ("Time"
+     "format-a-unix-timestamp")
+    ("File system"
+     "find-all-matching-files-in-a-directory-tree")))
 
 (define page-group-title car)
 (define page-group-pages cdr)
