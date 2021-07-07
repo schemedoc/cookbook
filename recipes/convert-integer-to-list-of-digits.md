@@ -19,7 +19,25 @@ If the integer is negative, the list should start with a minus sign.
          chars)))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
+
+## Using quotient and remainder
+
+The `truncate/` procedure (from R7RS) performs an integer division,
+and returns both the quotient and the remainder. In some other
+programming languages, this operation is called `divmod`.
+
+```
+(define (integer->list integer)
+  (let ((neg? (negative? integer)))
+    (let loop ((integer (abs integer)) (digits '()))
+      (let-values (((integer digit) (truncate/ integer 10)))
+        (let ((digits (cons digit digits)))
+          (if (> integer 0) (loop integer digits)
+              (if neg? (cons '- digits) digits)))))))
+```
+
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 
