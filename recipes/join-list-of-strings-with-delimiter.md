@@ -1,3 +1,5 @@
+# Join list of strings with delimiter
+
 ## Problem
 You have a list of strings and string delimiter and you want to create a single string from the list with a delimiter in between
 
