@@ -127,7 +127,9 @@
             page-groups)
      (hr)
      (p "Source code " (a (@ (href "https://github.com/schemedoc/cookbook"))
-                          "at GitHub")))))
+                          "at GitHub"))
+     (p (a (@ (href "https://www.scheme.org/"))
+           "Back to Scheme.org")))))
 
 (define (main)
   (create-directory "www")
