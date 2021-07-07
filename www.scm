@@ -10,7 +10,7 @@
         (srfi 1)
         (srfi 13)
         (srfi 132)
-        (only (chicken file) create-directory directory)
+        (only (chicken file) create-directory)
         (lowdown)  ; Markdown->SXML parser.
         (sxml-transforms))
 
@@ -60,9 +60,6 @@
            (apply string-append (cadr (car tags))))
           (else (rec (cdr tags))))))
 
-(define (markdown-file->sxml md-filename)
-  (call-with-port (open-input-file md-filename) markdown->sxml))
-
 (define-record-type page
   (make-page stem title sxml)
   page?
@@ -72,19 +69,26 @@
 
 (define (page<? a b) (string-ci<? (page-title a) (page-title b)))
 
-(define pages
-  (list-sort
-   page<?
-   (let ((dir "recipes"))
-     (filter-map
-      (lambda (filename)
-        (and (string-suffix-ci? ".md" filename)
-             (let* ((full (string-append dir "/" filename))
-                    (stem (string-remove-suffix-ci ".md" filename))
-                    (sxml (markdown-file->sxml full))
-                    (title (or (page-title-from-sxml sxml) stem)))
-               (make-page stem title sxml))))
-      (directory dir)))))
+(define (read-page-with-stem stem)
+  (let* ((md-filename (string-append "recipes" "/" stem ".md"))
+         (sxml (call-with-port (open-input-file md-filename) markdown->sxml))
+         (title (or (page-title-from-sxml sxml) stem)))
+    (make-page stem title sxml)))
+
+(define page-groups-template
+  `(("Lists"
+     "split-list-into-groups-that-are-equal-judging-by-a-procedure")))
+
+(define page-group-title car)
+(define page-group-pages cdr)
+
+(define page-groups
+  (map (lambda (group)
+         (cons (page-group-title group)
+               (list-sort page<?
+                          (map read-page-with-stem
+                               (page-group-pages group)))))
+       page-groups-template))
 
 (define (write-front-page html-filename)
   (write-html-file
@@ -94,10 +98,14 @@
                   "of programming languages.")
    `((h1 (@ (id "logo")) "Scheme Cookbook")
      (h2 "Recipes")
-     (ul ,@(map (lambda (page)
-                  `(li (a (@ (href ,(string-append (page-stem page) "/")))
-                          ,(page-title page))))
-                pages))
+     ,@(map (lambda (group)
+              `(section
+                (h3 ,(page-group-title group))
+                (ul ,@(map (lambda (page)
+                             (let ((href (string-append (page-stem page) "/")))
+                               `(li (a (@ (href ,href)) ,(page-title page)))))
+                           (page-group-pages group)))))
+            page-groups)
      (hr)
      (p "Source code " (a (@ (href "https://github.com/schemedoc/cookbook"))
                           "at GitHub")))))
@@ -112,7 +120,7 @@
                                  (page-title page)
                                  "A recipe in the Scheme Cookbook."
                                  (code->pre (page-sxml page)))))
-            pages)
+            (append-map page-group-pages page-groups))
   0)
 
 (main)
