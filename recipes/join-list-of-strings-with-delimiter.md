@@ -25,7 +25,7 @@ A `string-join` procedure is provided
                   (cdr lst))))))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### Using fold
 
@@ -37,7 +37,7 @@ Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
             (cdr lst))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ### Using string ports
 
@@ -54,7 +54,7 @@ Credit [Lassi Kortela](https://github.com/lassik)
                         (get-output-string out)))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 

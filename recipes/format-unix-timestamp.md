@@ -22,7 +22,7 @@ string.
          maybe-format))
 ```
 
-Credit [Göran Weinholt](https://weinholt.se/)
+Credit: [Göran Weinholt](https://weinholt.se/)
 
 ## Usage
 
