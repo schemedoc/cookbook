@@ -26,9 +26,21 @@ SRFI 13 provides the [`string-join` procedure](https://srfi.schemers.org/srfi-13
 
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
-### Alternative
-Alternative using string ports
-```scheme
+### Using fold
+
+```
+(define (string-join list delimiter)
+  (if (null? list) ""
+      (fold (lambda (item result) (string-append result delimiter item))
+            (car list)
+            (cdr list))))
+```
+
+Credit [Lassi Kortela](https://github.com/lassik)
+
+### Using string ports
+
+```
 (define (string-join list delimiter)
   (if (null? list) ""
       (call-with-port (open-output-string)
@@ -40,11 +52,12 @@ Alternative using string ports
                                   (cdr list))
                         (get-output-string out)))))
 ```
+
 Credit [Lassi Kortela](https://github.com/lassik)
 
-
 ## Usage
-```scheme
+
+```
 (string-join '("foo" "bar" "baz") ":")
 ;; ==> "foo:bar:baz"
 ```
