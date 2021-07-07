@@ -1,5 +1,9 @@
+# Find matching files in directory tree
+
 ## Problem
-You have a directory containing an unknown set of subdirectories and files. For example:
+
+You have a directory containing an unknown set of subdirectories and
+files. For example:
 
 ```
 a/a.png
@@ -10,21 +14,18 @@ c/d.png
 d/
 ```
 
-Return a list with the relative pathname (e.g. `"b/c/c.html"`) of each `.html` file in this tree.
+Return a list with the relative pathname (e.g. `"b/c/c.html"`) of each
+`.html` file in this tree.
 
 * Do not include file names starting with a dot ("dotfiles").
 * Do not visit subdirectories whose names start with a dot.
 * The list does not have to be sorted.
 
-No portable solution exists at the moment. SRFI 170 or implementation-specific libraries can be used.
-
 ## Solution
 
-### SRFI
+### Using SRFI 170
 
-Using SRFI 170 (and string-suffix-ci? comes from SRFI 13)
-
-```scheme
+```
 (define (directory-tree-fold merge state root)
   (define (path-append a b)
     (if (and a b) (string-append a "/" b) (or a b)))
@@ -37,11 +38,27 @@ Using SRFI 170 (and string-suffix-ci? comes from SRFI 13)
             (if (null? names) state
                 (loop (recurse state (path-append relative (car names)))
                       (cdr names))))))))
+```
 
+The following procedures come from
+[SRFI 170](https://srfi.schemers.org/srfi-170/srfi-170.html):
+
+* `directory-files`
+* `file-info`
+* `file-info-directory?`
+
+Equivalent implementation-specific procedures could be used just as
+well.
+
+Credit: [Lassi Kortela](https://github.com/lassik)
+
+## Usage
+
+The `string-suffix-ci?` procedure comes from SRFI 13.
+
+```
 (directory-tree-fold
  (lambda (name names)
    (if (string-suffix-ci? ".html" name) (cons name names) names))
  '() ".")
 ```
-
-Credit [Lassi Kortela](https://github.com/lassik)
