@@ -60,22 +60,22 @@
            (apply string-append (cadr (car tags))))
           (else (rec (cdr tags))))))
 
-(define-record-type page
-  (make-page stem title sxml)
-  page?
-  (stem page-stem)
-  (title page-title)
-  (sxml page-sxml))
+(define-record-type recipe
+  (make-recipe stem title sxml)
+  recipe?
+  (stem recipe-stem)
+  (title recipe-title)
+  (sxml recipe-sxml))
 
-(define (page<? a b) (string-ci<? (page-title a) (page-title b)))
+(define (recipe<? a b) (string-ci<? (recipe-title a) (recipe-title b)))
 
-(define (read-page-with-stem stem)
+(define (read-recipe-with-stem stem)
   (let* ((md-filename (string-append "recipes" "/" stem ".md"))
          (sxml (call-with-port (open-input-file md-filename) markdown->sxml))
          (title (or (page-title-from-sxml sxml) stem)))
-    (make-page stem title sxml)))
+    (make-recipe stem title sxml)))
 
-(define page-groups-template
+(define groups-template
   '(("Pairs and lists"
      "find-the-index-of-an-element-in-a-list"
      "finding-the-most-frequent-element-in-list"
@@ -97,16 +97,16 @@
     ("File system"
      "find-matching-files-in-directory-tree")))
 
-(define page-group-title car)
-(define page-group-pages cdr)
+(define group-title car)
+(define group-recipes cdr)
 
-(define page-groups
+(define groups
   (map (lambda (group)
-         (cons (page-group-title group)
-               (list-sort page<?
-                          (map read-page-with-stem
-                               (page-group-pages group)))))
-       page-groups-template))
+         (cons (group-title group)
+               (list-sort recipe<?
+                          (map read-recipe-with-stem
+                               (group-recipes group)))))
+       groups-template))
 
 (define (write-front-page html-filename)
   (write-html-file
@@ -118,35 +118,35 @@
      (h2 "Recipes")
      ,@(map (lambda (group)
               `(section
-                (h3 ,(page-group-title group))
-                (ul ,@(map (lambda (page)
-                             (let ((href (string-append (page-stem page)
+                (h3 ,(group-title group))
+                (ul ,@(map (lambda (recipe)
+                             (let ((href (string-append (recipe-stem recipe)
                                                         "/")))
-                               `(li (a (@ (href ,href)) ,(page-title page)))))
-                           (page-group-pages group)))))
-            page-groups)
+                               `(li (a (@ (href ,href))
+                                       ,(recipe-title recipe)))))
+                           (group-recipes group)))))
+            groups)
      (hr)
      (p "Source code " (a (@ (href "https://github.com/schemedoc/cookbook"))
                           "at GitHub"))
      (p (a (@ (href "https://www.scheme.org/"))
            "Back to Scheme.org")))))
 
-(define (write-recipe-page page)
-  (let ((page-dir (string-append "www" "/" (page-stem page))))
-    (create-directory page-dir)
+(define (write-recipe-page recipe)
+  (let ((recipe-dir (string-append "www" "/" (recipe-stem recipe))))
+    (create-directory recipe-dir)
     (write-html-file
-     (string-append page-dir "/" "index.html")
-     (page-title page)
+     (string-append recipe-dir "/" "index.html")
+     (recipe-title recipe)
      "A recipe in the Scheme Cookbook."
-     `(,@(code->pre (page-sxml page))
+     `(,@(code->pre (recipe-sxml recipe))
        (hr)
        (p (a (@ (href "/")) "Back to the Scheme Cookbook"))))))
 
 (define (main)
   (create-directory "www")
   (write-front-page  "www/index.html")
-  (let ((pages (append-map page-group-pages page-groups)))
-    (for-each write-recipe-page pages))
+  (for-each write-recipe-page (append-map group-recipes groups))
   0)
 
 (main)
