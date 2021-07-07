@@ -3,10 +3,10 @@
 ## Problem
 
 Write a procedure `(group-by f lst)` that splits the list `lst` into
-sublists. The sublist boundaries are determined by the value of `(f
-x)` for each element `x` in `lst`. When the value changes, a new
-sublist is started from that element. Values of `(f x)` are compared
-by `equal?`.
+sublists. The sublist boundaries are determined by the value of `(f x)`
+for each element `x` in `lst`. When the value changes, a new sublist
+is started from that element. Values of `(f x)` are compared by
+`equal?`.
 
 Return a list of the groups, i.e. each group is a sublist in the main
 list.
