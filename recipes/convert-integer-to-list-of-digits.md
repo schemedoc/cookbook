@@ -15,7 +15,7 @@ If the integer is negative, the list should start with a minus sign.
 (define (integer->list integer)
   (let ((chars (string->list (number->string integer))))
     (map (lambda (char)
-           (string->number (string char)))
+           (if (char=? #\- char) '- (string->number (string char))))
          chars)))
 ```
 
