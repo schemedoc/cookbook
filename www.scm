@@ -88,7 +88,7 @@
      "creating-subset-of-an-alist")
     ("Strings"
      "convert-any-value-to-string"
-     "joining-list-of-strings-with-delimiter"
+     "join-list-of-strings-with-delimiter"
      "split-a-string")
     ("Numbers"
      "convert-number-to-sequence-of-number-digits")
