@@ -10,11 +10,11 @@ You have a list of strings and string delimiter and you want to create a single 
         (let ((item (car list))
               (rest (cdr list)))
           (if (null? result)
-              (iter rest (cons item result))     
+              (iter rest (cons item result))
               (iter rest (cons item (cons delimiter result))))))))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me) 
+Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### Alternative
 Alternative using string ports
@@ -30,7 +30,7 @@ Alternative using string ports
                                   (cdr list))
                         (get-output-string out)))))
 ```
-Credit [Lassi Kortela](https://github.com/lassik) 
+Credit [Lassi Kortela](https://github.com/lassik)
 
 ### SRFI
 you can use SRFI-13 that provides `string-join` function.
