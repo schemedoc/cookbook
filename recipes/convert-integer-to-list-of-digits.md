@@ -24,6 +24,6 @@ Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 ## Usage
 
 ```
-(integer->list 10001)
-;; ==> '(1 0 0 0 1)
+(integer->list 12345)
+;; ==> '(1 2 3 4 5)
 ```
