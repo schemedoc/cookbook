@@ -14,10 +14,16 @@
 
 (define (disp . xs) (for-each display xs) (newline))
 
+(define (string-remove-prefix-ci fix str)
+  (if (string-prefix-ci? fix str) (string-drop str (string-length fix)) str))
+
 (define (code->pre sxml)
   (cond ((not (pair? sxml)) sxml)
-        ((eq? 'code (car sxml))
-         (cons 'pre (map code->pre (cdr sxml))))
+        ((and (= 2 (length sxml))
+              (eq? 'code (car sxml))
+              (string? (cadr sxml))
+              (string-contains (cadr sxml) "\n"))
+         (list 'pre (string-remove-prefix-ci "scheme\n" (cadr sxml))))
         (else
          (map code->pre sxml))))
 
