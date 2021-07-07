@@ -45,3 +45,13 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 (integer->list 12345)
 ;; ==> '(1 2 3 4 5)
 ```
+
+```
+(integer->list -12345)
+;; ==> (- 1 2 3 4 5)
+```
+
+```
+(integer->list 0)
+;; ==> (0)
+```
