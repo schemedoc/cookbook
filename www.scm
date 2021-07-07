@@ -95,7 +95,7 @@
     ("Time"
      "format-unix-timestamp")
     ("File system"
-     "find-all-matching-files-in-a-directory-tree")))
+     "find-matching-files-in-directory-tree")))
 
 (define page-group-title car)
 (define page-group-pages cdr)
