@@ -29,11 +29,11 @@ Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 ### Using fold
 
 ```
-(define (string-join list delimiter)
-  (if (null? list) ""
+(define (string-join lst delimiter)
+  (if (null? lst) ""
       (fold (lambda (item result) (string-append result delimiter item))
-            (car list)
-            (cdr list))))
+            (car lst)
+            (cdr lst))))
 ```
 
 Credit [Lassi Kortela](https://github.com/lassik)
@@ -41,15 +41,15 @@ Credit [Lassi Kortela](https://github.com/lassik)
 ### Using string ports
 
 ```
-(define (string-join list delimiter)
-  (if (null? list) ""
+(define (string-join lst delimiter)
+  (if (null? lst) ""
       (call-with-port (open-output-string)
                       (lambda (out)
-                        (write-string (car list) out)
+                        (write-string (car lst) out)
                         (for-each (lambda (item)
                                     (write-string delimiter out)
                                     (write-string item out))
-                                  (cdr list))
+                                  (cdr lst))
                         (get-output-string out)))))
 ```
 
