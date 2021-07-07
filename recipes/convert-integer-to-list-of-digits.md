@@ -42,13 +42,13 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 ## Usage
 
 ```
-(integer->list 12345)
-;; ==> '(1 2 3 4 5)
+(integer->list 123450)
+;; ==> (1 2 3 4 5 0)
 ```
 
 ```
-(integer->list -12345)
-;; ==> (- 1 2 3 4 5)
+(integer->list -123450)
+;; ==> (- 1 2 3 4 5 0)
 ```
 
 ```
