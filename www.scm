@@ -131,20 +131,22 @@
      (p (a (@ (href "https://www.scheme.org/"))
            "Back to Scheme.org")))))
 
+(define (write-recipe-page page)
+  (let ((page-dir (string-append "www" "/" (page-stem page))))
+    (create-directory page-dir)
+    (write-html-file
+     (string-append page-dir "/" "index.html")
+     (page-title page)
+     "A recipe in the Scheme Cookbook."
+     `(,@(code->pre (page-sxml page))
+       (hr)
+       (p (a (@ (href "/")) "Back to the Scheme Cookbook"))))))
+
 (define (main)
   (create-directory "www")
   (write-front-page  "www/index.html")
-  (for-each (lambda (page)
-              (let ((stem (page-stem page)))
-                (create-directory (string-append "www/" stem))
-                (write-html-file
-                 (string-append "www/" stem "/index.html")
-                 (page-title page)
-                 "A recipe in the Scheme Cookbook."
-                 `(,@(code->pre (page-sxml page))
-                   (hr)
-                   (p (a (@ (href "/")) "Back to the Scheme Cookbook"))))))
-            (append-map page-group-pages page-groups))
+  (let ((pages (append-map page-group-pages page-groups)))
+    (for-each write-recipe-page pages))
   0)
 
 (main)
