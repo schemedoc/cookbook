@@ -76,7 +76,7 @@
     (make-page stem title sxml)))
 
 (define page-groups-template
-  `(("Pairs and lists"
+  '(("Pairs and lists"
      "find-the-index-of-an-element-in-a-list"
      "finding-the-most-frequent-element-in-list"
      "removing-duplicates-from-a-list"
