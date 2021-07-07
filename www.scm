@@ -93,10 +93,14 @@
    (string-append "Scheme is a minimalist dialect of the Lisp family "
                   "of programming languages.")
    `((h1 (@ (id "logo")) "Scheme Cookbook")
+     (h2 "Recipes")
      (ul ,@(map (lambda (page)
                   `(li (a (@ (href ,(string-append (page-stem page) "/")))
                           ,(page-title page))))
-                pages)))))
+                pages))
+     (hr)
+     (p "Source code " (a (@ (href "https://github.com/schemedoc/cookbook"))
+                          "at GitHub")))))
 
 (define (main)
   (create-directory "www")
