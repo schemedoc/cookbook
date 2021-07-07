@@ -120,7 +120,8 @@
               `(section
                 (h3 ,(page-group-title group))
                 (ul ,@(map (lambda (page)
-                             (let ((href (string-append (page-stem page) "/")))
+                             (let ((href (string-append (page-stem page)
+                                                        "/")))
                                `(li (a (@ (href ,href)) ,(page-title page)))))
                            (page-group-pages group)))))
             page-groups)
