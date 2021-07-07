@@ -13,15 +13,13 @@ SRFI 13 provides the [`string-join` procedure](https://srfi.schemers.org/srfi-13
 ### Using a loop
 
 ```
-(define (string-join list delimiter)
-  (let iter ((list list) (result '()))
-    (if (null? list)
-        (apply string-append (reverse result))
-        (let ((item (car list))
-              (rest (cdr list)))
-          (if (null? result)
-              (iter rest (cons item result))
-              (iter rest (cons item (cons delimiter result))))))))
+(define (string-join lst delimiter)
+  (if (null? lst) ""
+      (let loop ((result (car lst)) (lst (cdr lst)))
+        (if (null? lst)
+            result
+            (loop (string-append result delimiter (car lst))
+                  (cdr lst))))))
 ```
 
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
