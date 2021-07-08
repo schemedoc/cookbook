@@ -28,6 +28,10 @@ whitespace:
 The regular expression picks out the middle of the string. It is
 compiled only once, namely when `string-trim-both` is defined.
 
+The `regexp` and `regexp-match` procedures are from Racket. Equivalent
+procedures exist for some other implementations, and in
+[SRFI 115](https://srfi.schemers.org/srfi-115/srfi-115.html).
+
 Credit: [Jens Axel Søgaard](http://scheme.dk/)
 
 ## Usage
