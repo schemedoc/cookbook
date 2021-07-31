@@ -2,7 +2,7 @@
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
   "removing-duplicates-from-a-list"
-  "removing-item-from-a-list"
+  "remove-element-from-list"
   "select-random-elements-from-a-list-minimising-unwanted-duplicates"
   "split-list-into-groups-of-n-elements"
   "split-list-into-groups-that-are-equal-judging-by-a-procedure")
