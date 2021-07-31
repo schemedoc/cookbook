@@ -30,6 +30,7 @@ procedure is defined in SRFI 1.
 
 ```Scheme
 (define >10 (lambda (x) (> x 10)))
+
 (index >10 '(1 2 3 4 10 11 12 13 14))
 ;; ==> 5
 ```

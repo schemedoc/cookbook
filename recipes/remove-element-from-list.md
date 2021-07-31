@@ -29,6 +29,7 @@ SRFI 1 has a `remove` procedure that works as above. It also has a
 
 ```Scheme
 (define >10 (lambda (x) (> x 10)))
+
 (remove >10 '(1 2 3 4 10 11 12 13 14))
 ;; ==> (1 2 3 4 10)
 ```
