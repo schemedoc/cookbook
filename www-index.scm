@@ -14,7 +14,7 @@
   "convert-any-value-to-string"
   "join-list-of-strings-with-delimiter"
   "remove-whitespace-from-string"
-  "split-a-string")
+  "split-string")
 
  ("Numbers"
   "convert-integer-to-list-of-digits")
