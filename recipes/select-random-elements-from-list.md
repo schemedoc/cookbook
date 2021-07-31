@@ -54,6 +54,8 @@ Credit [Tim Van den Langenbergh](http://tmtvl.info)
 ## Usage
 
 ```Scheme
+;; Since the procedure uses randomness, the elements chosen may vary.
+
 (pick (iota 100) 100)
 ;; => (79 28 18 40 90 29 30 66 80 36 23 34 42 84 25 35 88 54 15 92 69 8 2
 ;;     16 95 27 19 74 91 77 68 3 83 57 26 86 89 60 53 47 21 85 72 0 73 96
