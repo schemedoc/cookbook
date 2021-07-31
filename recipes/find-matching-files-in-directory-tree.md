@@ -25,7 +25,7 @@ Return a list with the relative pathname (e.g. `"b/c/c.html"`) of each
 
 ### Using SRFI 170
 
-```
+```Scheme
 (define (directory-tree-fold merge state root)
   (define (path-append a b)
     (if (and a b) (string-append a "/" b) (or a b)))
@@ -56,7 +56,7 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 
 The `string-suffix-ci?` procedure comes from SRFI 13.
 
-```
+```Scheme
 (directory-tree-fold
  (lambda (name names)
    (if (string-suffix-ci? ".html" name) (cons name names) names))

@@ -3,8 +3,8 @@
 I want to be able to take random elements from a list without getting unwanted duplicates (so if I ask for 4 random elements from the list `'(a b c d)` I don't want to get to `'(d a ba )`, for example).
 
 ## Solution
-    
-```scheme
+
+```Scheme
 (define (pick elements how-many)
   (if (< how-many 0)
       (error "Cannot create a list of negative length."
@@ -47,7 +47,7 @@ Credit [Tim Van den Langenbergh](http://tmtvl.info)
 
 ## Usage
 
-```scheme
+```Scheme
 (pick (iota 100)
 	  100)
 ;; (79 28 18 40 90 29 30 66 80 36 23 34 42 84 25 35 88 54 15 92 69 8 2 16 95 27 19

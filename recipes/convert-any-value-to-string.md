@@ -2,7 +2,7 @@
 You need a function that will convert any value to a string
 
 ## Solution
-```scheme
+```Scheme
 (define-values (displayed written)
   (let ((repr (lambda (fn)
                 (lambda (object)
@@ -18,7 +18,7 @@ Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 The functions `displayed` and `written` are also defined by SRFI 166.
 
 ## Usage
-```scheme
+```Scheme
 (define (print x)
   (display x)
   (newline))

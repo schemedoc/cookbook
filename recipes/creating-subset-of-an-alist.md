@@ -2,7 +2,7 @@
 You have Alist and you need to return the new Alist only with specified keys.
 
 ## Solution
-```scheme
+```Scheme
 (define (match value)
   (lambda (x)
     (equal? x value)))
@@ -24,7 +24,7 @@ It uses the `remove` function from Recipe #6
 The code assumes that Alist has all unique keys.
 
 ## Usage
-```scheme
+```Scheme
 (define alist '((foo . 10) (bar . 20) (baz . 30) (quux . 40)))
 (alist->subset '(quux foo) alist)
 ;; => '((foo . 10) (quux . 40))

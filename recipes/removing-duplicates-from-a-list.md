@@ -7,7 +7,7 @@ The solution can use the `equal?` function or use the comparison function as an 
 
 Using hash tables (SRFI 125)
 
-```scheme
+```Scheme
 (define (remove-duplicates xs)
   (let ((seen (make-hash-table equal?)))
     (let loop ((xs xs) (new-list '()))
@@ -23,7 +23,8 @@ Using hash tables (SRFI 125)
 Credit [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
-```
+
+```Scheme
 (remove-duplicates '(1 2 3 1 2 4 4 5 6 7 5))
 ;; ==> '(1 2 3 4 5 6 7)
 ```

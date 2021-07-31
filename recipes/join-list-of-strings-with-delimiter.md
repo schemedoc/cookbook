@@ -15,7 +15,7 @@ A `string-join` procedure is provided
 
 ### Using a loop
 
-```
+```Scheme
 (define (string-join lst delimiter)
   (if (null? lst) ""
       (let loop ((result (car lst)) (lst (cdr lst)))
@@ -29,7 +29,7 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### Using fold
 
-```
+```Scheme
 (define (string-join lst delimiter)
   (if (null? lst) ""
       (fold (lambda (item result) (string-append result delimiter item))
@@ -41,7 +41,7 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 
 ### Using string ports
 
-```
+```Scheme
 (define (string-join lst delimiter)
   (if (null? lst) ""
       (call-with-port (open-output-string)
@@ -58,7 +58,7 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 
-```
+```Scheme
 (string-join '("foo" "bar" "baz") ":")
 ;; ==> "foo:bar:baz"
 ```

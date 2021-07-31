@@ -11,7 +11,7 @@ If the integer is negative, the list should start with a minus sign.
 
 ### Using number->string
 
-```
+```Scheme
 (define (integer->list integer)
   (let ((chars (string->list (number->string integer))))
     (map (lambda (char)
@@ -27,7 +27,7 @@ The `truncate/` procedure (from R7RS) performs an integer division,
 and returns both the quotient and the remainder. In some other
 programming languages, this operation is called `divmod`.
 
-```
+```Scheme
 (define (integer->list integer)
   (let ((neg? (negative? integer)))
     (let loop ((integer (abs integer)) (digits '()))
@@ -41,17 +41,17 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 
-```
+```Scheme
 (integer->list 123450)
 ;; ==> (1 2 3 4 5 0)
 ```
 
-```
+```Scheme
 (integer->list -123450)
 ;; ==> (- 1 2 3 4 5 0)
 ```
 
-```
+```Scheme
 (integer->list 0)
 ;; ==> (0)
 ```

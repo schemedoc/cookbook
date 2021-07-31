@@ -2,7 +2,7 @@
 You have a list and you need to find the element with duplicates and find the most frequent element. If the list has no duplicates is should return `#f`.
 
 ## Solution
-```scheme
+```Scheme
 (define (most-frequent xs)
   (let count-all-elements ((xs xs) (counters '()))
     (if (null? xs)
@@ -28,7 +28,7 @@ You have a list and you need to find the element with duplicates and find the mo
 ### SRFI
 using hash tables (SRFI 125)
 
-```scheme
+```Scheme
 (define (most-frequent xs)
   (define (inc n) (+ n 1))
   (let ((counts (make-hash-table equal?)))
@@ -48,7 +48,7 @@ using hash tables (SRFI 125)
 Credit [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
-```scheme
+```Scheme
 (most-frequest '(1 2 3 4 2 3 4 2 2 2))
 ;; ==> 2
 (most-frequest '(1 2 3 4 5 6 7))

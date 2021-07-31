@@ -18,7 +18,7 @@ whitespace:
 
 ### Using regular expressions
 
-```
+```Scheme
 (define string-trim-both
   (let ((r (regexp "^[ \t\r]*(.*?)[ \t\r]*$")))
     (lambda (s)
@@ -36,32 +36,22 @@ Credit: [Jens Axel Søgaard](http://scheme.dk/)
 
 ## Usage
 
-```
+```Scheme
 > (string-trim-both " foo ")
 "foo"
-```
 
-```
 > (string-trim-both " foo bar ")
 "foo bar"
-```
 
-```
 > (string-trim-both " foo bar")
 "foo bar"
-```
 
-```
 > (string-trim-both "foo bar")
 "foo bar"
-```
 
-```
 > (string-trim-both "")
 ""
-```
 
-```
 > (string-trim-both "   ")
 ""
 ```
