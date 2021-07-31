@@ -26,7 +26,7 @@ Credit: [Göran Weinholt](https://weinholt.se/)
 
 ```Scheme
 (time-unix->string 946684800)
-;; => "Sat Jan 01 00:00:00Z 2000"      ; Loko Scheme
-;; => "Sat Jan 01 02:00:00+0200 2000"  ; Chez Scheme
-;; => "Sat Jan 01 01:00:00+0100 2000"  ; Guile
+;; ==> "Sat Jan 01 00:00:00Z 2000"      ; Loko Scheme
+;; ==> "Sat Jan 01 02:00:00+0200 2000"  ; Chez Scheme
+;; ==> "Sat Jan 01 01:00:00+0100 2000"  ; Guile
 ```
