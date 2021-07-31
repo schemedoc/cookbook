@@ -1,5 +1,5 @@
 (("Pairs and lists"
-  "find-the-index-of-an-element-in-a-list"
+  "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
   "removing-duplicates-from-a-list"
   "removing-item-from-a-list"
