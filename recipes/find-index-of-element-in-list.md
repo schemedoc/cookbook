@@ -2,8 +2,8 @@
 
 ## Problem
 
-You have a list and a function and you want to find the first index
-for an item for which the function returns true.
+You have a list and a procedure and you want to find the first index
+for an element for which the procedure returns true.
 
 ## Solution
 
