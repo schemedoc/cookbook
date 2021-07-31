@@ -1,7 +1,12 @@
+# Filter alist keys
+
 ## Problem
-You have Alist and you need to return the new Alist only with specified keys.
+
+You have an association list and you want a copy with only the
+specified keys.
 
 ## Solution
+
 ```Scheme
 (define (match value)
   (lambda (x)
@@ -17,15 +22,18 @@ You have Alist and you need to return the new Alist only with specified keys.
                  (iter (cdr alist) keys (cons pair result)))
               (iter (cdr alist) keys result))))))
 ```
+
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 It uses the `remove` function from Recipe #6
 
-The code assumes that Alist has all unique keys.
+The code assumes that _alist_ has no duplicate keys.
 
 ## Usage
+
 ```Scheme
 (define alist '((foo . 10) (bar . 20) (baz . 30) (quux . 40)))
+
 (alist->subset '(quux foo) alist)
-;; => '((foo . 10) (quux . 40))
+;; ==> ((foo . 10) (quux . 40))
 ```
