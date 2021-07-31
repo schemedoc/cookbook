@@ -1,7 +1,15 @@
+# Find most frequent element in list
+
 ## Problem
-You have a list and you need to find the element with duplicates and find the most frequent element. If the list has no duplicates is should return `#f`.
+
+You have a list and you need to find the element with duplicates and
+find the most frequent element. If the list has no duplicates is
+should return `#f`.
 
 ## Solution
+
+### Using a list
+
 ```Scheme
 (define (most-frequent xs)
   (let count-all-elements ((xs xs) (counters '()))
@@ -25,8 +33,10 @@ You have a list and you need to find the element with duplicates and find the mo
                (begin (set-cdr! counter (+ (cdr counter) 1))
                       counters)))))))
 ```
-### SRFI
-using hash tables (SRFI 125)
+
+Credit [Lassi Kortela](https://github.com/lassik)
+
+### Using hash tables (SRFI 125)
 
 ```Scheme
 (define (most-frequent xs)
@@ -45,12 +55,15 @@ using hash tables (SRFI 125)
                         x
                         best-x))))))))
 ```
+
 Credit [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
+
 ```Scheme
 (most-frequest '(1 2 3 4 2 3 4 2 2 2))
 ;; ==> 2
+
 (most-frequest '(1 2 3 4 5 6 7))
 ;; ==> #f
 ```
