@@ -62,13 +62,14 @@
                          (info (alist-ref 'info contents))
                          (code (alist-ref 'code contents))
                          (code* (string-intersperse code ""))
-                         (lang (car info))
-                         (lang* (string->symbol (string-downcase lang))))
-                (if (coloring-type-exists? lang*)
-                    `(pre (code (@ (class ,(string-append "colorize "
-                                                          "language-" lang)))
+                         (raw-lang (car info))
+                         (lang-str (string-downcase raw-lang))
+                         (lang-sym (string->symbol lang-str)))
+                (if (coloring-type-exists? lang-sym)
+                    `(pre (code (@ (class ,(string-append
+                                            "colorize language-" lang-str)))
                                 ,@(->> code*
-                                       (html-colorize lang*)
+                                       (html-colorize lang-sym)
                                        (html->sxml)
                                        (cdr))))
                     `(pre (code ,code*))))
