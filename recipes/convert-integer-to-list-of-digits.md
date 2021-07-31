@@ -44,14 +44,10 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 ```Scheme
 (integer->list 123450)
 ;; ==> (1 2 3 4 5 0)
-```
 
-```Scheme
 (integer->list -123450)
 ;; ==> (- 1 2 3 4 5 0)
-```
 
-```Scheme
 (integer->list 0)
 ;; ==> (0)
 ```
