@@ -11,9 +11,8 @@
         (srfi 13)
         (srfi 132)
         (only (chicken file) create-directory)
-        (lowdown)  ; Markdown->SXML parser.
-        (colorize)
         (sxml-transforms)
+        (lowdown)  ; Markdown->SXML parser.
         (www-lowdown-colorize))
 
 (enable-www-lowdown-colorize!)
@@ -25,26 +24,8 @@
     (apply disp xs)
     (flush-output-port)))
 
-(define (string-remove-prefix-ci fix str)
-  (if (string-prefix-ci? fix str) (string-drop str (string-length fix))
-      str))
-
-(define (string-remove-suffix-ci fix str)
-  (if (string-suffix-ci? fix str) (string-drop-right str (string-length fix))
-      str))
-
-(define (code->pre sxml)
-  (cond ((not (pair? sxml)) sxml)
-        ((and (= 2 (length sxml))
-              (eq? 'code (car sxml))
-              (string? (cadr sxml))
-              (string-contains (cadr sxml) "\n"))
-         (list 'pre (string-remove-prefix-ci "scheme\n" (cadr sxml))))
-        (else
-         (map code->pre sxml))))
-
 (define (write-html-file html-filename title description body)
-  (disp "Writing " html-filename)
+  (edisp "Writing " html-filename)
   (with-output-to-file html-filename
     (lambda ()
       (write-string "<!DOCTYPE html>")
@@ -81,8 +62,9 @@
 
 (define (read-recipe-with-stem stem)
   (let ((md-filename (string-append "recipes" "/" stem ".md")))
-    (edisp "Reading " md-filename)
-    (let* ((sxml (call-with-port (open-input-file md-filename) markdown->sxml))
+    ;;(edisp "Reading " md-filename)
+    (let* ((sxml (call-with-port (open-input-file md-filename)
+                                 markdown->sxml))
            (title (or (page-title-from-sxml sxml) stem)))
       (make-recipe stem title sxml))))
 
