@@ -1,7 +1,7 @@
 (("Pairs and lists"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
-  "removing-duplicates-from-a-list"
+  "remove-duplicates-from-list"
   "remove-element-from-list"
   "select-random-elements-from-a-list-minimising-unwanted-duplicates"
   "split-list-into-groups-of-n-elements"
