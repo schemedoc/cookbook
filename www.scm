@@ -3,6 +3,11 @@
 ;; You need Chicken 5 and
 ;; `chicken-install lowdown r7rs srfi-1 srfi-13 srfi-132 ssax`
 
+;; TODO: `html-colorize` returns a HTML string, which we parse back
+;; into SXML by `html->sxml` and then convert to HTML again. We should
+;; send a patch to the `colorize` egg so it can return SXML directly
+;; and this module does not have to depend on html-parser.
+
 (import (scheme base)
         (scheme file)
         (scheme read)
@@ -13,9 +18,17 @@
         (only (chicken file) create-directory)
         (sxml-transforms)
         (lowdown)  ; Markdown->SXML parser.
-        (www-lowdown-colorize))
+        (lowdown extra)
+        (colorize)
+        (html-parser))
 
-(enable-www-lowdown-colorize!)
+(enable-lowdown-fenced-code-blocks!
+ (lambda (code lang)
+   (let ((lang-sym (string->symbol lang)))
+     (if (coloring-type-exists? lang-sym)
+         `(pre (code (@ (class ,(string-append "colorize language-" lang)))
+                     ,@(cdr (html->sxml (html-colorize lang-sym code)))))
+         `(pre (code ,code))))))
 
 (define (disp . xs) (for-each display xs) (newline))
 
