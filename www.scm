@@ -12,9 +12,18 @@
         (srfi 132)
         (only (chicken file) create-directory)
         (lowdown)  ; Markdown->SXML parser.
-        (sxml-transforms))
+        (colorize)
+        (sxml-transforms)
+        (www-lowdown-colorize))
+
+(enable-www-lowdown-colorize!)
 
 (define (disp . xs) (for-each display xs) (newline))
+
+(define (edisp . xs)
+  (parameterize ((current-output-port (current-error-port)))
+    (apply disp xs)
+    (flush-output-port)))
 
 (define (string-remove-prefix-ci fix str)
   (if (string-prefix-ci? fix str) (string-drop str (string-length fix))
@@ -45,6 +54,7 @@
                (meta (@ charset "UTF-8"))
                (title ,title)
                (link (@ (rel "stylesheet") (href "/style.css")))
+               (link (@ (rel "stylesheet") (href "/colorize.css")))
                (meta (@ (name "viewport")
                         (content "width=device-width, initial-scale=1")))
                (meta (@ (name "description")
@@ -53,7 +63,7 @@
 
 (define (page-title-from-sxml tags)
   (let rec ((tags tags))
-    (cond ((not (pair? tags))
+    (cond ((not (and (pair? tags) (pair? (car tags))))
            ;; (error "Markdown page has no title")
            #f)
           ((eqv? 'h1 (car (car tags)))
@@ -70,10 +80,11 @@
 (define (recipe<? a b) (string-ci<? (recipe-title a) (recipe-title b)))
 
 (define (read-recipe-with-stem stem)
-  (let* ((md-filename (string-append "recipes" "/" stem ".md"))
-         (sxml (call-with-port (open-input-file md-filename) markdown->sxml))
-         (title (or (page-title-from-sxml sxml) stem)))
-    (make-recipe stem title sxml)))
+  (let ((md-filename (string-append "recipes" "/" stem ".md")))
+    (edisp "Reading " md-filename)
+    (let* ((sxml (call-with-port (open-input-file md-filename) markdown->sxml))
+           (title (or (page-title-from-sxml sxml) stem)))
+      (make-recipe stem title sxml))))
 
 (define groups-template
   '(("Pairs and lists"
@@ -140,7 +151,7 @@
      (string-append recipe-dir "/" "index.html")
      (recipe-title recipe)
      "A recipe in the Scheme Cookbook."
-     `(,@(code->pre (recipe-sxml recipe))
+     `(,@(recipe-sxml recipe)
        (hr)
        (p (a (@ (href "/")) "Back to the Scheme Cookbook"))))))
 
