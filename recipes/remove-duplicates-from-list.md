@@ -1,11 +1,14 @@
+# Remove duplicates from list
+
 ## Problem
-You have a list and you want to remove any duplicated elements from the list and the order should not change.
-The solution can use the `equal?` function or use the comparison function as an argument.
+
+You have a list and you want to remove any duplicated elements from
+the list and the order should not change. The solution can use the
+`equal?` function or use the comparison function as an argument.
 
 ## Solution
-### Using SRFI
 
-Using hash tables (SRFI 125)
+### Using hash tables (SRFI 125)
 
 ```Scheme
 (define (remove-duplicates xs)
@@ -20,6 +23,7 @@ Using hash tables (SRFI 125)
                       (begin (hash-table-set! seen x #t)
                              (cons x new-list)))))))))
 ```
+
 Credit [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
