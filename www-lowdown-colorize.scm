@@ -63,7 +63,7 @@
                          (code (alist-ref 'code contents))
                          (code* (string-intersperse code ""))
                          (lang (car info))
-                         (lang* (string->symbol lang)))
+                         (lang* (string->symbol (string-downcase lang))))
                 (if (coloring-type-exists? lang*)
                     `(pre (code (@ (class ,(string-append "colorize "
                                                           "language-" lang)))
