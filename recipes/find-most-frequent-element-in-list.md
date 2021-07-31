@@ -8,7 +8,7 @@ should return `#f`.
 
 ## Solution
 
-### Using a list
+### Using an association list
 
 ```Scheme
 (define (most-frequent xs)
@@ -36,7 +36,7 @@ should return `#f`.
 
 Credit [Lassi Kortela](https://github.com/lassik)
 
-### Using hash tables (SRFI 125)
+### Using a hash table (SRFI 125)
 
 ```Scheme
 (define (most-frequent xs)
