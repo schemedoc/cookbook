@@ -8,7 +8,7 @@
   "split-list-into-groups-that-are-equal-judging-by-a-procedure")
 
  ("Association lists, property lists, and hash tables"
-  "creating-subset-of-an-alist")
+  "filter-alist-keys")
 
  ("Strings"
   "convert-any-value-to-string"
