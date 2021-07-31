@@ -61,9 +61,9 @@ Credit [Lassi Kortela](https://github.com/lassik)
 ## Usage
 
 ```Scheme
-(most-frequest '(1 2 3 4 2 3 4 2 2 2))
+(most-frequent '(1 2 3 4 2 3 4 2 2 2))
 ;; ==> 2
 
-(most-frequest '(1 2 3 4 5 6 7))
+(most-frequent '(1 2 3 4 5 6 7))
 ;; ==> #f
 ```
