@@ -8,12 +8,12 @@ given predicate procedure.
 ## Solution
 
 ```Scheme
-(define (remove fn list)
-  (let iter ((list list) (result '()))
-    (if (null? list)
+(define (remove fn lst)
+  (let loop ((lst lst) (result '()))
+    (if (null? lst)
         (reverse result)
-        (let ((item (car list)))
-          (iter (cdr list)
+        (let ((item (car lst)))
+          (loop (cdr lst)
                 (if (fn item) result (cons item result)))))))
 ```
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
