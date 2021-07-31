@@ -4,7 +4,7 @@
 
 You have a list and you want to remove any duplicated elements from
 the list and the order should not change. The solution can use the
-`equal?` function or use the comparison function as an argument.
+`equal?` procedure or use the comparison procedure as an argument.
 
 ## Solution
 

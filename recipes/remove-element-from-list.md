@@ -3,7 +3,7 @@
 ## Problem
 
 You have a list and want to remove elements that return true for a
-given predicate function.
+given predicate procedure.
 
 ## Solution
 

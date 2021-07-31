@@ -25,7 +25,7 @@ specified keys.
 
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
-It uses the `remove` function from [another
+It uses the `remove` procedure from [another
 recipe](../remove-element-from-list/).
 
 The code assumes that _alist_ has no duplicate keys.
