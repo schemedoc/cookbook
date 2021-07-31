@@ -8,10 +8,16 @@ the list and the order should not change. The solution can use the
 
 ## Solution
 
+### Using SRFI
+
+There's a
+[`delete-duplicates`](https://srfi.schemers.org/srfi-1/srfi-1.html#delete-duplicates)
+procedure in SRFI 1.
+
 ### Using hash tables (SRFI 125)
 
 ```Scheme
-(define (remove-duplicates xs)
+(define (delete-duplicates xs)
   (let ((seen (make-hash-table equal?)))
     (let loop ((xs xs) (new-list '()))
       (if (null? xs)
@@ -29,6 +35,6 @@ Credit [Lassi Kortela](https://github.com/lassik)
 ## Usage
 
 ```Scheme
-(remove-duplicates '(1 2 3 1 2 4 4 5 6 7 5))
+(delete-duplicates '(1 2 3 1 2 4 4 5 6 7 5))
 ;; ==> '(1 2 3 4 5 6 7)
 ```
