@@ -13,9 +13,8 @@ given predicate procedure.
     (if (null? list)
         (reverse result)
         (let ((item (car list)))
-          (if (fn item)
-              (iter (cdr list) result)
-              (iter (cdr list) (cons item result)))))))
+          (iter (cdr list)
+                (if (fn item) result (cons item result)))))))
 ```
 Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
