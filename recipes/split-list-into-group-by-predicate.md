@@ -1,3 +1,5 @@
+# Split list into sub lists by a given predicate
+
 ## Problem
 
 I want to split a list into lists by predicate, the function accept two sequential elements of the list.

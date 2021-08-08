@@ -1,3 +1,5 @@
+# Use list as stack data structure
+
 ## Problem
 
 I want to use list as stack, to add and remove items from list.
