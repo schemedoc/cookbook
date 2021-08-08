@@ -21,8 +21,8 @@ function get_api(argv) {
     const re = /\[Recipe\]/;
     return get(`https://api.github.com${base_path}`, { query, auth }).then(function(issues) {
         issues.forEach(function(issue) {
-            const { title, url } = issue;
-            if (title.match(re)) {
+            const { title, url, state } = issue;
+            if (title.match(re) && state == 'open') {
                 const filename = './recipes/' + slugify(title.replace(re, '')) + '.md';
                 get(url, { auth }).then(function(issue) {
                     const { body } = issue;
