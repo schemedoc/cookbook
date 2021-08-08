@@ -14,9 +14,7 @@
   "filter-alist-keys")
   
  ("Data structures"
-  "2d-matrix")
-
- ("Data structures"
+  "use-lists-as-2d-matrix.md"
   "use-list-as-stack"
   "use-list-as-set"
   "use-list-as-queue")

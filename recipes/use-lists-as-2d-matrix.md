@@ -1,4 +1,4 @@
-# Create 2D matrix manipulation functions
+# Use lists as 2d matrix
 
 ## Problem
 
