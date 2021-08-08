@@ -12,9 +12,9 @@
 
  ("Association lists, property lists, and hash tables"
   "filter-alist-keys")
-  
+
  ("Data structures"
-  "use-lists-as-2d-matrix.md"
+  "use-lists-as-2d-matrix"
   "use-list-as-stack"
   "use-list-as-set"
   "use-list-as-queue")
