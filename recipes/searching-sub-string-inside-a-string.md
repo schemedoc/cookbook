@@ -39,5 +39,5 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
       (begin
         (display (substring input found))
         (newline))))
-;; ==> "helo world"
+;; ==> "hello world"
 ```
