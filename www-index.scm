@@ -27,7 +27,8 @@
   "split-string")
 
  ("Numbers"
-  "convert-integer-to-list-of-digits")
+  "convert-integer-to-list-of-digits"
+  "compute-pascals-triangle")
 
  ("Time"
   "format-unix-timestamp")
