@@ -5,7 +5,7 @@
 You want to add element to the list, but make all elements unique. So it work like set.
 
 ## Solution
-    
+
 ```scheme
 (define (adjoin x a)
   (if (member x a)
