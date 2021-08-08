@@ -1,6 +1,7 @@
 (("Pairs and lists"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
+  "find-depth-of-list"
   "remove-duplicates-from-list"
   "remove-element-from-list"
   "select-random-elements-from-list"
