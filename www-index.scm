@@ -9,6 +9,9 @@
 
  ("Association lists, property lists, and hash tables"
   "filter-alist-keys")
+  
+ ("Data structures"
+  "2d-matrix")
 
  ("Strings"
   "convert-any-value-to-string"
