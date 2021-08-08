@@ -1,3 +1,5 @@
+# Find index of substring of a bigger string
+
 ## Problem
 
 You want to search and find the index of a string inside a bigger string.
