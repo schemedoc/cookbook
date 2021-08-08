@@ -1,4 +1,4 @@
-# Use list as stack data structure
+# Use list as stack
 
 ## Problem
 

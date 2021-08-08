@@ -1,11 +1,11 @@
-# Split list into sub lists by a given predicate
+# Split list into groups by comparator
 
 ## Problem
 
 I want to split a list into lists by predicate, the function accept two sequential elements of the list.
 
 ## Solution
-    
+
 ```scheme
 (define (collect p a)
   (let collect ((in  a)

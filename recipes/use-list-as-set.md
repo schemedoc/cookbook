@@ -1,4 +1,4 @@
-# Implement Set functionality
+# Use list as set
 
 ## Problem
 

@@ -1,4 +1,4 @@
-# Implement Queue
+# Use list as queue
 
 ## Problem
 
@@ -7,7 +7,7 @@ them in the same order. First In First out (FIFO)
 generate k-combinations from a given list.
 
 ## Solution
-    
+
 ```scheme
 (define (make-queue)
   (cons '() '()))
