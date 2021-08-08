@@ -18,7 +18,9 @@ I want to use list as stack, to add and remove items from list.
        top))))
 ```
 
-Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me) based on code by [Nils M Holm](http://t3x.org/)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
+
+based on code by [Nils M Holm](http://t3x.org/) (ref: [setters.scm](http://t3x.org/s9fes/setters.scm.html))
 
 ## Usage
 

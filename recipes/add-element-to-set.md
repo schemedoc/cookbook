@@ -11,7 +11,7 @@ You want to add element to the list, but make all elements unique. So it work li
       (cons x a)))
 ```
 
-Credit: [Nils M Holm](http://t3x.org/)
+Credit: [Nils M Holm](http://t3x.org/) (ref: [adjoin.scm](http://t3x.org/s9fes/adjoin.scm.html))
 
 ## Usage
 
