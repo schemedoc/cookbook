@@ -20,60 +20,58 @@ Create matrix data structure and functions to operate on matrices.
                  result)))))
 
 (define (nth list n)
-  (let iter ((n n) (result list))
+  (let loop ((n n) (result list))
     (if (= n 0)
         (car result)
-        (iter (- n 1)
+        (loop (- n 1)
               (cdr result)))))
 
 (define matrix-row nth)
 
 (define (matrix-col M n)
-  (let iter ((i (length M)) (result '()))
+  (let loop ((i (length M)) (result '()))
     (if (= i 0)
         result
-        (iter (- i 1)
+        (loop (- i 1)
               (cons (nth (nth M (- i 1)) n) result)))))
 
 (define (matrix-mul N M)
-  (let rows ((i (length N)) (result '()))
+  (let outter ((i (length N)) (result '()))
     (if (= i 0)
         result
-        (rows (- i 1)
-              (cons
-               (let cols ((j (length (car M))) (row '()))
-                 (if (= j 0)
-                     row
-                     (cols
-                      (- j 1)
-                      (cons (reduce + (map *
-                                           (matrix-row N (- i 1))
-                                           (matrix-col M (- j 1))))
-                            row))))
+        (outter (- i 1)
+                (cons
+                 (let inner ((j (length (car M))) (row '()))
+                   (if (= j 0)
+                       row
+                       (inner
+                        (- j 1)
+                        (cons (reduce + (map *
+                                             (matrix-row N (- i 1))
+                                             (matrix-col M (- j 1))))
+                              row))))
                result)))))
 
 (define (reduce fun lst)
-  (let iter ((result (car lst)) (lst (cdr lst)))
+  (let loop ((result (car lst)) (lst (cdr lst)))
     (if (null? lst)
         result
-        (iter (fun result (car lst)) (cdr lst)))))
+        (loop (fun result (car lst)) (cdr lst)))))
 
 (define (matrix-vector-mul v M)
   (car (matrix-mul (list v) M)))
 
-
 (define (matrix-transpose M)
-  (if (null? (car M))
-      '()
-      (cons (map car M)
-            (matrix-transpose (map cdr M)))))
+  (let loop ((M M) (result '()))
+    (if (null? (car M))
+        result
+        (loop (map cdr M) (append result (list (map car M)))))))
 
 (define (matrix-sum N M)
   (map (lambda (nrow mrow) (map + nrow mrow)) N M))
 ```
 
-Credit: [Jakub T. Jankiewicz](https://jcubic.pl) (ref: [Matrix manipulation in scheme
-](https://jcubic.wordpress.com/2011/09/29/matrix-manipulation-in-scheme/))
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl) (ref: [Matrix manipulation in scheme](https://jcubic.wordpress.com/2011/09/29/matrix-manipulation-in-scheme/))
 
 ## Usage
 
