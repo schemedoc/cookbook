@@ -1,4 +1,4 @@
-# Find index of substring of a bigger string
+# Find substring in string
 
 ## Problem
 

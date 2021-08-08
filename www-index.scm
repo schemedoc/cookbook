@@ -1,4 +1,5 @@
 (("Pairs and lists"
+  "create-k-combinations-from-list"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
   "find-depth-of-list"

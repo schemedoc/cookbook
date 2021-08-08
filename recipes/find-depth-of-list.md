@@ -1,4 +1,4 @@
-# Find depth of the list
+# Find depth of list
 
 ## Problem
 

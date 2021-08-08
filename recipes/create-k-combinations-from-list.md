@@ -1,9 +1,11 @@
+# Create K combinations from list
+
 ## Problem
 
 I want to generate k-combinations from a given list.
 
 ## Solution
-    
+
 ```scheme
 (define (combine3 n set rest)
   (letrec
