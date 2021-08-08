@@ -1,4 +1,4 @@
-# Use lists as 2d matrix
+# Use lists as 2D matrix
 
 ## Problem
 
