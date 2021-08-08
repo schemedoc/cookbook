@@ -11,8 +11,8 @@ Create matrix data structure and functions to operate on matrices.
   (let outter ((i n) (result '()))
     (if (= i 0)
         result
-        (outter (- i 1) 
-                (cons 
+        (outter (- i 1)
+                (cons
                  (let inner ((j n) (row '()))
                    (if (= j 0)
                        row
