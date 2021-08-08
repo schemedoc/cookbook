@@ -25,7 +25,7 @@ I want to split a list into lists by predicate, the function accept two sequenti
                        (cons out res)))))))
 ```
 
-Credit: [Nils M Holm](http://t3x.org/) (ref: [collect.scm](http://t3x.org/s9fes/collect.scm.html))
+Credit: [Nils M Holm](https://t3x.org/) (ref: [collect.scm](https://t3x.org/s9fes/collect.scm.html))
 
 
 ## Usage

@@ -40,7 +40,7 @@ I want to generate k-combinations from a given list.
   (combine3 n set (lambda (x) x)))
 ```
 
-Credit: [Nils M Holm](http://t3x.org/) (ref: [combine.scm](http://t3x.org/s9fes/combine.scm.html))
+Credit: [Nils M Holm](https://t3x.org/) (ref: [combine.scm](https://t3x.org/s9fes/combine.scm.html))
 
 ## Usage
 

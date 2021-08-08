@@ -13,7 +13,7 @@ I want to calculate the depth of the list (how much the list is nested).
       0))
 ```
 
-Credit: [Nils M Holm](http://t3x.org/) (ref: [depth.scm](http://t3x.org/s9fes/depth.scm.html))
+Credit: [Nils M Holm](https://t3x.org/) (ref: [depth.scm](https://t3x.org/s9fes/depth.scm.html))
 
 ## Usage
 

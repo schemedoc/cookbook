@@ -34,7 +34,7 @@ generate k-combinations from a given list.
     (list x q)))
 ```
 
-Credit: [Nils M Holm](http://t3x.org/) (ref: [queue.scm](http://t3x.org/s9fes/queue.scm.html))
+Credit: [Nils M Holm](https://t3x.org/) (ref: [queue.scm](https://t3x.org/s9fes/queue.scm.html))
 
 ## Usage
 
