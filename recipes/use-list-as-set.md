@@ -20,6 +20,7 @@ Credit: [Nils M Holm](https://t3x.org/) (ref: [adjoin.scm](https://t3x.org/s9fes
 ```scheme
 (adjoin 'x '(a b c))
 ;; ==> (x a b c)
+
 (adjoin 'c '(a b c))
 ;; ==> (a b c)
 ```

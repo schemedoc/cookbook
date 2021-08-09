@@ -47,6 +47,7 @@ Credit: [Nils M Holm](https://t3x.org/) (ref: [combine.scm](https://t3x.org/s9fe
 ```scheme
 (combine 2 '(a b c))
 ;; ==> ((a b) (a c) (b c))
+
 (combine* 2 '(a b c))
 ;; ==>  ((a a) (a b) (a c) (b b) (b c) (c c))
 ```

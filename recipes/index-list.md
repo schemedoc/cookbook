@@ -35,6 +35,5 @@ Credit: [Arthur A. Gleckler](https://speechcode.com/)
              (make-eq-hash-table)
              (lambda (a) (list (car a)))
              cdr))
-
 ;; ==> ((bar bat foo) (baz quux))
 ```

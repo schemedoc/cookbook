@@ -33,6 +33,7 @@ Credit: [Nils M Holm](https://t3x.org/) (ref: [collect.scm](https://t3x.org/s9fe
 ```scheme
 (collect eq? '(a a a b c c))
 ;; ==> ((a a a) (b) (c c))
+
 (collect < '(1 2 3 3 4 5 4))
 ;; ==> ((1 2 3) (3 4 5) (4))
 ```
