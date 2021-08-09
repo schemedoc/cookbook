@@ -37,9 +37,6 @@ The same functionality is provided by SRFI-13 function `string-contains` and `st
 (let* ((input "This is hello world")
        (search "hello")
        (found (string-find input search)))
-  (if found
-      (begin
-        (display (substring input found))
-        (newline))))
+    (and found (substring input found (string-length input))))
 ;; ==> "hello world"
 ```
