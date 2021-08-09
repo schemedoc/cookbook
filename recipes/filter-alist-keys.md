@@ -23,7 +23,7 @@ specified keys.
               (iter (cdr alist) keys result))))))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 It uses the `remove` procedure from [another
 recipe](../remove-element-from-list/).

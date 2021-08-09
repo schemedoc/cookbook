@@ -34,7 +34,7 @@ should return `#f`.
                       counters)))))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ### Using a hash table (SRFI 125)
 
@@ -56,7 +56,7 @@ Credit [Lassi Kortela](https://github.com/lassik)
                         best-x))))))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 

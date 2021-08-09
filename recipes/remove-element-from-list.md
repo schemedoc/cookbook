@@ -16,7 +16,8 @@ given predicate procedure.
           (loop (cdr lst)
                 (if (fn item) result (cons item result)))))))
 ```
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### Using SRFI
 

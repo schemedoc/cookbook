@@ -49,7 +49,8 @@ I don't want to get `(d a b a)`.
                                    how-many))))))
         (do-pick elements '() '() (random-integer list-length) how-many))))
 ```
-Credit [Tim Van den Langenbergh](http://tmtvl.info)
+
+Credit: [Tim Van den Langenbergh](http://tmtvl.info)
 
 ## Usage
 

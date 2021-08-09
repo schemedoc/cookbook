@@ -18,7 +18,8 @@ Split a string into substrings at known delimiters.
               (loop (+ b 1) (+ b 1) (maybe-add a b parts)))
           (reverse (maybe-add a b parts))))))
 ```
-Credit [Lassi Kortela](https://github.com/lassik)
+
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 

@@ -18,7 +18,7 @@ for an element for which the procedure returns true.
               (iter (cdr list) (+ index 1)))))))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### Using SRFI 1
 

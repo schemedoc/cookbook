@@ -25,11 +25,11 @@ You want to search and find the index of a string inside a bigger string.
                   (loop (+ h-index 1) 0))))))))
 ```
 
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
+
 ### SRFI
 
 The same functionality is provided by SRFI-13 function `string-contains` and `string-contains-ci`
-
-Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ## Usage
 

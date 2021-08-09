@@ -30,7 +30,7 @@ procedure in SRFI 1.
                              (cons x new-list)))))))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ### Removing only adjacent duplicates
 
@@ -51,7 +51,7 @@ memory.
                     (cons x new-list)))))))
 ```
 
-Credit [Lassi Kortela](https://github.com/lassik)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 

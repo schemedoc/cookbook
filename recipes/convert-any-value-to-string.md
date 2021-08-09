@@ -17,7 +17,7 @@ You need a procedure that will convert any value to a string.
     (values (repr display) (repr write))))
 ```
 
-Credit [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### SRFI
 
