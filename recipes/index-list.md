@@ -25,6 +25,8 @@ The hash table procedures are from [SRFI 69](https://srfi.schemers.org/srfi-69/)
   table)
 ```
 
+Credit: [Arthur A. Gleckler](https://speechcode.com/)
+
 ## Usage
 
 ```Scheme
