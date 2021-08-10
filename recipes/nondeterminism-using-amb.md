@@ -1,14 +1,20 @@
-# Create McCarthy's AMB operator.
+# Nondeterminism using amb
 
 ## Problem
 
-I want to implement amb operator, so I can use nondeterminism in my code.
+I want to use McCarthy's `amb` operator to express nondeterminism in
+my code.
 
 ## Solution
 
-This solution use code from:
-* [/use-list-as-stack/](Use list as Stack) - `push!` and `pop!`
-* [/find-if-element-in-list-exists](Find if element exists in list) - `exists?`
+This solution depends on the `syntax-rules` ellipsis extension that is
+present in R7RS and
+[SRFI 46](https://srfi.schemers.org/srfi-46/srfi-46.html).
+
+It also depends on two other recipes:
+
+* [Use list as stack](/use-list-as-stack/) - `push!` and `pop!`
+* [Find stride across lists](/find-stride-across-lists) - `find-stride`
 
 ```scheme
 (define *amb-stack* '())
@@ -54,11 +60,10 @@ This solution use code from:
             (amb))))))
 ```
 
-Code requires syntax-rules to support [SRFI-46](https://srfi.schemers.org/srfi-46/srfi-46.html) required by R7RS.
-
 Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
-based on code by [Nils M Holm](https://t3x.org/) (ref: [amb.scm](http://t3x.org/s9fes/amb.scm.html))
+based on code by [Nils M Holm](https://t3x.org/)
+(ref: [amb.scm](https://t3x.org/s9fes/amb.scm.html))
 
 ## Usage
 

@@ -1,8 +1,9 @@
 (("Pairs and lists"
   "create-k-combinations-from-list"
+  "find-depth-of-list"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
-  "find-depth-of-list"
+  "find-stride-across-lists"
   "index-list"
   "remove-duplicates-from-list"
   "remove-element-from-list"
@@ -19,6 +20,9 @@
   "use-list-as-stack"
   "use-list-as-set"
   "use-list-as-queue")
+
+ ("Algorithms"
+  "nondeterminism-using-amb")
 
  ("Strings"
   "convert-any-value-to-string"
