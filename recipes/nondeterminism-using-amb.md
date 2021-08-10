@@ -30,21 +30,23 @@ It also depends on two other recipes:
 (define-syntax amb
   (syntax-rules ()
     ((_ expr ...)
-     (letrec-syntax ((unfold-alternatives (syntax-rules ::: ()
-                                           ((_)
-                                            (begin
-                                              (pop! *amb-stack*)
-                                              (if (null? *amb-stack*)
-                                                  *amb-done*
-                                                  ((car *amb-stack*) *amb-done*))))
-                                           ((_ a b :::)
-                                            (let ((x (call/cc
-                                                      (lambda (k)
-                                                        (set-car! *amb-stack* k)
-                                                        a))))
-                                              (if (amb-done? x)
-                                                  (unfold-alternatives b :::)
-                                                  x))))))
+     (letrec-syntax
+         ((unfold-alternatives
+           (syntax-rules ::: ()
+             ((_)
+              (begin
+                (pop! *amb-stack*)
+                (if (null? *amb-stack*)
+                    *amb-done*
+                    ((car *amb-stack*) *amb-done*))))
+             ((_ a b :::)
+              (let ((x (call/cc
+                        (lambda (k)
+                          (set-car! *amb-stack* k)
+                          a))))
+                (if (amb-done? x)
+                    (unfold-alternatives b :::)
+                    x))))))
        (begin
          (push! *amb-stack* #f)
          (unfold-alternatives expr ...))))))
