@@ -22,7 +22,8 @@
   "use-list-as-queue")
 
  ("Algorithms"
-  "nondeterminism-using-amb")
+  "nondeterminism-using-amb"
+  "topological-sort")
 
  ("Strings"
   "convert-any-value-to-string"
