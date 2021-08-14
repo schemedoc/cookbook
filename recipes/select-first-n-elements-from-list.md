@@ -7,22 +7,20 @@ I want to select first elements from list.
 ## Solution
 
 ```schem
-(define (take n lst)
-  (let iter ((result '()) (i n) (lst lst))
+(define (take lst n)
+  (let loop ((result '()) (i n) (lst lst))
     (if (or (null? lst) (<= i 0))
         (reverse result)
-        (iter (cons (car lst) result) (- i 1) (cdr lst)))))
+        (loop (cons (car lst) result) (- i 1) (cdr lst)))))
 ```
 
 Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ### SRFI
-
-Function with same name, but with arguments swaped is part of the [SRFI-1](https://srfi.schemers.org/srfi-1/srfi-1.html#take).
+The same function is part of the [SRFI-1](https://srfi.schemers.org/srfi-1/srfi-1.html#take).
 
 ## Usage
-
 ```scheme
-(take 3 '(1 2 3 4 5))
+(take '(1 2 3 4 5) 3)
 ;; ==> (1 2 3)
 ```
