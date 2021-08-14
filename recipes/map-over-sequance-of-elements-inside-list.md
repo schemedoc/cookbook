@@ -7,13 +7,24 @@ each loops the function gets n items from list.
 
 e.g.:
 
-for list `(1 2 3 4 5)` and `N = 2` it will call
+for list `(1 2 3 4 5)` and `N = 2` it will call:
 
 ```scheme
 (fn 1 2)
 (fn 2 3)
 (fn 3 4)
 (fn 4 5)
+(fn 5)
+```
+
+for list '(1 2 3 4 5) and `N = 3` it will call:
+
+```scheme
+(fn 1 2 3)
+(fn 2 3 4)
+(fn 3 4 5)
+(fn 4 5)
+(fn 5)
 ```
 
 and collect the results into single list.
