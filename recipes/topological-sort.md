@@ -20,6 +20,15 @@ which uses it to compute the order in which to build files.
 
 ## Solution
 
+### Built-in procedures
+
+Chicken and Gauche have a built-in `topological-sort` procedure.
+
+### Algorithm T (Knuth)
+
+This solution is loosely based on Algorithm T in _The Art of Computer
+ Programming_ section 2.2.3.
+
 The graph is represented as a list of lists. The first element of each
 nested list is the label of a graph node, and the rest of the elements
 (if any) are the labels of the nodes that this node depends on.
@@ -28,9 +37,6 @@ Prerequisites:
 
 * The `filter` procedure from SRFI 1.
 * The three-argument version of `assoc` from R7RS.
-
-This solution is loosely based on Algorithm T in _The Art of Computer
- Programming_ (Knuth) section 2.2.3.
 
 ```Scheme
 (define (topological-sort nodes eq)
@@ -80,10 +86,6 @@ This solution is loosely based on Algorithm T in _The Art of Computer
 ```
 
 Credit: [Shiro Kawai](https://practical-scheme.net/)
-
-## Built-in procedures
-
-Chicken and Gauche have a built-in `topological-sort` procedure.
 
 ## Usage
 
