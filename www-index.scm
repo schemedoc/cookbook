@@ -30,6 +30,7 @@
   "join-list-of-strings-with-delimiter"
   "remove-whitespace-from-string"
   "find-substring-in-string"
+  "get-type-of-object"
   "split-string")
 
  ("Numbers"
