@@ -48,8 +48,8 @@ Credit: [Arthur A. Gleckler](https://speechcode.com/)
  'scheme-mode-hook
  (lambda ()
    (setq prettify-symbols-alist
-         (append
-          prettify-symbols-alist
+         (seq-concatenate
+          'list
           '(("<="       . ?≤)
             (">="       . ?≥)
             ("define"   . ?≝)
@@ -61,7 +61,8 @@ Credit: [Arthur A. Gleckler](https://speechcode.com/)
             ("'()"      . ?∅)
             ("if"       . ?⁇)
             ("or"       . ?∨)
-            ("and"      . ?∧))))))
+            ("and"      . ?∧))
+          prettify-symbols-alist))))
 ```
 
 Credit: [Vladimir Nikishkin](https://lockywolf.net/)
