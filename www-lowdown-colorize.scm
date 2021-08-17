@@ -54,6 +54,20 @@
                           (result `(verbatim (info ,(string-trim-both info))
                                              (code ,@code-lines)))))))
 
+(define (dashes->spaces string)
+  (string-map (lambda (c) (if (char=? c #\-) #\space c)) string))
+
+(define (spaces->dashes string)
+  (string-map (lambda (c) (if (char=? c #\space) #\- c)) string))
+
+(define (coloring-type-string->symbol string)
+  (let ((string (dashes->spaces string)))
+    (let loop ((names (coloring-type-names)))
+      (and (not (null? names))
+           (if (string-ci= string (cdar names))
+               (caar names)
+               (loop (cdr names)))))))
+
 (define fenced-code-block-conversion-rules*
   `((verbatim
      . ,(lambda (_ contents)
@@ -63,11 +77,13 @@
                          (code (alist-ref 'code contents))
                          (code* (string-intersperse code ""))
                          (raw-lang (car info))
-                         (lang-str (string-downcase raw-lang))
-                         (lang-sym (string->symbol lang-str)))
+                         (lang-sym (coloring-type-string->symbol raw-lang))
+                         (lang-dashed (spaces->dashes
+                                       (string-downcase raw-lang))))
                 (if (coloring-type-exists? lang-sym)
                     `(pre (code (@ (class ,(string-append
-                                            "colorize language-" lang-str)))
+                                            "colorize"
+                                            " language-" lang-dashed)))
                                 ,@(->> code*
                                        (html-colorize lang-sym)
                                        (html->sxml)
