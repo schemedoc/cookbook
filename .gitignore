@@ -1,3 +1,4 @@
 *.html
+/www/licenses/
 /www/schemeorg.css
 node_modules
