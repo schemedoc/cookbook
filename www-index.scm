@@ -40,4 +40,7 @@
   "format-unix-timestamp")
 
  ("File system"
-  "find-matching-files-in-directory-tree"))
+  "find-matching-files-in-directory-tree")
+
+ ("Tool integrations"
+  "display-unicode-symbols-in-emacs"))

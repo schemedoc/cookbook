@@ -1,23 +1,28 @@
-# Display some symbols in Scheme buffers using special characters
+# Display Unicode symbols in Emacs
 
 ## Problem
 
-In Emacs, one can display some keywords, like `lambda` and `>=`, using
-special characters like `λ` and `≥`.
+In Emacs, display some Scheme keywords, like `lambda` and `>=`, using
+special Unicode characters like `λ` and `≥`.
 
 ## Solution
 
-```Emacs-Lisp
+The following works in modern versions of GNU Emacs:
+
+```Emacs Lisp
 (defvar pretty-scheme-keywords
-  '(("\\(->\\)" . #x2192)
-    ("\\(<=\\)" . #x2264)
-    ("\\(<==\\)" . #x21d0)
-    ("\\(>=\\)" . #x2265)
-    ("\\(==>\\)" . #x21d2))
-  "alist from regexps to Unicode code points")
+  (mapcar (lambda (pair)
+            (cons (concat "\\(" (regexp-quote (car pair)) "\\)")
+                  (cdr pair)))
+          '(("->"  . #x2192)
+            ("<="  . #x2264)
+            ("<==" . #x21D0)
+            (">="  . #x2265)
+            ("==>" . #x21D2)))
+  "Alist from regexps to Unicode code points.")
 
 (defun prettify-scheme ()
-  (add-to-list 'prettify-symbols-alist '("lambda" . ?x3bb))
+  (add-to-list 'prettify-symbols-alist '("lambda" . #x3BB))
   (font-lock-add-keywords
    nil
    (mapcar (lambda (keyword)
@@ -32,3 +37,5 @@ special characters like `λ` and `≥`.
 
 (add-hook 'scheme-mode-hook 'prettify-scheme)
 ```
+
+Credit: [Arthur A. Gleckler](https://speechcode.com/)
