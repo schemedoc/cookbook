@@ -7,9 +7,11 @@ special Unicode characters like `λ` and `≥`.
 
 ## Solution
 
-The following works in modern versions of GNU Emacs:
+The following solutions work in modern versions of GNU Emacs.
 
-```Emacs Lisp
+### Arrows and lambda
+
+```Emacs-Lisp
 (defvar pretty-scheme-keywords
   (mapcar (lambda (pair)
             (cons (concat "\\(" (regexp-quote (car pair)) "\\)")
@@ -38,3 +40,34 @@ The following works in modern versions of GNU Emacs:
 ```
 
 Credit: [Arthur A. Gleckler](https://speechcode.com/)
+
+### APL-like characters
+
+```Emacs-Lisp
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist
+         (seq-concatenate
+          'list
+          '(("<="       . ?≤)
+            (">="       . ?≥)
+            ("define"   . ?≝)
+            ("set!"     . ?≐)
+            ("set-car!" . ?≔)
+            ("set-cdr!" . ?≕)
+            ("#t"       . ?✓)
+            ("#f"       . ?✗)
+            ("'()"      . ?∅)
+            ("if"       . ?⁇)
+            ("or"       . ?∨)
+            ("and"      . ?∧))
+          prettify-symbols-alist))))
+```
+
+Credit: [Vladimir Nikishkin](https://lockywolf.net/)
+
+### Greek letters
+
+A [`prettify-greek`](https://melpa.org/#/prettify-greek) package can
+be installed from MELPA.
