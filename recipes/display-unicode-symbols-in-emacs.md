@@ -17,7 +17,7 @@ special characters like `λ` and `≥`.
   "alist from regexps to Unicode code points")
 
 (defun prettify-scheme ()
-  (add-to-list 'prettify-symbols-alist '("lambda" . ?λ))
+  (add-to-list 'prettify-symbols-alist '("lambda" . ?x3bb))
   (font-lock-add-keywords
    nil
    (mapcar (lambda (keyword)
