@@ -32,7 +32,6 @@ The following works in modern versions of GNU Emacs:
                                          'decompose-region)
                          nil))))
            pretty-scheme-keywords))
-  (prettify-quotes)
   (turn-on-font-lock))
 
 (add-hook 'scheme-mode-hook 'prettify-scheme)
