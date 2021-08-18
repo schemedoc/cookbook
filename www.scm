@@ -81,6 +81,36 @@
                                (group-recipes group)))))
        groups-template))
 
+(define (about-section subdomain user/repo)
+  `(section
+    (@ (id "schemeorg-contributing"))
+    (h2 "About " ,subdomain ".scheme.org")
+    (div (@ (class "round-box gray-box"))
+         (p (kbd ,subdomain ".scheme.org")
+            " is a community subdomain of "
+            (kbd "scheme.org"))
+         (ul
+          (li "Source code: "
+              (a (@ (href ,(string-append
+                            "https://github.com/"
+                            user/repo)))
+                 (kbd (@ (class "github-repo"))
+                      ,user/repo))
+              " repository on GitHub.")
+          (li "Discussion: "
+              (code (@ (class "mailing-list"))
+                    "schemeorg")
+              " mailing list "
+              "(" (a (@ (href
+                         "https://srfi-email.schemers.org/schemeorg/"))
+                     "archives")
+              ", " (a (@ (href
+                          ,(string-append
+                            "https://srfi.schemers.org/"
+                            "srfi-list-subscribe.html#schemeorg")))
+                      "subscribe")
+              ").")))))
+
 (define (write-front-page html-filename)
   (write-html-file
    html-filename
@@ -99,9 +129,7 @@
                                        ,(recipe-title recipe)))))
                            (group-recipes group)))))
             groups)
-     (hr)
-     (p "Source code " (a (@ (href "https://github.com/schemedoc/cookbook"))
-                          "at GitHub"))
+     ,(about-section "cookbook" "schemedoc/cookbook")
      (p (a (@ (href "https://www.scheme.org/"))
            "Back to Scheme.org")))))
 
