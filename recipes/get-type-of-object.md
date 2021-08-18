@@ -2,7 +2,7 @@
 
 ## Problem
 
-You need a procedure that will return the type of the object as a string.
+You need a procedure that will return the type of an object.
 
 ## Solution
 
@@ -16,7 +16,7 @@ You need a procedure that will return the type of the object as a string.
 (define type-of-alist
   (append type-of-alist-extra
           (list (cons boolean?    'boolean)
-                (cons char?       'character)
+                (cons char?       'char)
                 (cons eof-object? 'eof-object)
                 (cons null?       'null)
                 (cons number?     'number)
@@ -42,8 +42,8 @@ Credit: [Lassi Kortela](https://github.com/lassik)
 ;; ==> string
 
 (type-of #\x)
-;; ==> character
+;; ==> char
 
 (type-of (current-input-port))
-;; ==> input-port
+;; ==> port
 ```
