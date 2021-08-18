@@ -7,34 +7,43 @@ You need a procedure that will return the type of the object as a string.
 ## Solution
 
 ```Scheme
-(define (type obj)
-  (cond ((number? obj) "number")
-        ((pair? obj) "pair")
-        ((null? obj) "nil")
-        ((string? obj) "string")
-        ((symbol? obj) "symbol")
-        ((vector? obj) "vector")
-        ((procedure? obj) "procedure")
-        ((port? obj)
-         (cond ((input-port? obj) "input-port")
-               ((output-port? obj) "output-port")
-               (else "unknown-port")))
-        ((eof-object? obj) "eof")
-        ((char? obj) "character")
-        ((boolean? obj) "boolean")))
+(cond-expand
+ (r7rs
+  (define type-of-alist-extra (list (cons bytevector? 'bytevector))))
+ (else
+  (define type-of-alist-extra '())))
+
+(define type-of-alist
+  (append type-of-alist-extra
+          (list (cons boolean?    'boolean)
+                (cons char?       'character)
+                (cons eof-object? 'eof-object)
+                (cons null?       'null)
+                (cons number?     'number)
+                (cons pair?       'pair)
+                (cons port?       'port)
+                (cons procedure?  'procedure)
+                (cons string?     'string)
+                (cons symbol?     'symbol)
+                (cons vector?     'vector))))
+
+(define (type-of obj)
+  (let loop ((alist type-of-alist))
+    (and (not (null? alist))
+         (if ((caar alist) obj) (cdar alist) (loop (cdr alist))))))
 ```
 
-Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 
 ```Scheme
-(type "foo")
-;; ==> "string"
+(type-of "foo")
+;; ==> string
 
-(type #\x)
-;; ==> "character"
+(type-of #\x)
+;; ==> character
 
-(type (current-input-port))
-;; ==> "input-port"
+(type-of (current-input-port))
+;; ==> input-port
 ```
