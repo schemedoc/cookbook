@@ -10,12 +10,19 @@
         (srfi 1)
         (srfi 13)
         (srfi 132)
-        (only (chicken file) create-directory)
+        (only (chicken file) copy-file create-directory)
         (sxml-transforms)
         (lowdown)  ; Markdown->SXML parser.
         (www-lowdown-colorize))
 
 (enable-www-lowdown-colorize!)
+
+(define licenses
+  '("CC0-1.0"
+    "ISC"
+    "MIT"
+    "BSD-3-Clause"
+    "LGPL-2.1-or-later"))
 
 (define (disp . xs) (for-each display xs) (newline))
 
@@ -118,6 +125,19 @@
    (string-append "Scheme is a minimalist dialect of the Lisp family "
                   "of programming languages.")
    `((h1 (@ (id "logo")) "Scheme Cookbook")
+     (h2 "License")
+     (p "The code in the cookbook is released under several common"
+        " licenses simultaneously. The user is free to pick any one"
+        " of them. The aim is to make it easy"
+        " to copy code into existing projects without having"
+        " to add a new license notice to cover the cookbook material.")
+     (p "The licenses are: "
+        ,@(cdr (append-map (lambda (license)
+                             `(", "
+                               (a (@ (href ,(string-append
+                                             "licenses/" license ".txt")))
+                                  (kbd ,license))))
+                           licenses)))
      (h2 "Recipes")
      ,@(map (lambda (group)
               `(section
@@ -146,6 +166,12 @@
 
 (define (main)
   (create-directory "www")
+  (create-directory "www/licenses")
+  (for-each (lambda (license)
+              (copy-file (string-append "LICENSES/" license ".txt")
+                         (string-append "www/licenses/" license ".txt")
+                         #t))
+            licenses)
   (write-front-page  "www/index.html")
   (for-each write-recipe-page (append-map group-recipes groups))
   0)
