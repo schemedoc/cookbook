@@ -45,5 +45,8 @@
  ("Reflection"
   "get-type-of-object")
 
+ ("Macros"
+  "define-symbols")
+
  ("Tool integrations"
   "display-unicode-symbols-in-emacs"))
