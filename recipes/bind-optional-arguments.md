@@ -1,4 +1,4 @@
-# Create binding with optionnal arguments
+# Bind optional arguments
 
 ## Problem
 

@@ -1,6 +1,6 @@
 (("Pairs and lists"
   "create-k-combinations-from-list"
-  "create-bindinng-with-optional-arguments"
+  "bind-optional-arguments"
   "find-depth-of-list"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
