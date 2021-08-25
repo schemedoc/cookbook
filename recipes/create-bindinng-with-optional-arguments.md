@@ -31,8 +31,8 @@ Credit [@tallflier](https://www.reddit.com/user/tallflier/)
 
 ```scheme
 (define (calc num . rest)
-  (let-optionals rest ((multipier 1) (factor 10))
-    (/ (* num multipier) factor)))
+  (let-optionals rest ((multiplier 1) (factor 10))
+    (/ (* num multiplier) factor)))
 
 (calc 10)
 ;; ==> 1
