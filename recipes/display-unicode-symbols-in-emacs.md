@@ -7,7 +7,8 @@ special Unicode characters like `λ` and `≥`.
 
 ## Solution
 
-The following solutions work in modern versions of GNU Emacs.
+The following solutions, which are written in the Emacs Lisp
+programming language, work in current versions of GNU Emacs.
 
 ### Arrows and lambda
 
