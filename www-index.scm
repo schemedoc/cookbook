@@ -47,6 +47,7 @@
 
  ("Macros"
   "bind-optional-arguments"
+  "define-functors"
   "define-symbols")
 
  ("Tool integrations"
