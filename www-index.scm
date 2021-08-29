@@ -1,6 +1,5 @@
 (("Pairs and lists"
   "create-k-combinations-from-list"
-  "bind-optional-arguments"
   "find-depth-of-list"
   "find-index-of-element-in-list"
   "find-most-frequent-element-in-list"
@@ -47,6 +46,7 @@
   "get-type-of-object")
 
  ("Macros"
+  "bind-optional-arguments"
   "define-symbols")
 
  ("Tool integrations"
