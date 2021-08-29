@@ -7,6 +7,8 @@ specified keys.
 
 ## Solution
 
+### Assuming no duplicate keys
+
 ```Scheme
 (define (match value)
   (lambda (x)
@@ -28,7 +30,20 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 It uses the `remove` procedure from [another
 recipe](../remove-element-from-list/).
 
-The code assumes that _alist_ has no duplicate keys.
+### Handling duplicate keys
+
+```Scheme
+(define (alist->subset keys alist)
+  (let loop ((alist alist) (new-alist '()))
+    (if (null? alist) (reverse new-alist)
+        (loop (cdr alist)
+              (let ((pair (car alist)))
+                (if (member (car pair) keys)
+                    new-alist
+                    (cons pair new-alist)))))))
+```
+
+Credit: [Lassi Kortela](https://github.com/lassik)
 
 ## Usage
 
