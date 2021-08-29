@@ -2,7 +2,9 @@
 
 ## Problem
 
-I want to generate k-combinations from a given list.
+I want to generate
+[_k_-combinations](https://en.wikipedia.org/wiki/Combination)
+from a given list.
 
 ## Solution
 
