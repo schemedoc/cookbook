@@ -47,6 +47,7 @@
 
  ("Macros"
   "bind-optional-arguments"
+  "check-for-symbol-in-syntax-rules"
   "define-symbols")
 
  ("Tool integrations"
