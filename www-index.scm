@@ -48,7 +48,8 @@
  ("Macros"
   "bind-optional-arguments"
   "check-for-symbol-in-syntax-rules"
-  "define-symbols")
+  "define-symbols"
+  "unicode-lambda")
 
  ("Tool integrations"
   "display-unicode-symbols-in-emacs"))
