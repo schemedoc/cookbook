@@ -35,12 +35,12 @@ The code use function:
 * `take` from recipe: [Select first n elements from list](/select-first-n-elements-from-list/)
 
 ```scheme
-(define (seq-map n fn seq-list)
-  (let loop ((seq-list seq-list) (result '()))
-    (if (null? seq-list)
+(define (sublist-map n fn lst)
+  (let loop ((lst lst) (result '()))
+    (if (null? lst)
         (reverse result)
-        (let ((next-list (take seq-list n)))
-          (loop (cdr seq-list) (cons (apply fn next-list) result))))))
+        (let ((next-list (take lst n)))
+          (loop (cdr lst) (cons (apply fn next-list) result))))))
 ```
 
 **NOTE:** This looping overlap the list so window is always moving one element per loop.
@@ -61,13 +61,17 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 ## Usage
 
 ```scheme
-(seq-map 2 < '(1 2 3 4))
+(sublist-map 2 < '(1 2 3 4))
 ;; ==> (#t #t #t)
-(seq-map 3 = '(2 2 2 3 3 3 4 4 4))
+(sublist-map 3 = '(2 2 2 3 3 3 4 4 4))
 ;; ==> (#t #f #f #t #f #f #t #t #t)
 
 (group-map 3 = '(2 2 2 3 3 3 4 4 4))
 ;; ==> (#t #t #t)
 (group-map 3 = '(2 2 2 0 1 2 4 4 4))
 ;; ==> (#t #f #t)
+(group-map 3 + '(2 2 2 3 3 3 4 4 4))
+;; ==> (6 9 12)
+(group-map 3 max '(1 2 3 4 5 6 7 8 9))
+;; ==> (3 6 9)
 ```
