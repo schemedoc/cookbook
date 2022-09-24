@@ -54,7 +54,7 @@ It also depends on two other recipes:
 (define (amb-collector)
   (let ((values '()))
     (lambda (p . v*)
-      (if (exists amb-done? v*)
+      (if (find-stride amb-done? v*)
           values
           (begin
             (if (apply p v*)
