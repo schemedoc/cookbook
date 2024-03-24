@@ -1,8 +1,8 @@
-# Select first n elements from list
+# Select first n elements from a list
 
 ## Problem
 
-I want to select first elements from list.
+I want to select first elements from a list.
 
 ## Solution
 
