@@ -3,7 +3,7 @@
 ## Problem
 
 I have a list of elements, and I want to map using a function when on
-each loops the function gets n items from list.
+each loop the function gets n items from a list.
 
 e.g.:
 
@@ -14,7 +14,6 @@ for list `(1 2 3 4 5)` and `N = 2` it will call:
 (fn 2 3)
 (fn 3 4)
 (fn 4 5)
-(fn 5)
 ```
 
 for list '(1 2 3 4 5) and `N = 3` it will call:
@@ -23,11 +22,9 @@ for list '(1 2 3 4 5) and `N = 3` it will call:
 (fn 1 2 3)
 (fn 2 3 4)
 (fn 3 4 5)
-(fn 4 5)
-(fn 5)
 ```
 
-and collect the results into single list.
+and collect the results into a single list.
 
 ## Solution
 
@@ -37,14 +34,14 @@ The code use function:
 ```scheme
 (define (sublist-map n fn lst)
   (let loop ((lst lst) (result '()))
-    (if (null? lst)
+    (if (< (length lst) n)
         (reverse result)
         (let ((next-list (take lst n)))
           (loop (cdr lst) (cons (apply fn next-list) result))))))
 ```
 
-**NOTE:** This looping overlap the list so window is always moving one element per loop.
-If you want the whole window to move to next n elements you can use this solution instead:
+**NOTE:** This looping overlap the list, so window is always moving one element per loop.
+If you want the whole window to move to the next n elements you can use this solution instead:
 
 ```scheme
 (define (group-map n fn seq-list)
@@ -64,7 +61,7 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 (sublist-map 2 < '(1 2 3 4))
 ;; ==> (#t #t #t)
 (sublist-map 3 = '(2 2 2 3 3 3 4 4 4))
-;; ==> (#t #f #f #t #f #f #t #t #t)
+;; ==> (#t #f #f #t #f #f #t)
 
 (group-map 3 = '(2 2 2 3 3 3 4 4 4))
 ;; ==> (#t #t #t)
