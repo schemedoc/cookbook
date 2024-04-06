@@ -71,7 +71,7 @@ Create matrix data structure and functions to operate on matrices.
   (map (lambda (nrow mrow) (map + nrow mrow)) N M))
 ```
 
-Credit: [Jakub T. Jankiewicz](https://jcubic.pl) (ref: [Matrix manipulation in scheme](https://jcubic.wordpress.com/2011/09/29/matrix-manipulation-in-scheme/))
+Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me) (ref: [Matrix manipulation in scheme](https://jcubic.wordpress.com/2011/09/29/matrix-manipulation-in-scheme/))
 
 ## Usage
 
