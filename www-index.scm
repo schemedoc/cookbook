@@ -40,6 +40,7 @@
 
  ("Numbers"
   "convert-integer-to-list-of-digits"
+  "convert-list-of-digits-to-integer"
   "compute-pascals-triangle")
 
  ("Time"
