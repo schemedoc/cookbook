@@ -24,6 +24,13 @@ Credit: [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
 ## Usage
 
+```scheme
+(list->integer '(- 1 2 3 4))
+;; ==> -1234
+(list->integer '(1 0 0 0 0 1))
+;; ==> 100001
+```
+
 Testing if the both functions return original value
 
 ```scheme
