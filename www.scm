@@ -1,7 +1,7 @@
 ;; Write HTML files into the `www` subdirectory.
 ;;
 ;; You need Chicken 5 and
-;; `chicken-install lowdown r7rs srfi-1 srfi-13 srfi-132 ssax`
+;; `chicken-install colorize html-parser lowdown r7rs srfi-1 srfi-13 srfi-132 ssax`
 
 (import (scheme base)
         (scheme file)
