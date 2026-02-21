@@ -1,31 +1,29 @@
-var request = require('request');
+var fetch = require('node-fetch');
 
 exports.slugify = slugify;
 exports.get = get;
 
 function get(url, { query, auth = null } = {}) {
-    var options = {
-        url: url,
-        qs: query,
-        headers: {
-            'accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Node.js'
-        }
+    var headers = {
+        'accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Node.js'
     };
     if (auth) {
-        options.headers['Authorization'] = auth;
+        headers['Authorization'] = auth;
     }
-    return new Promise(function(resolve, reject) {
-        request(options, function(error, res, body) {
-            if (res.statusCode == 200) {
-                resolve(JSON.parse(body));
-            } else if (+res.headers['x-ratelimit-remaining'] == 0) {
-                var date = new Date(+res.headers['x-ratelimit-reset']*1000);
-                reject('Rate limit util ' + date);
-            } else {
-                reject('Error code ' + res.statusCode);
-            }
-        });
+    if (query) {
+        var params = new URLSearchParams(query);
+        url = url + '?' + params.toString();
+    }
+    return fetch(url, { headers: headers }).then(function(res) {
+        if (res.status == 200) {
+            return res.json();
+        } else if (+res.headers.get('x-ratelimit-remaining') == 0) {
+            var date = new Date(+res.headers.get('x-ratelimit-reset') * 1000);
+            return Promise.reject('Rate limit util ' + date);
+        } else {
+            return Promise.reject('Error code ' + res.status);
+        }
     });
 }
 
