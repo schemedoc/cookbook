@@ -18,10 +18,14 @@ function get(url, { query, auth = null } = {}) {
     return fetch(url, { headers: headers }).then(function(res) {
         if (res.status == 200) {
             return res.json();
-        } else if (+res.headers.get('x-ratelimit-remaining') == 0) {
-            var date = new Date(+res.headers.get('x-ratelimit-reset') * 1000);
-            return Promise.reject('Rate limit util ' + date);
         } else {
+            if (res.headers.has('x-ratelimit-remaining')) {
+                var limit = res.headers.get('x-ratelimit-remaining');
+                if (+limit == 0) {
+                    var date = new Date(+res.headers.get('x-ratelimit-reset') * 1000);
+                    return Promise.reject('Rate limit until ' + date);
+                }
+            }
             return Promise.reject('Error code ' + res.status);
         }
     });
