@@ -36,7 +36,7 @@ Testing if the both functions return original value
 ```scheme
 (let ((numbers '(1000 -1234)))
   (for-each (lambda (number)
-              (display (eq? number (list->integer (integer->list number))))
+              (display (= number (list->integer (integer->list number))))
               (newline))
             numbers))
 ;; ==> #t

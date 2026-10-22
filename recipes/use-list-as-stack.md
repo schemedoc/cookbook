@@ -27,7 +27,7 @@ based on code by [Nils M Holm](https://t3x.org/) (ref: [setters.scm](https://t3x
 ## Usage
 
 ```scheme
-(let ((x ()))
+(let ((x '()))
   (push! x 'foo)
   (push! x 'bar)
   (push! x 'baz)
